@@ -1,0 +1,40 @@
+{
+    "name":"exist404/datatable-cruds",
+    "description": "Vue Js datatable cruds package",
+    "type": "package",
+    "version": "1.0",
+    "keywords": ["laravel", "vue", "datatable", "cruds", "datatable-cruds", "forms", "axios", "js"],
+    "authors": [
+        {
+            "name": "Osama Saad",
+            "email": "osamasaad1237@gmail.com",
+            "homepage": "https://github.com/404Exist/laravel-datatable-cruds",
+            "role": "Developer"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">= 7.2.5",
+		"laravel/framework": "^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Exist404\\DatatableCruds\\": "src/"
+        },
+        "files": [
+            "src/helper.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+          "providers": [
+            "Exist404\\DatatableCruds\\DatatableCrudsProvider"
+          ],
+          "aliases": {
+            "Datatable": "Exist404\\DatatableCruds\\Facades\\DatatableCruds"
+          }
+        }
+      },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
