@@ -1,8 +1,6 @@
 ## datatable-cruds
 
-[![Donate](https://img.shields.io/badge/donate-paypal-blue.svg)](https://www.paypal.com/paypalme/404Exist)
-[![Issues](https://img.shields.io/github/issues/404Exist/datatable-cruds)](https://github.com/404Exist/datatable-cruds/issues)
-[![License](https://img.shields.io/github/license/404Exist/datatable-cruds)](https://packagist.org/packages/404Exist/datatable-cruds)
+[![Donate](https://img.shields.io/badge/donate-paypal-blue.svg)](https://www.paypal.com/paypalme/404Exist) [![Latest Stable Version](http://poser.pugx.org/exist404/datatable-cruds/v)](https://packagist.org/packages/exist404/datatable-cruds) [![Total Downloads](http://poser.pugx.org/exist404/datatable-cruds/downloads)](https://packagist.org/packages/exist404/datatable-cruds) [![Issues](https://img.shields.io/github/issues/404Exist/datatable-cruds)](https://github.com/404Exist/datatable-cruds/issues) [![License](http://poser.pugx.org/exist404/datatable-cruds/license)](https://packagist.org/packages/exist404/datatable-cruds)
 
 ## Installation
 This package was created to deal with laravel datatables and cruds using vuejs.
@@ -72,6 +70,7 @@ class DatatableExampleController extends Controller
 
     public function store(Request $request)
     {
+        User::create($request->all());
         return [
             'toast-message' => 'New User Has Been Added Successfully.',
             'toast-type' => 'success',
@@ -80,6 +79,7 @@ class DatatableExampleController extends Controller
 
     public function update($id, Request $request)
     {
+        User::where($request->findBy, $id)->first()->update($request->all());
         return [
             'toast-message' => 'User Has Been Updated Successfully.',
             'toast-type' => 'success',
@@ -88,6 +88,7 @@ class DatatableExampleController extends Controller
 
     public function delete($id, Request $request)
     {
+        User::where($request->findBy, $id)->first()->delete();
         return [
             'toast-message' => 'User Has Been Deleted Successfully.',
             'toast-type' => 'success',

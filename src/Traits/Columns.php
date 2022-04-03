@@ -27,7 +27,6 @@ Trait Columns {
                     'isDate' => $isDate,
                     'sortable' => true,
                     'searchable' => true,
-                    'parentClass' => $this->defaultParentClass ? $this->defaultParentClass : ''
                 ]);
             }
         }

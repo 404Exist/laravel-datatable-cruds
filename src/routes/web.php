@@ -16,10 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/_datatablecrudsminfindjs', [AssetController::class, 'js']);
-Route::redirect('/', '/datatable-cruds-example');
-Route::prefix('datatable-cruds-example')->name('datatable-cruds-example')->controller(DatatableExampleController::class)->group(function () {
-    Route::get('/', 'index');
-    Route::post('/', 'store')->name('.store');
-    Route::patch('/{id}', 'update')->name('.update');
-    Route::delete('/{id}', 'delete')->name('.delete');
-});
+Route::get('/datatable-cruds-example', [DatatableExampleController::class, 'index']);
+Route::post('/datatable-cruds-example', [DatatableExampleController::class, 'store'])->name('datatable-cruds-example.store');
+Route::patch('/datatable-cruds-example/{id}', [DatatableExampleController::class, 'update'])->name('datatable-cruds-example.update');
+Route::delete('/datatable-cruds-example/{id}', [DatatableExampleController::class, 'delete'])->name('datatable-cruds-example.delete');
