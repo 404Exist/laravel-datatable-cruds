@@ -89,7 +89,7 @@ class DatatableExampleController extends Controller
 
     public function delete($id, Request $request)
     {
-        User::where($request->findBy, $id)->first()->delete();
+        User::whereIn($request->findBy, explode(',', $id))->delete();
         return [
             'toast-message' => 'User Has Been Deleted Successfully.',
             'toast-type' => 'success',
