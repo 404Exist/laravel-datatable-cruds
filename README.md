@@ -2,6 +2,7 @@
 
 [![Donate](https://img.shields.io/badge/donate-paypal-blue.svg)](https://www.paypal.com/paypalme/404Exist) [![Latest Stable Version](http://poser.pugx.org/exist404/datatable-cruds/v)](https://packagist.org/packages/exist404/datatable-cruds) [![Total Downloads](http://poser.pugx.org/exist404/datatable-cruds/downloads)](https://packagist.org/packages/exist404/datatable-cruds) [![Issues](https://img.shields.io/github/issues/404Exist/datatable-cruds)](https://github.com/404Exist/datatable-cruds/issues) [![License](http://poser.pugx.org/exist404/datatable-cruds/license)](https://packagist.org/packages/exist404/datatable-cruds)
 
+[![License](./docs/images/code.png)](https://packagist.org/packages/exist404/datatable-cruds)
 ## Installation
 This package was created to deal with laravel datatables and cruds using vuejs.
 Install the package through [Composer](http://getcomposer.org/). 
@@ -13,7 +14,7 @@ Run the Composer require command from the Terminal:
 
 After completing the step above, use the following command to publish assets:
 
-	php artisan vendor:publish --provider="Exist404\DatatableCruds\DatatableCrudsProvider",
+	php artisan vendor:publish --provider="Exist404\DatatableCruds\DatatableCrudsProvider"
 
 Now you're ready to start using datatable cruds in your application.
 
@@ -270,6 +271,7 @@ $datatable->deleteButton("Delete", "danger");
 ### render()
 Finally, use this method to render your datatable view.
 this method accepts three prameters, the first for the blade `@extends` the second for the blade `@section`, and the third is an array of variables that can be accessed in the `@extends` blade file.
+by default the first parameter is `"app"`, the second is `"content"` and the third is an empty array `[]`.
 
 ```php
 $datatable->render("app", "content", ["title" => "datatable"]);
@@ -586,3 +588,8 @@ $datatable->input("radio")->radio(2)->label("Choice 2")->add();
 $datatable->input("radio")->radio(3)->label("Choice 3")->add();
 ```
 ****
+[![License](./docs/images/1.png)](https://packagist.org/packages/exist404/datatable-cruds)
+[![License](./docs/images/2.png)](https://packagist.org/packages/exist404/datatable-cruds)
+[![License](./docs/images/3.png)](https://packagist.org/packages/exist404/datatable-cruds)
+[![License](./docs/images/4.png)](https://packagist.org/packages/exist404/datatable-cruds)
+[![License](./docs/images/5.png)](https://packagist.org/packages/exist404/datatable-cruds)

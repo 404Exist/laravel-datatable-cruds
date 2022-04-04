@@ -8,7 +8,6 @@
         <meta name="theme-color" content="#100DD1">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
-        <script src="{{ asset('/js/datatable-cruds.min.js') }}" defer></script>
     </head>
     <body>
         @yield('content')
