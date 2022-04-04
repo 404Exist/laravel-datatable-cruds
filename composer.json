@@ -2,7 +2,7 @@
     "name":"exist404/datatable-cruds",
     "description": "Vue Js datatable cruds package",
     "type": "package",
-    "version": "1.0",
+    "version": "1.0.1",
     "keywords": ["laravel", "vue", "datatable", "cruds", "datatable-cruds", "forms", "axios", "js"],
     "authors": [
         {
