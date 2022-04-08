@@ -1,0 +1,6 @@
+Route::namespace("{{namespace}}"){{middleware}}{{prefix}}->name('{{routename}}.')->group(function () {
+    Route::get('/{{routepath}}', '{{class}}Controller@index')->name('get');
+    Route::post('/{{routepath}}', '{{class}}Controller@store')->name('store');
+    Route::patch('/{{routepath}}/{id}', '{{class}}Controller@update')->name('update');
+    Route::delete('/{{routepath}}/{id}', '{{class}}Controller@destroy')->name('delete');
+});

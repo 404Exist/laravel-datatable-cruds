@@ -36,9 +36,10 @@ Trait Columns {
     /**
      * Create a new column
      *
+     * @param  string $name
      * @return $this->create('column')
     */
-    public function column($name) {
+    public function column(string $name) {
         return $this->create('column', $name);
     }
     /**
@@ -47,7 +48,7 @@ Trait Columns {
      * @param  string $name
      * @return $this->update('column', $name)
     */
-    public function updateColumn($name) {
+    public function updateColumn(string $name) {
         return $this->update('column', $name);
     }
     /**
@@ -56,16 +57,16 @@ Trait Columns {
      * @param  string $name
      * @return $this->delete('column', $name)
     */
-    public function deleteColumn($name) {
+    public function deleteColumn(string $name) {
         return $this->delete('column', $name);
     }
     /**
      * Set sortable for current column
      *
-     * @param  boolean $sortable
+     * @param  bool $sortable
      * @return $this
     */
-    public function sortable($sortable = true) {
+    public function sortable(bool $sortable = true) {
         $this->instanceMethod('input', 'sortable');
         $this->setValue('sortable', $sortable);
         return $this;
@@ -73,10 +74,10 @@ Trait Columns {
     /**
      * Set searchable for current column
      *
-     * @param  boolean $searchable
+     * @param  bool $searchable
      * @return $this
     */
-    public function searchable($searchable = true) {
+    public function searchable(bool $searchable = true) {
         $this->instanceMethod('input', 'searchable');
         $this->setValue('searchable', $searchable);
         return $this;
@@ -84,11 +85,10 @@ Trait Columns {
     /**
      * Specify that current column is image
      *
-     * @param  string|null $path
-     * @param  boolean $isImage
+     * @param  string|bool|null $path
      * @return $this
     */
-    public function image($path = '') {
+    public function image(string|bool|null $path = '') {
         $this->setMethodName('image');
         $this->instanceMethod('input', 'image');
         $isImage = !$path && $path !== '' ? false : true;
@@ -102,7 +102,7 @@ Trait Columns {
      * @param  string $href
      * @return $this
     */
-    public function href($href = '') {
+    public function href(string $href = '') {
         $this->instanceMethod('input', 'href');
         $this->setMethodName('href');
         $this->setValue('href', $href);
@@ -111,11 +111,10 @@ Trait Columns {
     /**
      * Specify that current column is date
      *
-     * @param  string|null $format
-     * @param  boolean $isDate
+     * @param  string|bool|null $format
      * @return $this
     */
-    public function date($format = null) {
+    public function date(string|bool|null $format = null) {
         $this->instanceMethod('input', 'date');
         $isDate = $format === false ? false : true;
         $this->setValue('isDate', $isDate);
@@ -126,10 +125,10 @@ Trait Columns {
     /**
      * Specify that current column is checkall
      *
-     * @param  string $label
+     * @param  string|bool|null $label
      * @return $this
     */
-    public function checkall($label = null) {
+    public function checkall(string|bool|null $label = null) {
         $this->instanceMethod('input', 'checkall');
         $isSelect = $label === false ? false : true;
         $this->setValue('isSelect', $isSelect);
@@ -139,10 +138,10 @@ Trait Columns {
     /**
      * Specify that current column is actions
      *
-     * @param  string $label
+     * @param  string|bool|null $label
      * @return $this
     */
-    public function actions($label = null) {
+    public function actions(string|bool|null $label = null) {
         $this->instanceMethod('input', 'actions');
         $isAction = $label === false ? false : true;
         $this->setValue('isAction', $isAction);
@@ -156,7 +155,7 @@ Trait Columns {
      * @param  string|null $to (html ||  href)
      * @return $this
     */
-    public function exec($js, $to = null) {
+    public function exec(string $js, string|null $to = null) {
         $this->instanceMethod('input', 'exec');
         $to = $to ?: $this->methodName;
         if (!$to) $this->methodsToApplyAfter('exec', 'html', 'href');

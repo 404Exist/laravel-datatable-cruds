@@ -8,7 +8,7 @@ Trait Globals {
      * @param  string $model
      * @return $this
     */
-    public function setModel($model)
+    public function setModel(string $model)
     {
         $this->model = $model;
         if (!$this->title) $this->setTitle(ucwords((new $model())->getTable()));
@@ -20,7 +20,7 @@ Trait Globals {
      * @param  string $title
      * @return $this
     */
-    public function setTitle($title)
+    public function setTitle(string $title)
     {
         $this->title = $title;
         return $this;
@@ -31,7 +31,7 @@ Trait Globals {
      * @param  string $dir
      * @return $this
     */
-    public function setDir($dir)
+    public function setDir(string $dir)
     {
         $this->dir = $dir;
         return $this;
@@ -39,10 +39,11 @@ Trait Globals {
     /**
      * Request Headers
      *
-     * @param  array $headers
+     * @param  string $name
+     * @param  string $value
      * @return $this
     */
-    public function setHeader($name, $value)
+    public function setHeader(string $name, string $value)
     {
         $this->headers = array_merge($this->headers, [$name => $value]);
         return $this;
@@ -53,7 +54,7 @@ Trait Globals {
      * @param  mixed ...$with
      * @return $this
     */
-    public function with(...$with)
+    public function with(mixed ...$with)
     {
         foreach ($with as $index => $value) {
             $this->with .= $index == 0 ? $value :'|'.$value;
@@ -66,7 +67,7 @@ Trait Globals {
      * @param  mixed ...$searchBy
      * @return $this
     */
-    public function searchBy(...$searchBy)
+    public function searchBy(mixed ...$searchBy)
     {
         $this->searchBy = array_merge($this->searchBy, $searchBy);
         return $this;
@@ -77,7 +78,7 @@ Trait Globals {
      * @param  string $route
      * @return $this
     */
-    public function setGetRoute($route)
+    public function setGetRoute(string $route)
     {
         $this->routes['get'] = $route;
         return $this;
@@ -89,7 +90,7 @@ Trait Globals {
      * @param  string $method
      * @return $this
     */
-    public function setStoreRoute($route, $method = 'post')
+    public function setStoreRoute(string $route, string $method = 'post')
     {
         $this->routes['store'] = $route;
         $this->routesMethods['store'] = $method;
@@ -102,7 +103,7 @@ Trait Globals {
      * @param  string $method
      * @return $this
     */
-    public function setUpdateRoute($route, $method = 'patch')
+    public function setUpdateRoute(string $route, string $method = 'patch')
     {
         $this->routes['update'] = $route;
         $this->routesMethods['update'] = $method;
@@ -115,7 +116,7 @@ Trait Globals {
      * @param  string $method
      * @return $this
     */
-    public function setDeleteRoute($route, $method = 'delete')
+    public function setDeleteRoute(string $route, string $method = 'delete')
     {
         $this->routes['delete'] = $route;
         $this->routesMethods['delete'] = $method;
@@ -127,7 +128,7 @@ Trait Globals {
      * @param  string $findBy
      * @return $this
     */
-    public function setRequestFindByKey($findBy)
+    public function setRequestFindByKey(string $findBy)
     {
         $this->findBy = $findBy;
         return $this;
@@ -138,7 +139,7 @@ Trait Globals {
      * @param  string $dateFormat
      * @return $this
     */
-    public function setDefaultDateFormat($dateFormat)
+    public function setDefaultDateFormat(string $dateFormat)
     {
         $this->dateFormat = 'format('.$dateFormat.')';
         return $this;
@@ -150,7 +151,7 @@ Trait Globals {
      * @param  string $order
      * @return $this
     */
-    public function setDefaultOrder($orderBy = 'created_at', $order = 'desc')
+    public function setDefaultOrder(string $orderBy = 'created_at', string $order = 'desc')
     {
         $this->request['order'] = $order;
         $this->request['orderBy'] = $orderBy;
@@ -161,10 +162,10 @@ Trait Globals {
      *
      * @param  string $html
      * @param  string $onclick (openModal | funcName | href)
-     * @param  string $value
+     * @param  string|bool $value
      * @return $this
     */
-    public function addAction($html = null, $onclick = 'openModal', $value = true) {
+    public function addAction(string $html = null, string $onclick = 'openModal', string|bool $value = true) {
         $this->addButton['onclick'] = [$onclick => $value];
         $this->addButton['html'] = $html;
         return $this;
@@ -177,7 +178,7 @@ Trait Globals {
      * @param  string $value
      * @return $this
     */
-    public function editAction($html = null, $onclick = 'openModal', $value = true) {
+    public function editAction(string $html = null, string $onclick = 'openModal', string|bool $value = true) {
         $this->actions["edit"]['onclick'] = [$onclick => $value];
         $this->actions["edit"]['html'] = $html;
         if ($html === false) $this->actions["edit"] = false;
@@ -191,7 +192,7 @@ Trait Globals {
      * @param  string $value
      * @return $this
     */
-    public function deleteAction($html = null, $onclick = 'openModal', $value = true) {
+    public function deleteAction(string $html = null, string $onclick = 'openModal', string|bool $value = true) {
         $this->actions["delete"]['onclick'] = [$onclick => $value];
         $this->actions["delete"]['html'] = $html;
         if ($html === false) $this->actions["delete"] = false;
@@ -205,7 +206,7 @@ Trait Globals {
      * @param  string $value
      * @return $this
     */
-    public function cloneAction($html = null, $onclick = 'openModal', $value = true) {
+    public function cloneAction(string $html = null, string $onclick = 'openModal', string|bool $value = true) {
         $this->actions["clone"]['onclick'] = [$onclick => $value];
         $this->actions["clone"]['html'] = $html;
         if ($html === false) $this->actions["clone"] = false;
@@ -218,7 +219,7 @@ Trait Globals {
      * @param  string $class
      * @return $this
     */
-    public function search($debounce, $class = 'form-control')
+    public function search(string $debounce, string $class = 'form-control')
     {
         $this->searchBar = [
             "class" => $class,
@@ -232,7 +233,7 @@ Trait Globals {
      * @param  array $exports
      * @return $this
     */
-    public function exports($exports = [])
+    public function exports(array $exports = [])
     {
         $this->exports = array_merge(config('datatablecruds.exports'), $exports);
         return $this;
@@ -244,7 +245,7 @@ Trait Globals {
      * @param  string $text
      * @return $this
     */
-    public function setText($key, $text)
+    public function setText(string $key, string $text)
     {
         $this->texts[$key] = $text;
         return $this;
@@ -255,7 +256,7 @@ Trait Globals {
      * @param  mixed $limits
      * @return $this
     */
-    public function setLimits(...$limits)
+    public function setLimits(mixed ...$limits)
     {
         $this->limits = $limits;
         return $this;
@@ -266,7 +267,7 @@ Trait Globals {
      * @param  int $width
      * @return $this
     */
-    public function formWidth($width)
+    public function formWidth(int $width)
     {
         $this->formWidth = $width;
         return $this;
@@ -278,7 +279,7 @@ Trait Globals {
      * @param  string $color
      * @return $this
     */
-    public function storeButton($label = 'Create', $color = 'primary')
+    public function storeButton(string $label = 'Create', string $color = 'primary')
     {
         $this->storeButton = [
             'label' => $label,
@@ -293,7 +294,7 @@ Trait Globals {
      * @param  string $color
      * @return $this
     */
-    public function updateButton($label = 'Update', $color = 'primary')
+    public function updateButton(string $label = 'Update', string $color = 'primary')
     {
         $this->updateButton = [
             'label' => $label,
@@ -308,7 +309,7 @@ Trait Globals {
      * @param  string $color
      * @return $this
     */
-    public function deleteButton($label = 'Delete', $color = 'danger')
+    public function deleteButton(string $label = 'Delete', string $color = 'danger')
     {
         $this->deleteButton = [
             'label' => $label,

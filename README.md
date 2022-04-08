@@ -14,89 +14,29 @@ Run the Composer require command from the Terminal:
 
 After completing the step above, use the following command to publish assets:
 
-	php artisan vendor:publish --provider="Exist404\DatatableCruds\DatatableCrudsProvider"
+	php artisan datatablecruds:install
 
 Now you're ready to start using datatable cruds in your application.
-
+****
 
 ## Overview
-* [Demo](#demo)
+* [Prepare Command](#prepare-command)
 * [General Methods](#general-methods)
 * [Common Methods](#columns-and-inputs-common-methods)
 * [Columns Methods](#columns-methods)
 * [Inputs Methods](#inputs-methods)
 
-## Demo
-### web.php
-```php
-<?php
-
-use App\Http\Controllers\DatatableExampleController;
-use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
-Route::redirect('/', '/datatable-cruds-example');
-Route::prefix('datatable-cruds-example')->name('datatable-cruds-example')->controller(DatatableExampleController::class)->group(function () {
-    Route::get('/', 'index');
-    Route::post('/', 'store')->name('.store');
-    Route::patch('/{id}', 'update')->name('.update');
-    Route::delete('/{id}', 'delete')->name('.delete');
-});
-``` 
-### DatatableExampleController.php
-```php
-<?php
-namespace App\Http\Controllers;
-
-use App\Http\Controllers\Controller;
-use App\Models\User;
-use Exist404\DatatableCruds\Facades\DatatableCruds;
-
-class DatatableExampleController extends Controller
-{
-    public function index()
-    {
-        return DatatableCruds::setModel(User::class)->fillColumns()->fillInputs()->render();
-    }
-
-    public function store(Request $request)
-    {
-        User::create($request->all());
-        return [
-            'toast-message' => 'New User Has Been Added Successfully.',
-            'toast-type' => 'success',
-        ];
-    }
-
-    public function update($id, Request $request)
-    {
-        User::where($request->findBy, $id)->first()->update($request->all());
-        return [
-            'toast-message' => 'User Has Been Updated Successfully.',
-            'toast-type' => 'success',
-        ];
-    }
-
-    public function delete($id, Request $request)
-    {
-        User::whereIn($request->findBy, explode(',', $id))->delete();
-        return [
-            'toast-message' => 'User Has Been Deleted Successfully.',
-            'toast-type' => 'success',
-        ];
-    }
-}
+****
+## Prepare Command
+* if you run this command, a controller will be created and routes to that controller's methods will be created.
+* if the model does not exist, this command will create the model, factory and migration as well.
+* you can replace `User` in this command with your desired model name.
+* you can pass `--middleware` or it's shortcut `-M` options and these middlewars will be applied to the routes.
+* you can pass `--prefix` or it's shortcut `-P` option and these prefix will be applied to the routes.
+```php 
+php artisan datatablecruds:prepare User --middleware=auth --middleware=sanctum -P en
 ```
+****
 ## General Methods
 ```php
 $datatable = DatatableCruds::setModel(User::class);
@@ -593,3 +533,4 @@ $datatable->input("radio")->radio(3)->label("Choice 3")->add();
 [![License](./docs/images/3.png)](https://packagist.org/packages/exist404/datatable-cruds)
 [![License](./docs/images/4.png)](https://packagist.org/packages/exist404/datatable-cruds)
 [![License](./docs/images/5.png)](https://packagist.org/packages/exist404/datatable-cruds)
+****

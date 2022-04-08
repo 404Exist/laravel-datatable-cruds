@@ -9,7 +9,7 @@ Trait Common {
      * @param  mixed $sorts
      * @return $this
     */
-    public function sort(...$sorts)
+    public function sort(mixed ...$sorts)
     {
         foreach ($sorts as $index => $sort) {
             $out = array_splice($this->{$this->instance.'s'}, array_search($sort, array_column($this->{$this->instance.'s'}, 'name')), 1);
@@ -23,7 +23,7 @@ Trait Common {
      * @param  mixed $excepts
      * @return $this
     */
-    public function except(...$excepts)
+    public function except(mixed ...$excepts)
     {
         foreach ($excepts as $except) {
             array_splice($this->{$this->instance.'s'}, array_search($except, array_column($this->{$this->instance.'s'}, 'name')), 1);
@@ -41,7 +41,7 @@ Trait Common {
      * @param  string $label
      * @return $this
     */
-    public function label($label) {
+    public function label(string $label) {
         $this->setValue('label', $label);
         if ($this->instance == 'input' && !isset($this->input['attributes'], $this->input['attributes']['placeholder'])) {
             $this->setValue('attributes', ['placeholder' => $label], true);
@@ -54,7 +54,7 @@ Trait Common {
      * @param  string $html
      * @return $this
     */
-    public function html($html = '') {
+    public function html(string $html = '') {
         $this->setMethodName('html');
         $this->setValue('isDate', false);
         $this->setValue('isImage', false);
@@ -69,7 +69,7 @@ Trait Common {
      * @param  array $attributes
      * @return $this
     */
-    public function attributes($attributes)
+    public function attributes(array $attributes)
     {
         if (!isset($this->{$this->instance}['attributes'])) $this->{$this->instance}['attributes'] = [];
         $this->setValue('attributes', $attributes, true);
@@ -82,7 +82,7 @@ Trait Common {
      * @param  string $value
      * @return $this
     */
-    public function setAttribute($name, $value)
+    public function setAttribute(string $name, string $value)
     {
         $this->attributes([$name => $value]);
         return $this;
@@ -93,7 +93,7 @@ Trait Common {
      * @param string $after
      * @return $this
     */
-    public function after($after)
+    public function after(string $after)
     {
         if ($after && $this->instancePosition($after) !== false) {
             $this->position = $this->instancePosition($after);
@@ -114,7 +114,7 @@ Trait Common {
      * @param string $after
      * @return $this
     */
-    public function before($before)
+    public function before(string $before)
     {
         if ($before && $this->instancePosition($before) !== false) {
             $this->position = $this->instancePosition($before);

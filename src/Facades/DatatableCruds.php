@@ -1,23 +1,79 @@
 <?php
 
 namespace Exist404\DatatableCruds\Facades;
+use Illuminate\Support\Facades\Facade;
 
-use Exist404\DatatableCruds\Builder\DatatableCruds as BuilderDatatableCruds;
-
-class DatatableCruds
+/**
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds render(string $extends = 'app', string $section = 'content', array $extendsData = [])
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds setModel(string $model)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds setTitle(string $title)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds setDir(string $dir)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds setHeader(string $name, string $value)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds with(mixed ...$with)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds searchBy(mixed ...$searchBy)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds setGetRoute(string $route)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds setStoreRoute(string $route, string $method = 'post')
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds setUpdateRoute(string $route, string $method = 'patch')
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds setDeleteRoute(string $route, string $method = 'delete')
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds setRequestFindByKey(string $findBy)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds setDefaultDateFormat(string $dateFormat)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds setDefaultOrder(string $orderBy = 'created_at', string $order = 'desc')
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds addAction(string $html = null, string $onclick = 'openModal', string|bool $value = true)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds editAction(string $html = null, string $onclick = 'openModal', string|bool $value = true)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds deleteAction(string $html = null, string $onclick = 'openModal', string|bool $value = true)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds cloneAction(string $html = null, string $onclick = 'openModal', string|bool $value = true)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds search(string $debounce, string $class = 'form-control')
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds exports(array $exports = [])
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds setText(string $key, string $text)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds setLimits(mixed ...$limits)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds formWidth(int $width)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds storeButton(string $label = 'Create', string $color = 'primary')
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds updateButton(string $label = 'Update', string $color = 'primary')
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds deleteButton(string $label = 'Delete', string $color = 'danger')
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds sort(mixed ...$sorts)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds except(mixed ...$excepts)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds label(string $label)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds html(string $html = '')
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds attributes(array $attributes)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds setAttribute(string $name, string $value)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds after(string $after)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds before(string $before)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds add()
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds fillColumns()
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds column(string $name)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds updateColumn(string $name)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds deleteColumn(string $name)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds sortable(bool $sortable = true)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds searchable(bool $searchable = true)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds image(string|bool|null $path = '')
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds date(string|bool|null $format = null)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds checkall(string|bool|null $label = null)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds actions(string|bool|null $label = null)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds href(string $href = '')
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds exec(string $js, string|null $to = null)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds fillInputs(int|null $maxInputsPerPage = null, string|null $parentClass = "mb-3")
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds input(string $name)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds updateInput(string $name)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds deleteInput(string $name)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds type(string $type)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds form(string $form)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds page(int $page)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds parentClass(string $parentClass)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds labelClass(string $labelClass)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds multiSelect(string $label = "name", string $val = "id", bool $multiple = true)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds select(string $label = "name", string $val = "id")
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds options(array $options = [])
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds onChange(string $update, string $getDataFrom)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds dropzone(array $dropZoneAttributes = [])
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds checkbox(bool $selectedValue = true, bool $unselectedValue = false)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds radio($value)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds tags()
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds editor(string|null $value = null)
+ * @method static \Exist404\DatatableCruds\Builder\DatatableCruds optionsRoute(string $optionsRoute)
+ *
+ * @see \Illuminate\Routing\Router
+ */
+class DatatableCruds extends Facade
 {
-    public function __construct($data = [])
-    {
-        foreach ($data as $key => $value) {
-            $this->{$key} = $value;
-        }
-    }
-    public static function __callStatic($method, $arguments)
-    {
-        return (new BuilderDatatableCruds())->$method(...$arguments);
-    }
-    public function __call($method, $arguments)
-    {
-        return (new BuilderDatatableCruds())->$method(...$arguments);
-    }
+    protected static function getFacadeAccessor() { return 'datatablecruds'; }
 }

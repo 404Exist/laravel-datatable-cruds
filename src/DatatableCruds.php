@@ -1,6 +1,6 @@
 <?php
 
-namespace Exist404\DatatableCruds\Builder;
+namespace Exist404\DatatableCruds;
 
 use Exist404\DatatableCruds\Traits\Globals;
 use Exist404\DatatableCruds\Traits\Columns;
