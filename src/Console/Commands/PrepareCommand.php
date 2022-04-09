@@ -5,7 +5,7 @@ namespace Exist404\DatatableCruds\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 
-class MakeCommand extends Command
+class PrepareCommand extends Command
 {
     protected $name;
 
@@ -56,7 +56,7 @@ class MakeCommand extends Command
                 $this->getNamespace(),
                 str_replace('\\', '/', $this->name),
                 $this->getClass(),
-                str_replace('\\', '-', $this->name),
+                str_replace('\\', '.', $this->name),
                 $this->middleWare(),
                 $this->prefix(),
             ],

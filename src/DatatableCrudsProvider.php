@@ -2,7 +2,7 @@
 
 namespace Exist404\DatatableCruds;
 
-use Exist404\DatatableCruds\Console\Commands\MakeCommand;
+use Exist404\DatatableCruds\Console\Commands\PrepareCommand;
 use Exist404\DatatableCruds\Console\Commands\InstallPackageCommand;
 use Illuminate\Support\ServiceProvider;
 
@@ -31,7 +31,7 @@ class DatatableCrudsProvider extends ServiceProvider
         $this->publishes([__DIR__ . '/../config/datatablecruds.php' => config_path('datatablecruds.php')], 'config');
         $this->commands([
             InstallPackageCommand::class,
-            MakeCommand::class,
+            PrepareCommand::class,
         ]);
     }
 }

@@ -388,4 +388,45 @@ class DatatableCruds
         $this->methodAction = $action;
         return $this;
     }
+
+    protected function executeMethodsFromStr(...$items)
+    {
+        $for = $this->instance;
+        foreach ($items as $item) {
+            $data = explode('|', $item);
+            $instance = $this->$for($data[0]);
+            array_splice($data, 0, 1);
+            foreach ($data as $val) {
+                if (str_starts_with($val, '$@') && $for == 'column') $instance->href()->exec(ltrim($val, '$@'));
+                else if (str_starts_with($val, '$#') && $for == 'column') $instance->html()->exec(ltrim($val, '$#'));
+                else {
+                    $method = explode('(', $val)[0];
+                    if (!method_exists($this, $method) && $for == 'input') $instance->type($method);
+                    else {
+                        preg_match('/\(([^#]+)\)/', $val, $params);
+                        if (isset($params[1])) {
+                            $params = $params[1];
+                            $fixedParams = [];
+                            foreach (explode(',', $params) as $param) {
+                                if ($param == 'true') $param = true;
+                                else if ($param == 'false') $param = false;
+                                else if ($param == 'null') $param = null;
+                                else if (is_numeric($param)) $param = (int)$param;
+                                array_push($fixedParams, $param);
+                            }
+                            $arr = [];
+                            if (str_ends_with($params, '}') || str_ends_with($params, ']')) {
+                                $arr = json_decode($params, true);
+                            }
+                            if ($arr) {
+                                $instance->{$method}($arr);
+                            } else $instance->{$method}(...$fixedParams);
+                        }
+                        else $instance->{$method}();
+                    }
+                }
+            }
+            $instance->add();
+        }
+    }
 }

@@ -34,6 +34,18 @@ Trait Columns {
         return $this;
     }
     /**
+     * Set View Columns.
+     *
+     * @param mixed ...$columns
+     * @return $this
+    */
+    public function setColumns(mixed ...$columns)
+    {
+        $this->instance = 'column';
+        $this->executeMethodsFromStr(...$columns);
+        return $this;
+    }
+    /**
      * Create a new column
      *
      * @param  string $name

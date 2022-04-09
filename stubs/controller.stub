@@ -1,5 +1,6 @@
 <?php
 namespace {{namespace}};
+
 use App\Http\Controllers\Controller;
 use {{modelNameSpace}};
 use Exist404\DatatableCruds\Facades\DatatableCruds;

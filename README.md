@@ -151,7 +151,7 @@ the second one is button action you can set it to one of these choices `("openMo
 and the third parameter is for action value if you set the button action to `"href"` you will need to pass href value in the third parameter 
 and if you set the button action to `"funcName"` you will need to pass a javascript function name to execute onClick on the add button.
 **by default add button will open modal for form store.**
-if you send `funcName`, when you create this function in your app you will get two prameters in it `(event, row)` row which will contain the row data but in method `addAction()` you will only get the event `(event)`.
+if you send `funcName`, when you create this function in your app you will get two parameters in it `(event, row)` row which will contain the row data but in method `addAction()` you will only get the event `(event)`.
 
 ```php
 $datatable->addAction('<button class="btn btn-primary"> Add New User </button>');
@@ -210,7 +210,7 @@ $datatable->deleteButton("Delete", "danger");
 ```
 ### render()
 Finally, use this method to render your datatable view.
-this method accepts three prameters, the first for the blade `@extends` the second for the blade `@section`, and the third is an array of variables that can be accessed in the `@extends` blade file.
+this method accepts three parameters, the first for the blade `@extends` the second for the blade `@section`, and the third is an array of variables that can be accessed in the `@extends` blade file.
 by default the first parameter is `"app"`, the second is `"content"` and the third is an empty array `[]`.
 
 ```php
@@ -319,6 +319,29 @@ You can use this method to delete a specific column.
 ```php
 $datatable->deleteColumn("updated_at");
 ```
+### setColumns() 
+
+use this magic method to display columns to the view, you can use any column method in this method.
+this method accepts `@mixed` parameters.
+##### how to write each parameter in this method ?
+* parameter text must begin with the column name.
+* you can implement any of the column methods using this symbol `|` and then type the method name `"email|sortable"`.
+* how to pass parameters to the method ?
+  * if you want to pass parameters just put the prameters in half circle brackets `()` for example `|multiSelect(name,id,true)` it's the same as `->multiSelect("name", "id", true)`.
+  * If you want to pass an array as a parameter, you have to write that array in json way `{"class":"bg-danger p-2"}`.
+* you can use these symbols `|$#` to write javascript code and set the value to column html or you can use these symbols `|$@` to write javascript code and set the value to column href.
+```php
+$datatable->setColumns(
+    'id',
+    'name|sortable|searchable|attributes({"class":"bg-danger p-2"})',
+    'email|href({id})',
+    'status|$#"{email_verified_at}" ? "<span>Verified</span>" : "<span>Not Verified</span>"',
+    'created_at|date(YYYY-MM-DD)',
+    'updated_at|date',
+    'select|checkall',
+    'actions|actions',
+);
+```
 ### sortable()
 You can use this method to make column is sortable.
 this method accepts one boolean parameter by default it's true.
@@ -404,6 +427,23 @@ You can use this method to delete a specific input.
 ```php
 $datatable->deleteInput("name.en");
 ```
+### setInputs() 
+
+use this magic method to display inputs to the forms, you can use any input method in this method.
+this method accepts `@mixed` parameters.
+##### how to write each parameter in this method ?
+* parameter text must begin with the input name `"email"`.
+* you can implement any of the input methods using this symbol `|` and then type the method name `"the_tags|tags"`, you can also write the input type after this symbol `"email|email"`.
+* how to pass parameters to the method ?
+    * if you want to pass parameters just put the prameters in half circle brackets `()` for example `|multiSelect(name,id,true)` it's the same as `->multiSelect("name", "id", true)`.
+    * If you want to pass an array as a parameter, you have to write that array in json way `[{"id":1, "name": "name1"}, {"id": 2, "name": "name2"}]`.
+```php
+$datatable->setInputs(
+    'name|text', 'email|email', 'password|password',
+    'images|dropzone({"multiple":true, "acceptedFiles":"mp4,png"})',
+    'choices|multiSelect(name,id,false)|options([{"id":1, "name": "name1"}, {"id": 2, "name": "name2"}])',
+);
+```
 ### form()
 
 You can use this method to add the input in a specific form, by default it will be added in all forms. 
@@ -438,7 +478,7 @@ $datatable->updateInput("name.en")->type("text");
 ### select()
 
 you can use this method to make a `select` tag.
-this method accepts two prameters the first one for options label column name by default its `name` and the second one is for options value column name by default its `id`.
+this method accepts two parameters the first one for options label column name by default its `name` and the second one is for options value column name by default its `id`.
 ```php
 $datatable->input("select")->select("name.en")->options([
         ["id" => 1, "name" => ["en" => "datatable-1"]],
@@ -448,7 +488,7 @@ $datatable->input("select")->select("name.en")->options([
 ### multiSelect()
 
 you can use this method to make a `multi-select` input.
-this method accepts three prameters the first one for options label column name by default its `name` , the second one is for options value column name by default its `id` and the last one is for multiple selection by default its `true`.
+this method accepts three parameters the first one for options label column name by default its `name` , the second one is for options value column name by default its `id` and the last one is for multiple selection by default its `true`.
 **in the edit form when multiSelect is multiple and you remove any selected options you will get the values of those options in the update request in request key starts with `remove_` then the input name.**
 ```php
 $datatable->input("multi")->multiSelect("name.en")->options([
@@ -463,7 +503,7 @@ $datatable->input("multi")->multiSelect("name.en")->optionsRoute("/theRoute")->a
 ### onChange()
 
 you can use this method to update select options on other select change.
-this method accepts two prameters the first one for the select name to update and the second one is for the route to get options from it.
+this method accepts two parameters the first one for the select name to update and the second one is for the route to get options from it.
 you can use `$request->value` to access the selected option value in the onChange route.
 
 ```php
@@ -487,7 +527,7 @@ $datatable->input("image")->dropzone([
     "multiple" => true, // default is false
     "maxFiles" => 6,
     "maxFileSize" => 2 * 1024 * 1024, //2MB
-    "acceptedFiles" => ['jpg ', 'mp4'],
+    "acceptedFiles" => 'jpg,mp4',
     // "addDownloadinks" => true, // default is true
     // "addRemoveLinks" => true, // default is true
     // "addFileName" => true, // default is true

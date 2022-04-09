@@ -37,6 +37,18 @@ Trait Inputs {
         return $this;
     }
     /**
+     * Set View Inputs.
+     *
+     * @param mixed ...$inputs
+     * @return $this
+    */
+    public function setInputs(mixed ...$inputs)
+    {
+        $this->instance = 'input';
+        $this->executeMethodsFromStr(...$inputs);
+        return $this;
+    }
+    /**
      * Create a new input
      *
      * @param string $name
