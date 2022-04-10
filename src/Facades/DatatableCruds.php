@@ -4,7 +4,7 @@ namespace Exist404\DatatableCruds\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static \Exist404\DatatableCruds\DatatableCruds render(string $extends = 'app', string $section = 'content', array $extendsData = [])
+ * @method static \Exist404\DatatableCruds\DatatableCruds render(array $extendsData = [])
  * @method static \Exist404\DatatableCruds\DatatableCruds setModel(string $model)
  * @method static \Exist404\DatatableCruds\DatatableCruds setTitle(string $title)
  * @method static \Exist404\DatatableCruds\DatatableCruds setDir(string $dir)
@@ -30,6 +30,8 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Exist404\DatatableCruds\DatatableCruds storeButton(string $label = 'Create', string $color = 'primary')
  * @method static \Exist404\DatatableCruds\DatatableCruds updateButton(string $label = 'Update', string $color = 'primary')
  * @method static \Exist404\DatatableCruds\DatatableCruds deleteButton(string $label = 'Delete', string $color = 'danger')
+ * @method static \Exist404\DatatableCruds\DatatableCruds setBladeExtends(string $extends)
+ * @method static \Exist404\DatatableCruds\DatatableCruds setBladeSection(string $section)
  * @method static \Exist404\DatatableCruds\DatatableCruds sort(mixed ...$sorts)
  * @method static \Exist404\DatatableCruds\DatatableCruds except(mixed ...$excepts)
  * @method static \Exist404\DatatableCruds\DatatableCruds label(string $label)

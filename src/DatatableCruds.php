@@ -11,6 +11,16 @@ class DatatableCruds
 {
     use Globals, Columns, Inputs, Common;
     /**
+     * Datatable blade @extends.
+     * @var string
+    */
+    protected $bladeExtends = 'app';
+    /**
+     * Datatable blade @section.
+     * @var string
+    */
+    protected $bladeSection = 'content';
+    /**
      * Datatable Title.
      * @var string
     */
@@ -254,19 +264,19 @@ class DatatableCruds
     /**
      * Get Datatable Data
      *
-     * @param  string $extends
-     * @param  string $section
      * @param  array $extendsData
      *
      * @return \Illuminate\Support\Facades\View
     */
-    public function render($extends = 'app', $section = 'content', $extendsData = [])
+    public function render($extendsData = [])
     {
         if (isset($_SERVER['HTTP_X_DATATABLE'])) {
             if (!$this->model) return $this->exception('You must send valid model class to render data');
             return dataTableOf($this->model);
         }
         $datatable = $this->applyData();
+        $extends = $this->bladeExtends;
+        $section = $this->bladeSection;
         return view('datatable::datatable-cruds', compact('datatable', 'extends', 'section', 'extendsData'));
     }
 
@@ -403,7 +413,7 @@ class DatatableCruds
                     $method = explode('(', $val)[0];
                     if (!method_exists($this, $method) && $for == 'input') $instance->type($method);
                     else {
-                        preg_match('/\(([^#]+)\)/', $val, $params);
+                        preg_match('/\((.*)\)/', $val, $params);
                         if (isset($params[1])) {
                             $params = $params[1];
                             $fixedParams = [];

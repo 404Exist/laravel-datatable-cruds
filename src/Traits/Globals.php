@@ -317,4 +317,26 @@ Trait Globals {
         ];
         return $this;
     }
+    /**
+     * Set blade extends
+     *
+     * @param  string $extends
+     * @return $this
+    */
+    public function setBladeExtends(string $extends)
+    {
+        $this->extends = $extends;
+        return $this;
+    }
+    /**
+     * Set blade section
+     *
+     * @param  string $section
+     * @return $this
+    */
+    public function setBladeSection(string $section)
+    {
+        $this->section = $section;
+        return $this;
+    }
 }

@@ -1,5 +1,7 @@
 <?php
 return [
+    "bladeExtends" => "app",
+    "bladeSection" => "content",
     "dir" => "ltr",
     "headers" => [],
     "formWidth" => null,

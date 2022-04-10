@@ -31,8 +31,8 @@ Now you're ready to start using datatable cruds in your application.
 * if you run this command, a controller will be created and routes to that controller's methods will be created.
 * if the model does not exist, this command will create the model, factory and migration as well.
 * you can replace `User` in this command with your desired model name.
-* you can pass `--middleware` or it's shortcut `-M` options and these middlewars will be applied to the routes.
-* you can pass `--prefix` or it's shortcut `-P` option and these prefix will be applied to the routes.
+* you can pass `--middleware` or it's shortcut `-M` options and these middlewares will be applied to the routes.
+* you can pass `--prefix` or it's shortcut `-P` option and this prefix will be applied to the routes.
 ```php 
 php artisan datatablecruds:prepare User --middleware=auth --middleware=sanctum -P en
 ```
@@ -208,13 +208,24 @@ by default the label is `"Delete"` and the color is `"danger"`
 ```php
 $datatable->deleteButton("Delete", "danger");
 ```
+### setBladeExtends()
+use this method to set `@extends` to add datatable in your blade layout.
+**you can set the default `@extends` from datatablecruds config file**
+```php
+$datatable->setBladeExtends("app");
+```
+### setBladeSection()
+use this method to set `@section` name that will go to `@yield` in the blade layout.
+**you can set the default `@section` from datatablecruds config file**
+```php
+$datatable->setBladeSection("content");
+```
 ### render()
 Finally, use this method to render your datatable view.
-this method accepts three parameters, the first for the blade `@extends` the second for the blade `@section`, and the third is an array of variables that can be accessed in the `@extends` blade file.
-by default the first parameter is `"app"`, the second is `"content"` and the third is an empty array `[]`.
+this method accepts one prameter which is an array of variables that can be accessed in the `@extends` (layout) blade file.
 
 ```php
-$datatable->render("app", "content", ["title" => "datatable"]);
+$datatable->render(["title" => "datatable"]);
 ```
 ***
 
