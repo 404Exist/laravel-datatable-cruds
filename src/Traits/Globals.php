@@ -11,7 +11,7 @@ Trait Globals {
     public function setModel(string $model)
     {
         $this->model = $model;
-        if (!$this->title) $this->setTitle(ucwords((new $model())->getTable()));
+        if (!$this->title) $this->setTitle(ucwords(str_replace('_',' ', (new $model())->getTable())));
         return $this;
     }
     /**

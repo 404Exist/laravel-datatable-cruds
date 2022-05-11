@@ -342,7 +342,7 @@ class DatatableCruds
     protected function instancePosition($value = null, $searchBy = 'name')
     {
         $value = $value ? $value : $this->{$this->instance}[$searchBy];
-        return array_search($value, array_column($this->{$this->instance.'s'}, $searchBy));
+        return array_search($value, array_column($this->{$this->instance.'s'}, $searchBy)) + ($this->methodAction === "create" ? 1 : 0);
     }
 
     protected function dynamicLabel($label)

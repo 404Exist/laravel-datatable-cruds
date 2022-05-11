@@ -69,7 +69,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Exist404\DatatableCruds\DatatableCruds options(array $options = [])
  * @method static \Exist404\DatatableCruds\DatatableCruds onChange(string $update, string $getDataFrom)
  * @method static \Exist404\DatatableCruds\DatatableCruds dropzone(array $dropZoneAttributes = [])
- * @method static \Exist404\DatatableCruds\DatatableCruds checkbox(bool $selectedValue = true, bool $unselectedValue = false)
+ * @method static \Exist404\DatatableCruds\DatatableCruds checkbox($selectedValue = true, $unselectedValue = false)
  * @method static \Exist404\DatatableCruds\DatatableCruds radio($value)
  * @method static \Exist404\DatatableCruds\DatatableCruds tags()
  * @method static \Exist404\DatatableCruds\DatatableCruds editor(string|null $value = null)

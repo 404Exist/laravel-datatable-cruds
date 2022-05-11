@@ -218,11 +218,11 @@ Trait Inputs {
     /**
      * Make checkbox input
      *
-     * @param  bool $selectedValue = true
-     * @param  bool $unselectedValue = false
+     * @param  $selectedValue = true
+     * @param  $unselectedValue = false
      * @return $this
     */
-    public function checkbox(bool $selectedValue = true, bool $unselectedValue = false) {
+    public function checkbox($selectedValue = true, $unselectedValue = false) {
         $this->instanceMethod('column', 'checkbox');
         $this->type('checkbox');
         $attributes = [

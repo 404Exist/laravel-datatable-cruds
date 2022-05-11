@@ -31,7 +31,7 @@ Now you're ready to start using datatable cruds in your application.
 * if you run this command, a controller will be created and routes to that controller's methods will be created.
 * if the model does not exist, this command will create the model, factory and migration as well.
 * you can replace `User` in this command with your desired model name.
-* you can pass `--middleware` or it's shortcut `-M` options and these middlewares will be applied to the routes.
+* you can pass `--middleware` or it's shortcut `-M` options and these middleware will be applied to the routes.
 * you can pass `--prefix` or it's shortcut `-P` option and this prefix will be applied to the routes.
 ```php 
 php artisan datatablecruds:prepare User --middleware=auth --middleware=sanctum -P en
@@ -339,7 +339,7 @@ this method accepts `@mixed` parameters.
 * you can implement any of the column methods using this symbol `|` and then type the method name `"email|sortable"`.
 * how to pass parameters to the method ?
   * if you want to pass parameters just put the prameters in half circle brackets `()` for example `|multiSelect(name,id,true)` it's the same as `->multiSelect("name", "id", true)`.
-  * If you want to pass an array as a parameter, you have to write that array in json way `{"class":"bg-danger p-2"}`.
+  * If you want to pass an array as a parameter, you have to write that array in json format `{"class":"bg-danger p-2"}`.
 * you can use these symbols `|$#` to write javascript code and set the value to column html or you can use these symbols `|$@` to write javascript code and set the value to column href.
 ```php
 $datatable->setColumns(
@@ -447,7 +447,7 @@ this method accepts `@mixed` parameters.
 * you can implement any of the input methods using this symbol `|` and then type the method name `"the_tags|tags"`, you can also write the input type after this symbol `"email|email"`.
 * how to pass parameters to the method ?
     * if you want to pass parameters just put the prameters in half circle brackets `()` for example `|multiSelect(name,id,true)` it's the same as `->multiSelect("name", "id", true)`.
-    * If you want to pass an array as a parameter, you have to write that array in json way `[{"id":1, "name": "name1"}, {"id": 2, "name": "name2"}]`.
+    * If you want to pass an array as a parameter, you have to write that array in json format `[{"id":1, "name": "name1"}, {"id": 2, "name": "name2"}]`.
 ```php
 $datatable->setInputs(
     'name|text', 'email|email', 'password|password',

@@ -28,7 +28,7 @@ class PrepareCommand extends Command
         $this->info('Routes created successfully: web.php');
         $this->makeController();
         $this->info('Controller created successfully: '.$this->getClass().'Controller');
-        $this->info('Instalation finished successfully. 🏁');
+        $this->info('Preparation finished successfully. 🏁');
         $this->line('----------------------------------------------------');
         if (!File::exists($this->getModelPath())) {
             $this->info("Now add table columns in migration file , run php artisan migrate.");
@@ -45,7 +45,7 @@ class PrepareCommand extends Command
             [$this->getNamespace(), $this->getModelNameSpace(), $this->getClass()],
             file_get_contents(__DIR__.'/../../../stubs/controller.stub')
         );
-        File::put($this->getDir().'\\'.$this->getClass().'Controller.php' , $controller);
+        File::put($this->getDir().'/'.$this->getClass().'Controller.php' , $controller);
     }
 
     protected function makeRoutes()
@@ -87,7 +87,7 @@ class PrepareCommand extends Command
     }
     protected function getDir($for = 'Http\\Controllers')
     {
-        return app_path(str_ireplace('App\\', '', $this->getNameSpace($for)));
+        return str_replace('\\', '/', app_path(str_ireplace('App\\', '', $this->getNameSpace($for))));
     }
     protected function getClass()
     {
