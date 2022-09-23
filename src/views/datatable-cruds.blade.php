@@ -3,5 +3,5 @@
 <div id="datatablecruds">
 <data-list :data="{{ json_encode($datatable) }}" />
 </div>
-<script src="/_datatablecrudsminfindjs" defer></script>
+<script src="{{ config('datatablecruds.script_file_url') }}" defer></script>
 @endsection

@@ -2,7 +2,6 @@
 
 [![Donate](https://img.shields.io/badge/donate-paypal-blue.svg)](https://www.paypal.com/paypalme/404Exist) [![Latest Stable Version](http://poser.pugx.org/exist404/datatable-cruds/v)](https://packagist.org/packages/exist404/datatable-cruds) [![Total Downloads](http://poser.pugx.org/exist404/datatable-cruds/downloads)](https://packagist.org/packages/exist404/datatable-cruds) [![Issues](https://img.shields.io/github/issues/404Exist/datatable-cruds)](https://github.com/404Exist/datatable-cruds/issues) [![License](http://poser.pugx.org/exist404/datatable-cruds/license)](https://packagist.org/packages/exist404/datatable-cruds)
 
-[![License](./docs/images/code.png)](https://packagist.org/packages/exist404/datatable-cruds)
 ## Installation
 This package was created to deal with laravel datatables and cruds using vuejs.
 Install the package through [Composer](http://getcomposer.org/). 
@@ -86,6 +85,27 @@ this method accepts `@mixed` parameters.
 
 ```php
 $datatable->searchBy('id', 'name->en', ...);
+```
+### exportCsvBtn()
+
+you can use this method to remove export csv button or to set your own button.
+
+```php
+$datatable->exportCsvBtn("<a href='/csv'>Csv</a>");
+```
+### exportExcelBtn()
+
+you can use this method to remove export excel button or to set your own button.
+
+```php
+$datatable->exportExcelBtn(false);
+```
+### printBtn()
+
+you can use this method to remove export print button or to set your own button.
+
+```php
+$datatable->printBtn(false);
 ```
 ### Routes
 **by default you don't need to set any routes, the default routes will be as in the following table.**
@@ -185,7 +205,14 @@ $datatable->setLimits(10, 20, 30, 40, ...);
 use it to set custom width to form.
 
 ```php
-$datatable->formWidth(40);
+$datatable->formWidth("40%");
+```
+### formHeight()
+
+use it to set custom height to form.
+
+```php
+$datatable->formHeight("200px");
 ```
 ### storeButton()
 use it to set custom label and color to form store button.
@@ -234,24 +261,24 @@ $datatable->render(["title" => "datatable"]);
 
 You can use this method to set custom label for the column or input by default the label will be set from column or input name.
 ```php
-$datatable->column("created_at")->label("Created Date")->date()->add();
-$datatable->input("name")->label("User Name")->add();
+$datatable->column("created_at")->label("Created Date")->date();
+$datatable->input("name")->label("User Name");
 ```
 ### html()
 you can use this method to set custom column or input html.
 ```php
-$datatable->column("image")->html("Img: <img src='/{id}/{category.name.en}' />")->add();
-$datatable->input("hr")->html("<hr />")->add();
+$datatable->column("image")->html("Img: <img src='/{id}/{category.name.en}' />");
+$datatable->input("hr")->html("<hr />");
 ```
 ### attributes()
 
 you can use this method to set custom html tag attributes to the column or the input.
 ```php
-$datatable->updateColumn("id")->attributes([
+$datatable->column("id")->attributes([
     "class" => "btn btn-danger",
     "style" => "font-size: 20px"
 ]);
-$datatable->updateInput("name")->attributes([
+$datatable->input("name")->attributes([
     "class" => "form-control",
     "style" => "font-size: 20px"
 ]);
@@ -260,76 +287,20 @@ $datatable->updateInput("name")->attributes([
 
 you can use this method to set custom html tag attribute to the column or the input.
 ```php
-$datatable->updateColumn("id")->setAttribute("class", "btn btn-danger")->setAttribute("style", "font-size: 20px");
-$datatable->updateInput("name")->setAttribute("class", "form-control")->setAttribute("style", "font-size: 20px");
+$datatable->column("id")->setAttribute("class", "btn btn-danger")->setAttribute("style", "font-size: 20px");
+$datatable->input("name")->setAttribute("class", "form-control")->setAttribute("style", "font-size: 20px");
 ```
-### sort()
-
-sorting columns or inputs `sort("created_at", "updated_at")` this will display the `created_at` column first, then the `updated_at` column, and then the rest of the columns.
-this method accepts `@mixed` parameters.
-```php
-$datatable->fillColumns()->sort("created_at", "updated_at");
-$datatable->fillInputs()->sort("email", "name");
-```
-### except()
-
-exclude certain columns or inputs from rendering `except("id")` this will not display the `id` column in the view.
-this method accepts `@mixed` parameters.
-
-```php
-$datatable->fillColumns()->except("id", "email");
-$datatable->fillInputs()->except("name");
-```
-### after()
-
-you can use this method to move column or input after another.
-```php
-$datatable->updateColumn("id")->after("updated_at");
-$datatable->updateInput("name")->after("email");
-```
-### before()
-
-you can use this method to move column or input before another.
-```php
-$datatable->updateColumn("id")->before("updated_at");
-$datatable->updateInput("name")->before("email");
-```
-### add()
-
-you must use this method after creating the input or column.
-```php
-$datatable->column("html")->html("<p>Hello</p>")->add();
-$datatable->input("name")->type("text")->after("email")->add();
-```
-
 
 # Columns Methods
-### fillColumns() 
 
-To fill datatable view with all Model columns without hidden columns and the casts as array and object columns.
-```php
-$datatable->fillColumns();
-```
 ### column()
 
 You can use this method to start creating a new column.
 you can pass db_column_name or whatever name you need to the column method, if you pass the db_column_name it will return the data of that column, you can also access the nested data using `.` for example `column("name.en")`
-**You Must Use `add()` method in the last of the `column()` method query**
 ```php
-$datatable->column("updated_at")->sortable()->searchable()->date("YYYY-MM-DD")->add();
+$datatable->column("updated_at")->sortable()->searchable()->date("YYYY-MM-DD");
 ```
-### updateColumn()
 
-You can use this method to start updating a specific column.
-```php
-$datatable->updateColumn("updated_at")->sortable(false)->date();
-```
-### deleteColumn()
-
-You can use this method to delete a specific column.
-```php
-$datatable->deleteColumn("updated_at");
-```
 ### setColumns() 
 
 use this magic method to display columns to the view, you can use any column method in this method.
@@ -358,19 +329,26 @@ You can use this method to make column is sortable.
 this method accepts one boolean parameter by default it's true.
 
 ```php
-$datatable->updateColumn("updated_at")->sortable(false);
+$datatable->column("updated_at")->sortable(false);
 ```
 ### searchable()
 You can use this method to make column is searchable.
 this method accepts one boolean parameter by default it's true.
 
 ```php
-$datatable->updateColumn("updated_at")->searchable(false);
+$datatable->column("updated_at")->searchable(false);
+```
+### exportable()
+This method must be used to make the column visible while the page is being printed and in export files.
+this method accepts one boolean parameter by default it's true.
+
+```php
+$datatable->column("name")->exportable();
 ```
 ### date()
 You can use this method to make date columns more readable default is human format Optionally you can pass any format to date method or you can pass `false` to this method to remove any format from date.
 ```php
-$datatable->column("date")->date("YYYY-MM-DD")->add();
+$datatable->column("date")->date("YYYY-MM-DD");
 ```
 ### image()
 You can use this method to show column in html img tag.
@@ -378,66 +356,47 @@ the image src will be the value of the db_column.
 you can pass any value to this method and that value will be applied before the value of the db_column or you can pass `false` to this method to remove the image element.
 
 ```php
-$datatable->column("image")->image("images/{id}/")->add();
+$datatable->column("image")->image("images/{id}/");
 ```
 ### href()
 **if you want to access any field value just write that field in curly brackets {} `{created_at}`**
 you can use this method to set href to the column.
 ```php
-$datatable->updateColumn("image")->href("{id}/{category.name.en}");
+$datatable->column("image")->href("{id}/{category.name.en}");
 ```
 ### actions()
 You can use this method to create clone, edit and delete actions buttons, and you can optionally pass the given column label to the method the default label will be set from the column name.
 
 ```php
-$datatable->column("actions")->actions()->add();
+$datatable->column("actions")->actions();
 ```
 ### checkall()
 You can use this method to enable all rows to be selected for deletion at once, and you can optionally pass the given column label to the method the default label will be set from the column name.
 
 ```php
-$datatable->column("select")->checkall()->add();
+$datatable->column("select")->checkall();
 ```
-### exec()
+### execHtml() && execHref()
 
-you can use this method to execute any `javascript code`, by default it will return the whole code , if you want to return specfic data you will need to write `return` before it.
-this method is used after `html()` or `href()` methods or you can pass `"html"` or `"href"` to the second parameter to add the return value from execution to it.
-**in this method if field you are going to write in curly brackets {} is not number then you must enclose it in double quotes `"{created_at}"`**
+you can use these methods to execute any `javascript code`, by default it will return the whole code , if you want to return specfic data you will need to write `return` before it.
+**in these methods if field you are going to write in curly brackets {} is not number then you must enclose it in double quotes `"{created_at}"`**
 ```php
-$datatable->updateColumn("custom_one")->html()->exec('{status} == 1 ? "<span class="badge bg-success"> Active </span>" : "<span class="badge bg-danger"> InActive </span>"');
+$datatable->column("custom_one")->execHtml('{status} == 1 ? "<span class="badge bg-success"> Active </span>" : "<span class="badge bg-danger"> InActive </span>"');
+$datatable->column("custom_one")->execHref('/{id}');
 ```
+
 ****
 
 # Inputs Methods
-### fillInputs()
 
-Fills forms with all fillable columns without casts as array and object columns. 
-This method accepts two parameters, the first for the number of inputs to display per page, and the second for the input parent element class by default it's `"mb-3"`.
-
-```php
-$datatable->fillInputs();
-```
 ### input()
 You can use this method to start creating a new input.
 
 ```php
-$datatable->input("name.en")->type("text")->add();
+$datatable->input("name.en")->type("text");
 ```
 if you make input name like above example `"name.en"` then you can access it in store and update requests this way `$request->name->en`
 
-**You Must Use `add()` method in the last of the `input()` method query**
-### updateInput()
-
-You can use this method to start updating a specific input.
-```php
-$datatable->updateInput("name.en")->form("edit");
-```
-### deleteInput()
-
-You can use this method to delete a specific input.
-```php
-$datatable->deleteInput("name.en");
-```
 ### setInputs() 
 
 use this magic method to display inputs to the forms, you can use any input method in this method.
@@ -455,36 +414,41 @@ $datatable->setInputs(
     'choices|multiSelect(name,id,false)|options([{"id":1, "name": "name1"}, {"id": 2, "name": "name2"}])',
 );
 ```
-### form()
+### editForm()
 
-You can use this method to add the input in a specific form, by default it will be added in all forms. 
-This method parameter can only be `"edit"` or `"add"`.
+You can use this method to add the input to the edit form only, by default it will be added in all forms. 
 ```php
-$datatable->updateInput("name.en")->form("edit");
+$datatable->input("name.en")->editForm();
+```
+### createForm()
+
+You can use this method to add the input to the create form only, by default it will be added in all forms. 
+```php
+$datatable->input("name.en")->createForm();
 ```
 ### page()
 
 You can use this method to make the input added in the custom form page number.
 ```php
-$datatable->updateInput("name.en")->page(1);
+$datatable->input("name.en")->page(1);
 ```
 ### parentClass()
 
 You can use this method to add class to the parent element.
 ```php
-$datatable->updateInput("name.en")->parentClass("col-md-3");
+$datatable->input("name.en")->parentClass("col-md-3");
 ```
 ### labelClass()
 
 You can use this method to add class to the label element.
 ```php
-$datatable->updateInput("name.en")->labelClass("mb-1");
+$datatable->input("name.en")->labelClass("mb-1");
 ```
 ### type()
 
 use this method to set the input type.
 ```php
-$datatable->updateInput("name.en")->type("text");
+$datatable->input("name.en")->type("text");
 ```
 ### select()
 
@@ -494,7 +458,7 @@ this method accepts two parameters the first one for options label column name b
 $datatable->input("select")->select("name.en")->options([
         ["id" => 1, "name" => ["en" => "datatable-1"]],
         ["id" => 2, "name" => ["en" => "datatable-2"]],
-    ])->add();
+    ]);
 ```
 ### multiSelect()
 
@@ -505,11 +469,11 @@ this method accepts three parameters the first one for options label column name
 $datatable->input("multi")->multiSelect("name.en")->options([
         ["id" => 1, "name" => ["en" => "datatable-1"]],
         ["id" => 2, "name" => ["en" => "datatable-2"]],
-    ])->add();
+    ]);
 ```
 if you want to get multiSelect options on search you can use `optionsRoute()` method. and you can use `$request->search` to access the search text.
 ```php
-$datatable->input("multi")->multiSelect("name.en")->optionsRoute("/theRoute")->add();
+$datatable->input("multi")->multiSelect("name.en")->optionsRoute("/theRoute");
 ```
 ### onChange()
 
@@ -522,7 +486,7 @@ $datatable->input("select1")->select("name.en", "val")->options([
         ["val" => 1, "name" => ["en" => "datatable-1"]],
         ["val" => 2, "name" => ["en" => "datatable-2"]],
     ])
-    ->onChange('select2', '/select2')->add();
+    ->onChange('select2', '/select2');
 $datatable->input("select2")->select("name.en");
 ```
 ### dropzone()
@@ -549,34 +513,34 @@ $datatable->input("image")->dropzone([
     // "removeMessageAfter" => 5000, // time || false  default 2500 ms,
     // "notFoundFileCallBack" => "404.jpg",
     // "overLayMessage" => "Drop Here",
-])->add();
+]);
 ```
 ### tags()
 
 you can use this method to make a `tags` input.
 ```php
-$datatable->updateInput("name.en")->tags();
+$datatable->input("name.en")->tags();
 ```
 ### editor()
 
 you can use this method to make a CkEditor, this method accepts one parameter which will be the default editor data.
 ```php
-$datatable->input("editor")->editor("<h1>support me</h1>")->add();
+$datatable->input("editor")->editor("<h1>support me</h1>");
 ```
 ### checkbox()
 
 you can use this method to make a checkbox,
 This method accepts two parameters. The first is the checked value of the checkbox which is `true` by default and the second is the unchecked value of the checkbox which is `false` by default.
 ```php
-$datatable->input("checkbox")->checkbox(1, 0)->add();
+$datatable->input("checkbox")->checkbox(1, 0);
 ```
 ### radio()
 
 you can use this method to create radio buttons, this method accepts one parameter which will be the value of that radio button.
 ```php
-$datatable->input("radio")->radio(1)->label("Choice 1")->add();
-$datatable->input("radio")->radio(2)->label("Choice 2")->add();
-$datatable->input("radio")->radio(3)->label("Choice 3")->add();
+$datatable->input("radio")->radio(1)->label("Choice 1");
+$datatable->input("radio")->radio(2)->label("Choice 2");
+$datatable->input("radio")->radio(3)->label("Choice 3");
 ```
 ****
 [![License](./docs/images/1.png)](https://packagist.org/packages/exist404/datatable-cruds)

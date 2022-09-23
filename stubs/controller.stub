@@ -1,4 +1,5 @@
 <?php
+
 namespace {{namespace}};
 
 use App\Http\Controllers\Controller;
@@ -10,7 +11,10 @@ class {{class}}Controller extends Controller
 {
     public function index()
     {
-        return DatatableCruds::setModel({{class}}::class)->fillColumns()->fillInputs()->render();
+        return DatatableCruds::setModel({{class}}::class)
+            ->column("id")->sortable()->searchable()
+            ->column("actions")->actions()
+            ->render();
     }
     public function store(Request $request)
     {

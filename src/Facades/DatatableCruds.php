@@ -1,6 +1,7 @@
 <?php
 
 namespace Exist404\DatatableCruds\Facades;
+
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -23,25 +24,22 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Exist404\DatatableCruds\DatatableCruds deleteAction(string $html = null, string $onclick = 'openModal', string|bool $value = true)
  * @method static \Exist404\DatatableCruds\DatatableCruds cloneAction(string $html = null, string $onclick = 'openModal', string|bool $value = true)
  * @method static \Exist404\DatatableCruds\DatatableCruds search(string $debounce, string $class = 'form-control')
- * @method static \Exist404\DatatableCruds\DatatableCruds exports(array $exports = [])
+ * @method static \Exist404\DatatableCruds\DatatableCruds exportCsvBtn(bool|string $csv = true)
+ * @method static \Exist404\DatatableCruds\DatatableCruds exportExcelBtn(bool|string $excel = true)
+ * @method static \Exist404\DatatableCruds\DatatableCruds printBtn(bool|string $print = true)
  * @method static \Exist404\DatatableCruds\DatatableCruds setText(string $key, string $text)
  * @method static \Exist404\DatatableCruds\DatatableCruds setLimits(mixed ...$limits)
- * @method static \Exist404\DatatableCruds\DatatableCruds formWidth(int $width)
+ * @method static \Exist404\DatatableCruds\DatatableCruds formWidth(string $width)
+ * @method static \Exist404\DatatableCruds\DatatableCruds formHeight(string $height)
  * @method static \Exist404\DatatableCruds\DatatableCruds storeButton(string $label = 'Create', string $color = 'primary')
  * @method static \Exist404\DatatableCruds\DatatableCruds updateButton(string $label = 'Update', string $color = 'primary')
  * @method static \Exist404\DatatableCruds\DatatableCruds deleteButton(string $label = 'Delete', string $color = 'danger')
  * @method static \Exist404\DatatableCruds\DatatableCruds setBladeExtends(string $extends)
  * @method static \Exist404\DatatableCruds\DatatableCruds setBladeSection(string $section)
- * @method static \Exist404\DatatableCruds\DatatableCruds sort(mixed ...$sorts)
- * @method static \Exist404\DatatableCruds\DatatableCruds except(mixed ...$excepts)
  * @method static \Exist404\DatatableCruds\DatatableCruds label(string $label)
  * @method static \Exist404\DatatableCruds\DatatableCruds html(string $html = '')
  * @method static \Exist404\DatatableCruds\DatatableCruds attributes(array $attributes)
  * @method static \Exist404\DatatableCruds\DatatableCruds setAttribute(string $name, string $value)
- * @method static \Exist404\DatatableCruds\DatatableCruds after(string $after)
- * @method static \Exist404\DatatableCruds\DatatableCruds before(string $before)
- * @method static \Exist404\DatatableCruds\DatatableCruds add()
- * @method static \Exist404\DatatableCruds\DatatableCruds fillColumns()
  * @method static \Exist404\DatatableCruds\DatatableCruds setColumns(mixed ...$columns)
  * @method static \Exist404\DatatableCruds\DatatableCruds column(string $name)
  * @method static \Exist404\DatatableCruds\DatatableCruds updateColumn(string $name)
@@ -53,14 +51,15 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Exist404\DatatableCruds\DatatableCruds checkall(string|bool|null $label = null)
  * @method static \Exist404\DatatableCruds\DatatableCruds actions(string|bool|null $label = null)
  * @method static \Exist404\DatatableCruds\DatatableCruds href(string $href = '')
- * @method static \Exist404\DatatableCruds\DatatableCruds exec(string $js, string|null $to = null)
- * @method static \Exist404\DatatableCruds\DatatableCruds fillInputs(int|null $maxInputsPerPage = null, string|null $parentClass = "mb-3")
+ * @method static \Exist404\DatatableCruds\DatatableCruds execHtml(string $js)
+ * @method static \Exist404\DatatableCruds\DatatableCruds execHref(string $js)
  * @method static \Exist404\DatatableCruds\DatatableCruds setInputs(mixed ...$inputs)
  * @method static \Exist404\DatatableCruds\DatatableCruds input(string $name)
  * @method static \Exist404\DatatableCruds\DatatableCruds updateInput(string $name)
  * @method static \Exist404\DatatableCruds\DatatableCruds deleteInput(string $name)
  * @method static \Exist404\DatatableCruds\DatatableCruds type(string $type)
- * @method static \Exist404\DatatableCruds\DatatableCruds form(string $form)
+ * @method static \Exist404\DatatableCruds\DatatableCruds editForm()
+ * @method static \Exist404\DatatableCruds\DatatableCruds createForm()
  * @method static \Exist404\DatatableCruds\DatatableCruds page(int $page)
  * @method static \Exist404\DatatableCruds\DatatableCruds parentClass(string $parentClass)
  * @method static \Exist404\DatatableCruds\DatatableCruds labelClass(string $labelClass)
@@ -79,5 +78,8 @@ use Illuminate\Support\Facades\Facade;
  */
 class DatatableCruds extends Facade
 {
-    protected static function getFacadeAccessor() { return 'datatablecruds'; }
+    protected static function getFacadeAccessor()
+    {
+        return 'datatablecruds';
+    }
 }

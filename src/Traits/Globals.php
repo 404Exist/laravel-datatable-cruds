@@ -1,34 +1,40 @@
 <?php
 
 namespace Exist404\DatatableCruds\Traits;
-Trait Globals {
+
+trait Globals
+{
     /**
      * Datatable model
      *
-     * @param  string $model
+     * @param string $model
      * @return $this
     */
     public function setModel(string $model)
     {
         $this->model = $model;
-        if (!$this->title) $this->setTitle(ucwords(str_replace('_',' ', (new $model())->getTable())));
+        $this->tableName = (new $model())->getTable();
+
+        if (!$this->pageTitle) {
+            $this->setPageTitle(str($this->tableName)->headline());
+        }
         return $this;
     }
     /**
-     * Datatable title
+     * Datatable page title
      *
-     * @param  string $title
+     * @param string $pageTitle
      * @return $this
     */
-    public function setTitle(string $title)
+    public function setPageTitle(string $pageTitle)
     {
-        $this->title = $title;
+        $this->pageTitle = $pageTitle;
         return $this;
     }
     /**
      * Datatable direction
      *
-     * @param  string $dir
+     * @param string $dir
      * @return $this
     */
     public function setDir(string $dir)
@@ -39,8 +45,8 @@ Trait Globals {
     /**
      * Request Headers
      *
-     * @param  string $name
-     * @param  string $value
+     * @param string $name
+     * @param string $value
      * @return $this
     */
     public function setHeader(string $name, string $value)
@@ -51,20 +57,20 @@ Trait Globals {
     /**
      * Relations to load with model
      *
-     * @param  mixed ...$with
+     * @param mixed ...$with
      * @return $this
     */
     public function with(mixed ...$with)
     {
         foreach ($with as $index => $value) {
-            $this->with .= $index == 0 ? $value :'|'.$value;
+            $this->with .= $index == 0 ? $value : '|' . $value;
         }
         return $this;
     }
     /**
      * Columns names to search by
      *
-     * @param  mixed ...$searchBy
+     * @param mixed ...$searchBy
      * @return $this
     */
     public function searchBy(mixed ...$searchBy)
@@ -75,7 +81,7 @@ Trait Globals {
     /**
      * Set get route
      *
-     * @param  string $route
+     * @param string $route
      * @return $this
     */
     public function setGetRoute(string $route)
@@ -86,8 +92,8 @@ Trait Globals {
     /**
      * Set store route
      *
-     * @param  string $route
-     * @param  string $method
+     * @param string $route
+     * @param string $method
      * @return $this
     */
     public function setStoreRoute(string $route, string $method = 'post')
@@ -99,8 +105,8 @@ Trait Globals {
     /**
      * Set update route
      *
-     * @param  string $route
-     * @param  string $method
+     * @param string $route
+     * @param string $method
      * @return $this
     */
     public function setUpdateRoute(string $route, string $method = 'patch')
@@ -112,8 +118,8 @@ Trait Globals {
     /**
      * Set delete route
      *
-     * @param  string $route
-     * @param  string $method
+     * @param string $route
+     * @param string $method
      * @return $this
     */
     public function setDeleteRoute(string $route, string $method = 'delete')
@@ -125,7 +131,7 @@ Trait Globals {
     /**
      * Request FindBy Key
      *
-     * @param  string $findBy
+     * @param string $findBy
      * @return $this
     */
     public function setRequestFindByKey(string $findBy)
@@ -136,19 +142,19 @@ Trait Globals {
     /**
      * Default Date Format
      *
-     * @param  string $dateFormat
+     * @param string $dateFormat
      * @return $this
     */
     public function setDefaultDateFormat(string $dateFormat)
     {
-        $this->dateFormat = 'format('.$dateFormat.')';
+        $this->dateFormat = str($dateFormat)->wrap("format(", ")");
         return $this;
     }
     /**
      * Datatable order
      *
-     * @param  string $orderBy
-     * @param  string $order
+     * @param string $orderBy
+     * @param string $order
      * @return $this
     */
     public function setDefaultOrder(string $orderBy = 'created_at', string $order = 'desc')
@@ -160,12 +166,13 @@ Trait Globals {
     /**
      * Update addAction
      *
-     * @param  string $html
-     * @param  string $onclick (openModal | funcName | href)
-     * @param  string|bool $value
+     * @param string $html
+     * @param string $onclick (openModal | funcName | href)
+     * @param string|bool $value
      * @return $this
     */
-    public function addAction(string $html = null, string $onclick = 'openModal', string|bool $value = true) {
+    public function addAction(string $html = null, string $onclick = 'openModal', string|bool $value = true)
+    {
         $this->addButton['onclick'] = [$onclick => $value];
         $this->addButton['html'] = $html;
         return $this;
@@ -173,50 +180,59 @@ Trait Globals {
     /**
      * Update editAction
      *
-     * @param  string $html
-     * @param  string $onclick (openModal | funcName | href)
-     * @param  string $value
+     * @param string $html
+     * @param string $onclick (openModal | funcName | href)
+     * @param string $value
      * @return $this
     */
-    public function editAction(string $html = null, string $onclick = 'openModal', string|bool $value = true) {
+    public function editAction(string $html = null, string $onclick = 'openModal', string|bool $value = true)
+    {
         $this->actions["edit"]['onclick'] = [$onclick => $value];
         $this->actions["edit"]['html'] = $html;
-        if ($html === false) $this->actions["edit"] = false;
+        if ($html === false) {
+            $this->actions["edit"] = false;
+        }
         return $this;
     }
     /**
      * Update deleteAction
      *
-     * @param  string $html
-     * @param  string $onclick (openModal | funcName | href)
-     * @param  string $value
+     * @param string $html
+     * @param string $onclick (openModal | funcName | href)
+     * @param string $value
      * @return $this
     */
-    public function deleteAction(string $html = null, string $onclick = 'openModal', string|bool $value = true) {
+    public function deleteAction(string $html = null, string $onclick = 'openModal', string|bool $value = true)
+    {
         $this->actions["delete"]['onclick'] = [$onclick => $value];
         $this->actions["delete"]['html'] = $html;
-        if ($html === false) $this->actions["delete"] = false;
+        if ($html === false) {
+            $this->actions["delete"] = false;
+        }
         return $this;
     }
     /**
      * Update cloneAction
      *
-     * @param  string $html
-     * @param  string $onclick (openModal | funcName | href)
-     * @param  string $value
+     * @param string $html
+     * @param string $onclick (openModal | funcName | href)
+     * @param string $value
      * @return $this
     */
-    public function cloneAction(string $html = null, string $onclick = 'openModal', string|bool $value = true) {
+    public function cloneAction(string $html = null, string $onclick = 'openModal', string|bool $value = true)
+    {
         $this->actions["clone"]['onclick'] = [$onclick => $value];
         $this->actions["clone"]['html'] = $html;
-        if ($html === false) $this->actions["clone"] = false;
+        if ($html === false) {
+            $this->actions["clone"] = false;
+        }
         return $this;
     }
     /**
      * Set search debounce and class name
      *
-     * @param  string $debounce
-     * @param  string $class
+     * @param string $debounce
+     * @param string $class
      * @return $this
     */
     public function search(string $debounce, string $class = 'form-control')
@@ -228,21 +244,43 @@ Trait Globals {
         return $this;
     }
     /**
-     * Datatable exports
+     * Datatable export csv
      *
-     * @param  array $exports
+     * @param bool|string $csv
      * @return $this
     */
-    public function exports(array $exports = [])
+    public function exportCsvBtn(bool|string $csv = true)
     {
-        $this->exports = array_merge(config('datatablecruds.exports'), $exports);
+        $this->exports["csv"] = $csv;
+        return $this;
+    }
+    /**
+     * Datatable export excel
+     *
+     * @param bool|string $excel
+     * @return $this
+    */
+    public function exportExcelBtn(bool|string $excel = true)
+    {
+        $this->exports["excel"] = $excel;
+        return $this;
+    }
+    /**
+     * Datatable print
+     *
+     * @param bool|string $print
+     * @return $this
+    */
+    public function printBtn(bool|string $print = true)
+    {
+        $this->exports["print"] = $print;
         return $this;
     }
     /**
      * Default Texts
      *
-     * @param  string $key
-     * @param  string $text
+     * @param string $key
+     * @param string $text
      * @return $this
     */
     public function setText(string $key, string $text)
@@ -253,7 +291,7 @@ Trait Globals {
     /**
      * Set view limits
      *
-     * @param  mixed $limits
+     * @param mixed $limits
      * @return $this
     */
     public function setLimits(mixed ...$limits)
@@ -264,19 +302,30 @@ Trait Globals {
     /**
      * Set form width
      *
-     * @param  int $width
+     * @param string $width
      * @return $this
     */
-    public function formWidth(int $width)
+    public function formWidth(string $width)
     {
         $this->formWidth = $width;
         return $this;
     }
     /**
+     * Set form height
+     *
+     * @param string $height
+     * @return $this
+    */
+    public function formHeight(string $height)
+    {
+        $this->formHeight = $height;
+        return $this;
+    }
+    /**
      * Update form store button
      *
-     * @param  string $label
-     * @param  string $color
+     * @param string $label
+     * @param string $color
      * @return $this
     */
     public function storeButton(string $label = 'Create', string $color = 'primary')
@@ -290,8 +339,8 @@ Trait Globals {
     /**
      * Update form update button
      *
-     * @param  string $label
-     * @param  string $color
+     * @param string $label
+     * @param string $color
      * @return $this
     */
     public function updateButton(string $label = 'Update', string $color = 'primary')
@@ -305,8 +354,8 @@ Trait Globals {
     /**
      * Update form delete button
      *
-     * @param  string $label
-     * @param  string $color
+     * @param string $label
+     * @param string $color
      * @return $this
     */
     public function deleteButton(string $label = 'Delete', string $color = 'danger')
@@ -320,7 +369,7 @@ Trait Globals {
     /**
      * Set blade extends
      *
-     * @param  string $extends
+     * @param string $extends
      * @return $this
     */
     public function setBladeExtends(string $extends)
@@ -331,7 +380,7 @@ Trait Globals {
     /**
      * Set blade section
      *
-     * @param  string $section
+     * @param string $section
      * @return $this
     */
     public function setBladeSection(string $section)

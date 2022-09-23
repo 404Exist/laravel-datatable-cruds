@@ -24,10 +24,10 @@ class DatatableCrudsProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->bind('datatablecruds',function() {return new DatatableCruds;});
+        $this->app->bind('datatablecruds', fn() => new DatatableCruds());
         $this->mergeConfigFrom(__DIR__ . '/../config/datatablecruds.php', 'datatablecruds');
-        $this->loadViewsFrom(__DIR__.'/views', 'datatable');
-        $this->loadRoutesFrom(__DIR__.'/routes/web.php');
+        $this->loadViewsFrom(__DIR__ . '/views', 'datatable');
+        $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
         $this->publishes([__DIR__ . '/../config/datatablecruds.php' => config_path('datatablecruds.php')], 'config');
         $this->commands([
             InstallPackageCommand::class,

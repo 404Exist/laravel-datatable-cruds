@@ -2,40 +2,10 @@
 
 namespace Exist404\DatatableCruds\Traits;
 
-Trait Inputs {
-    /**
-     * Fill $this->inputs with current model all fillable columns.
-     *
-     * @param  int|null $maxInputsPerPage
-     * @param  string|null $parentClass
-     * @return $this
-    */
-    public function fillInputs(int|null $maxInputsPerPage = null, string|null $parentClass = "mb-3")
-    {
-        if (!$this->model) return $this->exception('You must send valid model class to use fillInputs method');
-        $this->instance = 'input';
-        $fillables = $this->getFillableByTypes('array', 'object');
-        foreach($fillables as $index => $fillable) {
-            if ($maxInputsPerPage && count($fillables) > intval($maxInputsPerPage)) {
-                $index += 1;
-                $page = ceil($index / intval($maxInputsPerPage));
-            }
-            array_push($this->inputs, [
-                'label' => $this->dynamicLabel($fillable),
-                'name' => $fillable,
-                'type' => $fillable == 'password' ? 'password' : ($fillable == 'email' ? 'email' : 'text'),
-                'attributes' => ['placeholder' => $this->dynamicLabel($fillable)],
-                'page' => isset($page) ? $page : '',
-                'parentClass' => $parentClass ? $parentClass : ''
-            ]);
-        }
-        if (isset($page)) {
-            for ($i = 0; $i < $page; $i++) {
-                $this->pages[$i] = [];
-            }
-        }
-        return $this;
-    }
+use Exist404\DatatableCruds\Exceptions\MethodNotAllowedWithCurrentInstance;
+
+trait Inputs
+{
     /**
      * Set View Inputs.
      *
@@ -52,201 +22,184 @@ Trait Inputs {
      * Create a new input
      *
      * @param string $name
-     * @return $this->create('input')
+     * @return $this
     */
-    public function input(string $name) {
+    public function input(string $name)
+    {
         return $this->create('input', $name);
-    }
-    /**
-     * Update an exist input
-     *
-     * @param  string|null $name
-     * @return $this->update('input', $name)
-    */
-    public function updateInput(string $name) {
-        return $this->update('input', $name);
-    }
-    /**
-     * Delete an exist input
-     *
-     * @param  string|null $name
-     * @return $this->delete('input', $name)
-    */
-    public function deleteInput(string $name) {
-        return $this->delete('input', $name);
     }
     /**
      * Set type for current input
      *
-     * @param  string $type
+     * @param string $type
      * @return $this
     */
-    public function type(string $type) {
-        $this->instanceMethod('column', 'type');
-        $this->setValue('type', $type);
+    public function type(string $type)
+    {
+        $this->setInputValue('type', $type);
         return $this;
     }
     /**
-     * Form to add input with
+     * Push input to the edit form only
      *
-     * @param  string $form (add, edit)
      * @return $this
     */
-    public function form(string $form) {
-        $this->instanceMethod('column', 'form');
-        $this->setValue('form', trim(ucwords(strtolower($form))));
+    public function editForm()
+    {
+        $this->setInputValue(["key" => 'form', "value" => "Edit", "calledMethodName" => __FUNCTION__]);
+        return $this;
+    }
+    /**
+     * Push input to the create form only
+     *
+     * @return $this
+    */
+    public function createForm()
+    {
+        $this->setInputValue(["key" => 'form', "value" => "Add", "calledMethodName" => __FUNCTION__]);
         return $this;
     }
     /**
      * Set current input page
      *
-     * @param  int $page
+     * @param int $page
      * @return $this
     */
-    public function page(int $page) {
-        $this->instanceMethod('column', 'page');
+    public function page(int $page)
+    {
         for ($i = 0; $i <= $page; $i++) {
             $this->pages[$i] = [];
         }
-        $this->setValue('page', $page);
+        $this->setInputValue("page", $page);
         return $this;
     }
     /**
      * Set class for current input parent
      *
-     * @param  string $parentClass
+     * @param string $parentClass
      * @return $this
     */
-    public function parentClass(string $parentClass) {
-        $this->instanceMethod('column', 'parentClass');
-        $this->setValue('parentClass', $parentClass);
+    public function parentClass(string $parentClass)
+    {
+        $this->setInputValue("parentClass", $parentClass);
         return $this;
     }
     /**
      * Set class for current input label
      *
-     * @param  string $labelClass
+     * @param string $labelClass
      * @return $this
     */
-    public function labelClass(string $labelClass) {
-        $this->instanceMethod('column', 'labelClass');
-        $this->setValue('labelClass', $labelClass);
+    public function labelClass(string $labelClass)
+    {
+        $this->setInputValue("labelClass", $labelClass);
         return $this;
     }
     /**
      * Make multi select input
      *
-     * @param  string $label
-     * @param  string $val
-     * @param  bool $multiple
+     * @param string $label
+     * @param string $val
+     * @param bool $multiple
      * @return $this
     */
-    public function multiSelect(string $label = "name", string $val = "id", bool $multiple = true) {
-        $this->instanceMethod('column', 'multiSelect');
-        $this->type('multi-select');
-        $attributes = [
+    public function multiSelect(string $label = "name", string $val = "id", bool $multiple = true)
+    {
+        $this->setInputValue(["key" => 'type', "value" => "multi-select", "calledMethodName" => __FUNCTION__]);
+        $this->attributes([
             'multiple' => $multiple,
             'internal-search' => true,
             'hide-selected' => false,
             'close-on-select' => false
-        ];
-        $this->attributes($attributes);
+        ]);
         $this->options([]);
-        $this->setValue('optionVal', $val);
-        $this->setValue('optionLabel', $label);
+        $this->setInputValue('optionVal', $val);
+        $this->setInputValue('optionLabel', $label);
         return $this;
     }
     /**
      * Make select input
      *
-     * @param  string $label
-     * @param  string $val
+     * @param string $label
+     * @param string $val
      * @return $this
     */
-    public function select(string $label = "name", string $val = "id") {
-        $this->instanceMethod('column', 'select');
-        $this->type('select');
+    public function select(string $label = "name", string $val = "id")
+    {
+        $this->setInputValue(["key" => 'type', "value" => "select", "calledMethodName" => __FUNCTION__]);
         $this->options([]);
-        $this->setValue('optionVal', $val);
-        $this->setValue('optionLabel', $label);
+        $this->setInputValue('optionVal', $val);
+        $this->setInputValue('optionLabel', $label);
         return $this;
     }
     /**
      * Set options for current input (select)
      *
-     * @param  array $options
+     * @param array $options
      * @return $this
     */
-    public function options(array $options = []) {
-        $this->instanceMethod('column', 'options');
-        $this->setMethodName('options');
-        $this->setValue('options', $options);
+    public function options(array $options = [])
+    {
+        $this->setInputValue("options", $options);
         return $this;
     }
     /**
      * Add onchange event to current input (select)
      *
-     * @param  string $update input (select) name to update it with data onchange current select
-     * @param  string $getDataFrom url to get data
+     * @param string $update input (select) name to update it with data onchange current select
+     * @param string $getDataFrom url to get data
      * @return $this
     */
-    public function onChange(string $update, string $getDataFrom) {
-        $this->instanceMethod('column', 'onChange');
-        $this->methodsToApplyAfter('onChange', 'options');
-        $this->setValue('onChange', [
-            'update' => $update,
-            'getDataFrom' => $getDataFrom,
-        ]);
+    public function onChange(string $update, string $getDataFrom)
+    {
+        $this->setInputValue('onChange', ['update' => $update, 'getDataFrom' => $getDataFrom]);
         return $this;
     }
     /**
      * Make dropzone input
      *
-     * @param  array $dropZoneAttributes
+     * @param array $dropZoneAttributes
      * @return $this
     */
-    public function dropzone(array $dropZoneAttributes = []) {
-        $this->setMethodName('dropzone');
-        $this->instanceMethod('column', 'dropzone');
-        $this->type('drop_zone');
-        $this->setValue('dropZoneAttributes', $dropZoneAttributes);
-        $this->setValue('oldVal', $dropZoneAttributes["idColumn"] ?? "id");
-        $this->setValue('path', $dropZoneAttributes["path"] ?? "");
+    public function dropzone(array $dropZoneAttributes = [])
+    {
+        $this->setInputValue(["key" => 'type', "value" => "drop_zone", "calledMethodName" => __FUNCTION__]);
+        $this->setInputValue('dropZoneAttributes', $dropZoneAttributes);
+        $this->setInputValue('oldVal', $dropZoneAttributes["idColumn"] ?? "id");
+        $this->setInputValue('path', $dropZoneAttributes["path"] ?? "");
         return $this;
     }
 
     /**
      * Make checkbox input
      *
-     * @param  $selectedValue = true
-     * @param  $unselectedValue = false
+     * @param $selectedValue = true
+     * @param $unselectedValue = false
      * @return $this
     */
-    public function checkbox($selectedValue = true, $unselectedValue = false) {
-        $this->instanceMethod('column', 'checkbox');
-        $this->type('checkbox');
-        $attributes = [
+    public function checkbox($selectedValue = true, $unselectedValue = false)
+    {
+        $this->setInputValue(["key" => 'type', "value" => "checkbox", "calledMethodName" => __FUNCTION__]);
+        $this->attributes([
             'value' => $selectedValue,
             'unSelectValue' => $unselectedValue,
-        ];
-        $this->attributes($attributes);
+        ]);
         return $this;
     }
 
     /**
      * Make radio input
      *
-     * @param  $value
+     * @param $value
      * @return $this
     */
-    public function radio($value) {
-        $this->instanceMethod('column', 'radio');
-        $this->type('radio');
-        $attributes = [
-            'name' => $this->{$this->instance}["name"],
+    public function radio($value)
+    {
+        $this->setInputValue(["key" => 'type', "value" => "radio", "calledMethodName" => __FUNCTION__]);
+        $this->attributes([
+            'name' => $this->input["name"],
             'value' => $value,
-        ];
-        $this->attributes($attributes);
+        ]);
         return $this;
     }
 
@@ -255,9 +208,9 @@ Trait Inputs {
      *
      * @return $this
     */
-    public function tags() {
-        $this->instanceMethod('column', 'tags');
-        $this->type('tags');
+    public function tags()
+    {
+        $this->setInputValue(["key" => 'type', "value" => "tags", "calledMethodName" => __FUNCTION__]);
         return $this;
     }
     /**
@@ -266,24 +219,31 @@ Trait Inputs {
      * @param string|null $value
      * @return $this
     */
-    public function editor(string|null $value = null) {
-        $value = $value ?: $this->{$this->instance}['label'];
-        $this->instanceMethod('column', 'editor');
-        $this->type('editor');
+    public function editor(string|null $value = null)
+    {
+        $value = $value ?: $this->input['label'];
+        $this->setInputValue(["key" => 'type', "value" => "editor", "calledMethodName" => __FUNCTION__]);
         $this->attributes(['value' => $this->dynamicLabel($value)]);
         return $this;
     }
     /**
      * To fill multiselect from $optionsRoute url with data on search
      *
-     * @param  string $optionsRoute
+     * @param string $optionsRoute
      * @return $this
     */
-    public function optionsRoute(string $optionsRoute) {
-        $this->instanceMethod('column', 'optionsRoute');
-        if ($this->input['type'] != 'multi-select' && $this->input['type'] != 'multiselect')
-            return $this->exception('optionsRoute method works with input type multiselect only');
-        $this->setValue('getDataFrom', $optionsRoute);
+    public function optionsRoute(string $optionsRoute)
+    {
+        $this->setInputValue(["key" => 'getDataFrom', "value" => $optionsRoute, "calledMethodName" => __FUNCTION__]);
         return $this;
+    }
+
+    private function setInputValue($data, $value = null)
+    {
+        $data = is_array($data) ? $data : ["key" => $data, "value" => $value];
+        if ($this->instance == "column") {
+            throw MethodNotAllowedWithCurrentInstance::create("column", $data["calledMethodName"] ?? $data["key"]);
+        }
+        $this->setValue($data["key"], $data["value"]);
     }
 }
