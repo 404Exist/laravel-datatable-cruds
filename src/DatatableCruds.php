@@ -7,6 +7,9 @@ use Exist404\DatatableCruds\Traits\Globals;
 use Exist404\DatatableCruds\Traits\Columns;
 use Exist404\DatatableCruds\Traits\Inputs;
 use Exist404\DatatableCruds\Traits\Common;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Collection;
 
 class DatatableCruds
 {
@@ -15,147 +18,72 @@ class DatatableCruds
     use Inputs;
     use Common;
 
-    /**
-     * Datatable blade @extends.
-     * @var string
-    */
-    protected $bladeExtends = 'app';
-    /**
-     * Datatable blade @section.
-     * @var string
-    */
-    protected $bladeSection = 'content';
-    /**
-     * Datatable page title.
-     * @var string
-    */
-    protected $pageTitle = '';
-    /**
-     * Datatable Direction.
-     * @var string
-    */
-    protected $dir = 'ltr';
-    /**
-     * Datatable Moment Format.
-     * @var string
-    */
-    protected $dateFormat = '';
-    /**
-     * Datatable findBy.
-     * @var string
-    */
-    protected $findBy = '';
-    /**
-     * Datatable messages.
-     * @var string
-    */
-    protected $texts = [];
-    /**
-     * Button to open store modal form. [html, onclick => [openModal || funcName || href  => true]]
-     * @var array
-    */
-    protected $addButton = [];
-    /**
-     * Action column buttons.
-     * @var array
-    */
-    protected $actions = [];
-    /**
-     * Searchbar
-     * @var array
-    */
-    protected $searchBar = [];
-    /**
-     * Searchbar
-     * @var array
-    */
-    protected $limits = [];
-    /**
-     * Form width
-     * @var int
-    */
-    protected $formWidth = null;
-    /**
-     * Form height
-     * @var int
-    */
-    protected $formHeight = null;
-    /**
-     * Store button [color, label]
-     * @var array
-    */
-    protected $storeButton = null;
-    /**
-     * Update button [color, label]
-     * @var array
-    */
-    protected $updateButton = null;
-    /**
-     * Delete button [color, label]
-     * @var array
-    */
-    protected $deleteButton = null;
-    /**
-     * Datatable columns to render
-     * @var array
-    */
-    protected $columns = [];
-    /**
-     * Datatable inputs to render in forms
-     * @var array
-    */
-    protected $inputs = [];
+    protected string $bladeExtends = 'app';
+
+    protected string $bladeSection = 'content';
+
+    protected string $pageTitle = '';
+
+    protected string $dir = 'ltr';
+
+    protected string $dateFormat = '';
+
+    protected string $findBy = '';
+
+    protected array $texts = [];
+
+    protected array $searchBar = [
+        "debounce" => "500ms",
+        "class" => "form-control"
+    ];
+
+    protected array $limits = [10, 25, 50, 100];
+
+    protected string $formWidth = "100%";
+
+    protected string $formHeight = "100vh";
+
+    protected array $columns = [];
+
+    protected array $inputs = [];
     /**
      * Form pages
-     * @var array
     */
-    protected $pages = [];
+    protected array $pages = [];
     /**
      * The current instance (input || column)
-     * @var string
     */
-    protected $instance = '';
+    protected string $instance = '';
     /**
      * The current column data
-     * @var array
     */
-    protected $column = [];
+    protected array $column = [];
     /**
      * The current input data
-     * @var array
     */
-    protected $input = [];
+    protected array $input = [];
     /**
      * Request headers.
-     * @var array
     */
-    protected $headers = [];
-    /**
-     * Request headers.
-     * @var array
-    */
-    protected $request = [];
+    protected array $headers = [];
+
+    protected array $request = [];
     /**
      * All Routes [get, store, update, delete].
-     * @var array
     */
-    protected $routes = [];
-    /**
-     * Routes Methods.
-     * @var array
-    */
-    protected $routesMethods = [];
+    protected array $routes = [];
+
+    protected array $routesMethods = [];
     /**
      * Relations to load with model.
-     * @var string
     */
-    protected $with = '';
+    protected string $with = '';
     /**
      * Columns to searchby.
      * @var array
     */
-    protected $searchBy = [];
-    protected $exports = [];
+    protected array $searchBy = [];
+    protected array $exports = [];
     /**
      * Create a new DatatableCruds instance.
      *
@@ -168,12 +96,15 @@ class DatatableCruds
     }
     /**
      * Create a new (input || column)
-     *
-     * @param string $instance (input || column)
-     * @return $this
     */
-    protected function create($instance, $name)
+    protected function create(string $instance, string|callable $name): self
     {
+        if (is_callable($name)) {
+            $name = $name();
+            if (!$name) {
+                return $this;
+            }
+        }
         $this->addCurrentInstance();
         $this->instance = $instance;
         $this->$instance = [];
@@ -182,11 +113,8 @@ class DatatableCruds
     }
     /**
      * Set name for current instance
-     *
-     * @param string $name
-     * @return $this
     */
-    protected function name($name)
+    protected function name(string $name): self
     {
         $this->setValue("name", $name);
 
@@ -199,10 +127,8 @@ class DatatableCruds
 
     /**
      * Get Datatable Data
-     *
-     * @return array $data
     */
-    public function applyData()
+    public function getDatatableData(): array
     {
         return [
             'title' => $this->pageTitle,
@@ -233,14 +159,7 @@ class DatatableCruds
         ];
     }
 
-    /**
-     * Get Datatable Data
-     *
-     * @param array $extendsData
-     *
-     * @return \Illuminate\Support\Facades\View|Illuminate\Pagination\LengthAwarePaginator
-    */
-    public function render($extendsData = [])
+    public function render(array $extendsData = []): View|LengthAwarePaginator|Collection
     {
         if (!isset($this->model)) {
             throw ModelIsNotSet::create();
@@ -251,14 +170,25 @@ class DatatableCruds
 
         $this->addCurrentInstance();
         return view('datatable::datatable-cruds')->with([
-            "datatable" => $this->applyData(),
+            "datatable" => $this->getDatatableData(),
             "extends" => $this->bladeExtends,
             "section" => $this->bladeSection,
             "extendsData" => $extendsData,
         ]);
     }
 
-    protected function getInputs()
+    public function renderData(): array
+    {
+        $this->addCurrentInstance();
+
+        $datatable = $this->getDatatableData();
+
+        $this->reset();
+
+        return $datatable;
+    }
+
+    protected function getInputs(): array
     {
         $inputs = $this->inputs;
         if (count($this->pages) > 1) {
@@ -276,8 +206,11 @@ class DatatableCruds
         return $inputs;
     }
 
-    protected function setValue($key, $value, $shouldAppend = false)
+    protected function setValue(string $key, mixed $value, bool $shouldAppend = false): void
     {
+        if (is_callable($value)) {
+            $value = $value();
+        }
         if (!isset($this->{$this->instance}[$key])) {
             $this->{$this->instance}[$key] = '';
         }
@@ -288,7 +221,7 @@ class DatatableCruds
         }
     }
 
-    protected function append($item, $value)
+    protected function append(mixed $item, mixed $value): mixed
     {
         if (is_array($value) && !is_array($item)) {
             $item = [];
@@ -305,7 +238,7 @@ class DatatableCruds
         return $item;
     }
 
-    protected function executeMethodsFromStr(...$items)
+    protected function executeMethodsFromStr(string ...$items): void
     {
         $for = $this->instance;
         foreach ($items as $item) {
@@ -314,9 +247,9 @@ class DatatableCruds
             array_splice($data, 0, 1);
             foreach ($data as $val) {
                 if (str_starts_with($val, '$@') && $for == 'column') {
-                    $instance->href()->exec(ltrim($val, '$@'));
+                    $instance->execHref(ltrim($val, '$@'));
                 } elseif (str_starts_with($val, '$#') && $for == 'column') {
-                    $instance->html()->exec(ltrim($val, '$#'));
+                    $instance->execHtml(ltrim($val, '$#'));
                 } else {
                     $method = explode('(', $val)[0];
                     if (!method_exists($this, $method) && $for == 'input') {
@@ -354,18 +287,30 @@ class DatatableCruds
     }
     /**
      * To push current instance to ($this->inputs, $this->columns)
-     *
-     * @return $this
     */
-    protected function addCurrentInstance()
+    protected function addCurrentInstance(): self
     {
         if (
             isset($this->{$this->instance}) &&
-            !empty($this->{$this->instance})
+            isset($this->{$this->instance}['name'])
         ) {
             array_push($this->{$this->instance . 's'}, $this->{$this->instance});
             $this->{$this->instance} = [];
         }
         return $this;
+    }
+
+    protected function reset(): void
+    {
+        $this->__construct();
+        $this->columns = [];
+        $this->inputs = [];
+        $this->routes = [];
+        $this->routesMethods = [];
+        $this->pages = [];
+        $this->searchBy = [];
+        $this->pageTitle = "";
+        $this->instance = "";
+        $this->with = "";
     }
 }

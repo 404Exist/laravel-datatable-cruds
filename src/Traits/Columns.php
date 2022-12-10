@@ -8,11 +8,8 @@ trait Columns
 {
     /**
      * Set View Columns.
-     *
-     * @param mixed ...$columns
-     * @return $this
     */
-    public function setColumns(mixed ...$columns)
+    public function setColumns(string ...$columns): self
     {
         $this->instance = 'column';
         $this->executeMethodsFromStr(...$columns);
@@ -20,54 +17,39 @@ trait Columns
     }
     /**
      * Create a new column
-     *
-     * @param string $name
-     * @return $this
     */
-    public function column(string $name)
+    public function column(string|callable $name): self
     {
         return $this->create('column', $name);
     }
     /**
      * Set sortable for current column
-     *
-     * @param bool $sortable
-     * @return $this
     */
-    public function sortable(bool $sortable = true)
+    public function sortable(bool|callable $sortable = true): self
     {
         $this->setColumnValue(["key" => 'sortable', "value" => $sortable]);
         return $this;
     }
     /**
      * Set searchable for current column
-     *
-     * @param bool $searchable
-     * @return $this
     */
-    public function searchable(bool $searchable = true)
+    public function searchable(bool|callable $searchable = true): self
     {
         $this->setColumnValue(["key" => 'searchable', "value" => $searchable]);
         return $this;
     }
     /**
      * Set exportable for current column
-     *
-     * @param bool $exportable
-     * @return $this
     */
-    public function exportable(bool $exportable = true)
+    public function exportable(bool|callable $exportable = true): self
     {
         $this->setColumnValue(["key" => 'exportable', "value" => $exportable]);
         return $this;
     }
     /**
      * Specify that current column is image
-     *
-     * @param string|bool|null $path
-     * @return $this
     */
-    public function image(string|bool|null $path = '')
+    public function image(string|bool|null $path = ''): self
     {
         $isImage = !$path && $path !== '' ? false : true;
 
@@ -78,24 +60,16 @@ trait Columns
         }
         return $this;
     }
-    /**
-     * Add href to current column
-     *
-     * @param string $href
-     * @return $this
-    */
-    public function href(string $href = '')
+
+    public function href(string|callable $href = ''): self
     {
         $this->setColumnValue(["key" => 'href', "value" => $href]);
         return $this;
     }
     /**
      * Specify that current column is date
-     *
-     * @param string|bool|null $format
-     * @return $this
     */
-    public function date(string|bool|null $format = null)
+    public function date(string|bool|null $format = null): self
     {
         $isDate = $format === false ? false : true;
 
@@ -109,11 +83,8 @@ trait Columns
     }
     /**
      * Specify that current column is checkall
-     *
-     * @param string|bool|null $label
-     * @return $this
     */
-    public function checkall(string|bool|null $label = null)
+    public function checkall(string|bool|null $label = null): self
     {
         $isSelect = $label === false ? false : true;
         $this->setColumnValue(["key" => 'isSelect', "value" => $isSelect, "calledMethodName" => __FUNCTION__]);
@@ -125,11 +96,8 @@ trait Columns
     }
     /**
      * Specify that current column is actions
-     *
-     * @param string|bool|null $label
-     * @return $this
     */
-    public function actions(string|bool|null $label = null)
+    public function actions(string|bool|null $label = null): self
     {
         $isAction = $label === false ? false : true;
         $this->setColumnValue(["key" => 'isAction', "value" => $isAction, "calledMethodName" => __FUNCTION__]);
@@ -141,11 +109,8 @@ trait Columns
     }
     /**
      * Execute javascript functions and push returned value to (html)
-     *
-     * @param string $js
-     * @return $this
     */
-    public function execHtml(string $js)
+    public function execHtml(string|callable $js): self
     {
         $this->setColumnValue([
             "key" => "html",
@@ -157,11 +122,8 @@ trait Columns
     }
     /**
      * Execute javascript functions and push returned value to (href)
-     *
-     * @param string $js
-     * @return $this
     */
-    public function execHref(string $js)
+    public function execHref(string|callable $js): self
     {
         $this->setColumnValue([
             "key" => "href",
@@ -172,7 +134,7 @@ trait Columns
         return $this;
     }
 
-    private function setColumnValue($data, $value = null)
+    private function setColumnValue(array|string $data, string|null $value = null): void
     {
         $data = is_array($data) ? $data : ["key" => $data, "value" => $value];
 

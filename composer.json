@@ -1,8 +1,8 @@
 {
     "name":"exist404/datatable-cruds",
-    "description": "Vue Js datatable cruds package",
+    "description": "Laravel datatable cruds package",
     "type": "package",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "keywords": ["laravel", "vue", "datatable", "cruds", "datatable-cruds", "forms", "axios", "js"],
     "authors": [
         {
@@ -15,7 +15,7 @@
     "license": "MIT",
     "require": {
         "php": ">= 7.2.5",
-	"laravel/framework": ">= 6.0"
+	    "laravel/framework": ">= 6.0"
     },
     "autoload": {
         "psr-4": {

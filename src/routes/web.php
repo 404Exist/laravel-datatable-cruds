@@ -1,5 +1,6 @@
 <?php
 
+use Exist404\DatatableCruds\Exceptions\ModelIsNotSet;
 use Illuminate\Support\Facades\Route;
 
 Route::get(config('datatablecruds.script_file_url'), function () {

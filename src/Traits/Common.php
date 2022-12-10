@@ -6,11 +6,8 @@ trait Common
 {
     /**
      * Set label for current instance
-     *
-     * @param string $label
-     * @return $this
     */
-    public function label(string $label)
+    public function label(string $label): self
     {
         $this->setValue('label', $label);
 
@@ -20,11 +17,8 @@ trait Common
     }
     /**
      * Use html tags with current instance
-     *
-     * @param string $html
-     * @return $this
     */
-    public function html(string $html = '')
+    public function html(string|callable $html = ''): self
     {
         $this->setValue('isDate', false);
         $this->setValue('isImage', false);
@@ -35,11 +29,8 @@ trait Common
     }
     /**
      * Apply html tag attributes to current instance
-     *
-     * @param array $attributes
-     * @return $this
     */
-    public function attributes(array $attributes)
+    public function attributes(array $attributes): self
     {
         if (!isset($this->{$this->instance}['attributes'])) {
             $this->{$this->instance}['attributes'] = [];
@@ -50,18 +41,14 @@ trait Common
     }
     /**
      * Apply html tag attributes to current instance
-     *
-     * @param string $name
-     * @param string $value
-     * @return $this
     */
-    public function setAttribute(string $name, string $value)
+    public function setAttribute(string $name, string $value): self
     {
         $this->attributes([$name => $value]);
         return $this;
     }
 
-    protected function setInputPlaceholderIfNotExist(string $placeholder)
+    protected function setInputPlaceholderIfNotExist(string $placeholder): void
     {
         if (
             $this->instance == 'input' &&

@@ -3,6 +3,8 @@
 namespace Exist404\DatatableCruds;
 
 use Exist404\DatatableCruds\Exceptions\ModelIsNotSet;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 class ModelDataTable
 {
@@ -29,7 +31,8 @@ class ModelDataTable
         $this->model = new $model();
         $this->tableName = $this->model->getTable();
     }
-    public function get()
+
+    public function get(): LengthAwarePaginator|Collection
     {
         $query = $this->applyOrderRequest();
 

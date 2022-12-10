@@ -19,40 +19,147 @@ Now you're ready to start using datatable cruds in your application.
 ****
 
 ## Overview
-* [Prepare Command](#prepare-command)
+* [Usage 1](#usage-1)
+* [Usage 2](#usage-2)
 * [General Methods](#general-methods)
 * [Common Methods](#columns-and-inputs-common-methods)
 * [Columns Methods](#columns-methods)
 * [Inputs Methods](#inputs-methods)
+****
 
-****
-## Prepare Command
-* if you run this command, a controller will be created and routes to that controller's methods will be created.
-* if the model does not exist, this command will create the model, factory and migration as well.
-* you can replace `User` in this command with your desired model name.
-* you can pass `--middleware` or it's shortcut `-M` options and these middleware will be applied to the routes.
-* you can pass `--prefix` or it's shortcut `-P` option and this prefix will be applied to the routes.
-```php 
-php artisan datatablecruds:prepare User --middleware=auth --middleware=sanctum -P en
-```
-****
-## General Methods
+## Usage 1
 ```php
-$datatable = DatatableCruds::setModel(User::class);
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Exist404\DatatableCruds\Facades\DatatableCruds;
+use Illuminate\Http\Request;
+
+class UserController extends Controller
+{
+    public function index()
+    {
+        return DatatableCruds::setModel(User::class)
+            ->with("profile")
+            ->column("id")->sortable()->setAttribute("class", "test")
+            ->column("name.en")->label("Name")->searchable()
+            ->column("profile.name.en")->sortable()->searchable()->exportable()
+            ->column("created_at")->date()->exportable()
+            ->column("updated_at")->date("DD/MM/YYYY")->sortable()
+            ->column("actions")->actions()
+            ->cloneAction(false)
+            ->render();
+    }
+
+    public function store(Request $request)
+    {
+        User::create($request->all());
+        return [
+            'toast-message' => 'New User Has Been Added Successfully.',
+            'toast-type' => 'success',
+        ];
+    }
+
+    public function update(Request $request, $id)
+    {
+        User::where($request->findBy, $id)->first()->update($request->all());
+        return [
+            'toast-message' => 'User Has Been Updated Successfully.',
+            'toast-type' => 'success',
+        ];
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        User::whereIn($request->findBy, explode(',', $id))->delete();
+        return [
+            'toast-message' => 'User Has Been Deleted Successfully.',
+            'toast-type' => 'success',
+        ];
+    }
+}
+
 ```
+## Usage 2
+#### render multiple datatables
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use App\Models\Product;
+use App\Models\User;
+use Exist404\DatatableCruds\Facades\DatatableCruds;
+
+class UserController extends Controller
+{
+    public function index()
+    {
+        $usersDatatable = DatatableCruds::setPageTitle("Users")
+            ->setGetRoute(route('getUsers'))
+            ->with("profile")
+            ->column("id")->sortable()
+            ->column("profile.name.en")->sortable()
+            ->renderData();
+
+        $productsDatatable = DatatableCruds::setPageTitle("Products")
+            ->setGetRoute(route('getProducts'))
+            ->column("id")->sortable()->setAttribute("class", "test")
+            ->column("name.en")->label("Name")->searchable()
+            ->renderData();
+        
+        return view("app", compact("usersDatatable", "productsDatatable"))
+    }
+
+    public function getUsers()
+    {
+        return dataTableOf(User::class);
+    }
+
+    public function getProducts()
+    {
+        return dataTableOf(Product::class);
+    }
+
+}
+```
+#### in app.blade.php use @datatable directive
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, shrink-to-fit=no">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="theme-color" content="#100DD1">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    </head>
+    <body>
+        @datatable($usersDatatable)
+        @datatable($productsDatatable)
+    </body>
+</html>
+```
+## General Methods
 ### setModel()
 
 Use the `setModel()` method at first it will define the model to get data from, it will specify the page title also by model table name.
 ```php
 DatatableCruds::setModel(User::class);
 ```
-### setTitle()
+### setPageTitle()
 
 use it to set a custom title for the page.
 
 
 ```php
-$datatable->setTitle("DataTables");
+$datatable->setPageTitle("DataTables");
 ```
 ### setDir()
 
@@ -132,10 +239,10 @@ $datatable->setStoreRoute('/store-route');
 use it to set a route to send form update data to it.
 the first parameter is for the route , and the second for the route method, by default it's `PATCH`.
 **route parameters must be written in curly brackets {} and these parameters will be replaced with the value from the row we are modifying**
-Also with the request you will get a request key called `findBy` whose value in this case will be `id` and you can change the `findBy` request key name with this method `setRequestFindByKey("newFindByKey")`.
+Also with the request you will get a request key called `findBy` whose value in this case will be `id` and you can change the `findBy` request key name with this method `setRequestFindByKeyName("newFindByKey")`.
 
 ```php
-$datatable->setUpdateRoute('/update-route'.'/{id}');
+$datatable->setUpdateRoute('/update-route/{id}');
 ```
 ### setDeleteRoute()
 use it to set a route to send form delete data to it.
@@ -144,7 +251,7 @@ the first parameter is for the route , and the second for the route method, by d
 you will also get the request key `findBy` with the request as in the above example.
 
 ```php
-$datatable->setDeleteRoute('/delete-route'.'/{id}');
+$datatable->setDeleteRoute('/delete-route/{id}');
 ```
 ### setDefaultDateFormat()
 
@@ -165,6 +272,7 @@ $datatable->setDefaultOrder("created_at", "desc");
 ### addAction() && editAction() && deleteAction() && cloneAction()
 
 **all of these methods works in the same way.**
+**if you want to disable any button of these buttons just pass false to method**
 use it to set custom add button.
 the first parameter of the method is button html,
 the second one is button action you can set it to one of these choices `("openModal", "funcName", "href")` default is `"openModal"` 
@@ -299,6 +407,12 @@ You can use this method to start creating a new column.
 you can pass db_column_name or whatever name you need to the column method, if you pass the db_column_name it will return the data of that column, you can also access the nested data using `.` for example `column("name.en")`
 ```php
 $datatable->column("updated_at")->sortable()->searchable()->date("YYYY-MM-DD");
+// render column if condition true
+$datatable->column(function() {
+    if (true) {
+        return "status";
+    }
+});
 ```
 
 ### setColumns() 
@@ -394,6 +508,12 @@ You can use this method to start creating a new input.
 
 ```php
 $datatable->input("name.en")->type("text");
+// render input if condition true
+$datatable->input(function() {
+    if (true) {
+        return "status";
+    }
+});
 ```
 if you make input name like above example `"name.en"` then you can access it in store and update requests this way `$request->name->en`
 

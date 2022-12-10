@@ -8,11 +8,8 @@ trait Inputs
 {
     /**
      * Set View Inputs.
-     *
-     * @param mixed ...$inputs
-     * @return $this
     */
-    public function setInputs(mixed ...$inputs)
+    public function setInputs(string ...$inputs): self
     {
         $this->instance = 'input';
         $this->executeMethodsFromStr(...$inputs);
@@ -20,52 +17,39 @@ trait Inputs
     }
     /**
      * Create a new input
-     *
-     * @param string $name
-     * @return $this
     */
-    public function input(string $name)
+    public function input(string|callable $name): self
     {
         return $this->create('input', $name);
     }
     /**
      * Set type for current input
-     *
-     * @param string $type
-     * @return $this
     */
-    public function type(string $type)
+    public function type(string $type): self
     {
         $this->setInputValue('type', $type);
         return $this;
     }
     /**
      * Push input to the edit form only
-     *
-     * @return $this
     */
-    public function editForm()
+    public function editForm(): self
     {
         $this->setInputValue(["key" => 'form', "value" => "Edit", "calledMethodName" => __FUNCTION__]);
         return $this;
     }
     /**
      * Push input to the create form only
-     *
-     * @return $this
     */
-    public function createForm()
+    public function createForm(): self
     {
         $this->setInputValue(["key" => 'form', "value" => "Add", "calledMethodName" => __FUNCTION__]);
         return $this;
     }
     /**
      * Set current input page
-     *
-     * @param int $page
-     * @return $this
     */
-    public function page(int $page)
+    public function page(int $page): self
     {
         for ($i = 0; $i <= $page; $i++) {
             $this->pages[$i] = [];
@@ -75,35 +59,24 @@ trait Inputs
     }
     /**
      * Set class for current input parent
-     *
-     * @param string $parentClass
-     * @return $this
     */
-    public function parentClass(string $parentClass)
+    public function parentClass(string|callable $parentClass): self
     {
         $this->setInputValue("parentClass", $parentClass);
         return $this;
     }
     /**
      * Set class for current input label
-     *
-     * @param string $labelClass
-     * @return $this
     */
-    public function labelClass(string $labelClass)
+    public function labelClass(string|callable $labelClass): self
     {
         $this->setInputValue("labelClass", $labelClass);
         return $this;
     }
     /**
      * Make multi select input
-     *
-     * @param string $label
-     * @param string $val
-     * @param bool $multiple
-     * @return $this
     */
-    public function multiSelect(string $label = "name", string $val = "id", bool $multiple = true)
+    public function multiSelect(string $label = "name", string $val = "id", bool $multiple = true): self
     {
         $this->setInputValue(["key" => 'type', "value" => "multi-select", "calledMethodName" => __FUNCTION__]);
         $this->attributes([
@@ -119,12 +92,8 @@ trait Inputs
     }
     /**
      * Make select input
-     *
-     * @param string $label
-     * @param string $val
-     * @return $this
     */
-    public function select(string $label = "name", string $val = "id")
+    public function select(string $label = "name", string $val = "id"): self
     {
         $this->setInputValue(["key" => 'type', "value" => "select", "calledMethodName" => __FUNCTION__]);
         $this->options([]);
@@ -134,34 +103,27 @@ trait Inputs
     }
     /**
      * Set options for current input (select)
-     *
-     * @param array $options
-     * @return $this
     */
-    public function options(array $options = [])
+    public function options(array $options = []): self
     {
         $this->setInputValue("options", $options);
         return $this;
     }
     /**
-     * Add onchange event to current input (select)
+     * Add onchange event to current input (select) that changes other select options
      *
      * @param string $update input (select) name to update it with data onchange current select
-     * @param string $getDataFrom url to get data
-     * @return $this
+     * @param string $urlToGetOptions url to get data
     */
-    public function onChange(string $update, string $getDataFrom)
+    public function onChange(string $update, string $urlToGetOptions): self
     {
-        $this->setInputValue('onChange', ['update' => $update, 'getDataFrom' => $getDataFrom]);
+        $this->setInputValue('onChange', ['update' => $update, 'getDataFrom' => $urlToGetOptions]);
         return $this;
     }
     /**
      * Make dropzone input
-     *
-     * @param array $dropZoneAttributes
-     * @return $this
     */
-    public function dropzone(array $dropZoneAttributes = [])
+    public function dropzone(array $dropZoneAttributes = []): self
     {
         $this->setInputValue(["key" => 'type', "value" => "drop_zone", "calledMethodName" => __FUNCTION__]);
         $this->setInputValue('dropZoneAttributes', $dropZoneAttributes);
@@ -172,12 +134,8 @@ trait Inputs
 
     /**
      * Make checkbox input
-     *
-     * @param $selectedValue = true
-     * @param $unselectedValue = false
-     * @return $this
     */
-    public function checkbox($selectedValue = true, $unselectedValue = false)
+    public function checkbox(bool|string|int $selectedValue = true, bool|string|int $unselectedValue = false): self
     {
         $this->setInputValue(["key" => 'type', "value" => "checkbox", "calledMethodName" => __FUNCTION__]);
         $this->attributes([
@@ -189,11 +147,8 @@ trait Inputs
 
     /**
      * Make radio input
-     *
-     * @param $value
-     * @return $this
     */
-    public function radio($value)
+    public function radio($value): self
     {
         $this->setInputValue(["key" => 'type', "value" => "radio", "calledMethodName" => __FUNCTION__]);
         $this->attributes([
@@ -205,21 +160,16 @@ trait Inputs
 
     /**
      * Make tags input
-     *
-     * @return $this
     */
-    public function tags()
+    public function tags(): self
     {
         $this->setInputValue(["key" => 'type', "value" => "tags", "calledMethodName" => __FUNCTION__]);
         return $this;
     }
     /**
      * Make editor input
-     *
-     * @param string|null $value
-     * @return $this
     */
-    public function editor(string|null $value = null)
+    public function editor(string|null $value = null): self
     {
         $value = $value ?: $this->input['label'];
         $this->setInputValue(["key" => 'type', "value" => "editor", "calledMethodName" => __FUNCTION__]);
@@ -228,17 +178,14 @@ trait Inputs
     }
     /**
      * To fill multiselect from $optionsRoute url with data on search
-     *
-     * @param string $optionsRoute
-     * @return $this
     */
-    public function optionsRoute(string $optionsRoute)
+    public function optionsRoute(string $optionsRoute): self
     {
         $this->setInputValue(["key" => 'getDataFrom', "value" => $optionsRoute, "calledMethodName" => __FUNCTION__]);
         return $this;
     }
 
-    private function setInputValue($data, $value = null)
+    private function setInputValue($data, $value = null): void
     {
         $data = is_array($data) ? $data : ["key" => $data, "value" => $value];
         if ($this->instance == "column") {

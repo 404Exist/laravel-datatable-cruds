@@ -10,6 +10,7 @@ return [
     "dateFormat" => "fromNow()",
     "findBy" => "findBy",
     "addButton" => [
+        "enabled" => true,
         "html" => false,
         "onclick" => ["openModal" => true],
     ],
@@ -75,5 +76,5 @@ return [
             "title" => null
         ],
     ],
-    "script_file_url" => "/_datatablecrudsminfindjs"
+    "script_file_url" => "/_datatablecrudsminfindjs",
 ];
