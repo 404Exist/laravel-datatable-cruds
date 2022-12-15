@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DatatableInjection
 {
+    protected string $content;
+
     public function handle(Request $request, Closure $next)
     {
         $response = $next($request);
@@ -17,47 +19,101 @@ class DatatableInjection
         return $response;
     }
 
-    public function inject(Response $response)
+    public function inject(Response $response): void
     {
-        $content = $response->getContent();
+        $this->content = $response->getContent();
 
-        if ($this->isDataTableRenderd($content)) {
-            $route = config("datatablecruds.script_file_url");
-
-            $widget = "<script src='$route' defer></script>";
-
-            $pos = stripos($content, '<body');
-
-
-            if ($pos !== false) {
-                $bodyRegex = "/<\s*body[^>]*>/";
-                preg_match($bodyRegex, substr($content, $pos), $bodyOpenTag);
-                $content = substr($content, 0, $pos) . preg_replace(
-                    $bodyRegex,
-                    $bodyOpenTag[0] . "<div id='datatablecruds'>",
-                    substr($content, $pos)
-                );
+        if ($this->isDataTableRenderd()) {
+            if ($this->isNotDatatableScriptLoaded()) {
+                $this->injectScript();
             }
 
-            $pos = strripos($content, '</body>');
-
-            if ($pos !== false) {
-                $content = substr($content, 0, $pos) . "</div>" . substr($content, $pos);
+            if ($this->isNotDatatableDivLoaded()) {
+                $this->injectDatatableDiv();
             }
 
-            $pos = strripos($content, '</head>');
-
-            if (false !== $pos) {
-                $content = substr($content, 0, $pos) . $widget . substr($content, $pos);
-            }
-
-            $response->setContent($content);
+            $response->setContent($this->content);
             $response->headers->remove('Content-Length');
         }
     }
 
-    protected function isDataTableRenderd($content): bool
+    protected function injectScript(): void
     {
-        return (bool) strripos($content, '<data-list');
+        $route = route("datatablecruds.script_file_url", [
+            'v' => filemtime(datatableScriptPath())
+        ]);
+
+        $script = "<script src=\"$route\" defer></script>";
+
+        $pos = strripos($this->content, '</head>');
+
+        if (false !== $pos) {
+            $this->content = substr($this->content, 0, $pos) . $script . substr($this->content, $pos);
+        }
+    }
+
+    protected function injectDatatableDiv(): void
+    {
+        $pos = stripos($this->content, '<body');
+
+        if ($pos !== false) {
+            $bodyRegex = "/<\s*body[^>]*>/";
+
+            preg_match($bodyRegex, substr($this->content, $pos), $bodyOpenTag);
+
+            $this->content = substr($this->content, 0, $pos) . preg_replace(
+                $bodyRegex,
+                $bodyOpenTag[0] . "<div id='datatablecruds'>",
+                substr($this->content, $pos)
+            );
+        }
+
+        $pos = strripos($this->content, '</body>');
+
+        if ($pos !== false) {
+            $this->content = substr($this->content, 0, $pos) . "</div>" . substr($this->content, $pos);
+        }
+    }
+
+    protected function isDataTableRenderd(): bool
+    {
+        return (bool) strripos($this->content, '<data-list');
+    }
+
+    protected function isNotDatatableScriptLoaded(): bool
+    {
+        $matches = $this->matchTagElWithAttributeValue(
+            "script",
+            "src",
+            ".*?\\" . config("datatablecruds.script_file_url") . "?.*?"
+        );
+
+        return ! (bool) count($matches);
+    }
+
+    protected function isNotDatatableDivLoaded(): bool
+    {
+        $matches = $this->matchTagElWithAttributeValue(
+            "div",
+            "id",
+            "datatablecruds"
+        );
+
+        return ! (bool) count($matches);
+    }
+
+    protected function matchTagElWithAttributeValue($tag, $attribute, $value): array
+    {
+        $regexs = [
+            "/<\s*$tag.*?$attribute=\"$value\"[^>]*>/",
+            "/<\s*$tag.*?$attribute='$value'[^>]*>/",
+        ];
+
+        $matches = [];
+        foreach ($regexs as $regex) {
+            preg_match($regex, $this->content, $matches[]);
+        }
+
+        return array_merge($matches[0], $matches[1]);
     }
 }

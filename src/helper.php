@@ -9,3 +9,10 @@ if (!function_exists('dataTableOf')) {
         return (new \Exist404\DatatableCruds\ModelDataTable($model))->get();
     }
 }
+
+if (!function_exists('datatableScriptPath')) {
+    function datatableScriptPath(): string|false
+    {
+        return __DIR__ . '/public/js/datatable-cruds.min.js';
+    }
+}

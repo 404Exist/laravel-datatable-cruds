@@ -34,7 +34,7 @@ class DatatableCrudsProvider extends ServiceProvider
         $this->commands([InstallPackageCommand::class]);
         $this->registerMiddleware(DatatableInjection::class);
         Blade::directive('datatable', function ($data) {
-            return "<data-list :data='{{ json_encode($data) }}'></data-list>";
+            return "<data-list data='{{ json_encode($data) }}'></data-list>";
         });
     }
 

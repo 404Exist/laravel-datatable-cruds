@@ -1,4 +1,10 @@
 # Release Notes
+## [v1.1.0](https://github.com/404Exist/datatable-cruds/compare/v1.0.9...v1.1.0) - 2022-12-15
+
+### Added
+
+- Caching script file to response
+- Ability to order by morphs relations
 ## [v1.0.9](https://github.com/404Exist/datatable-cruds/compare/v1.0.8...v1.0.9) - 2022-12-10
 
 ### Added
