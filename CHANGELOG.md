@@ -1,4 +1,18 @@
 # Release Notes
+## [v1.1.1](https://github.com/404Exist/datatable-cruds/compare/v1.1.0...v1.1.1) - 2022-12-16
+
+### Added
+
+- `dd()` & `dump()` methods have been added.
+- `columns()` & `inputs()` methods have been added.
+- `showPagination()` & `hidePaginationIfContainOnePage()` methods have been added.
+- `datatableCruds()` helper method have been added, it returns an instance of DatatableCruds class.
+- Access {current_page} and {per_page} in custom exports html.
+- Ability to set exported filename.
+- Ability to send model query to `dataTableOf()` helper function.
+- Ability to set nested text data with `setText('delete.title', 'Delete')`.
+### Fixed
+- `setBladeExtends()` & `setBladeSection()` methods have been fixed.
 ## [v1.1.0](https://github.com/404Exist/datatable-cruds/compare/v1.0.9...v1.1.0) - 2022-12-15
 
 ### Added

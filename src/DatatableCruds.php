@@ -9,7 +9,6 @@ use Exist404\DatatableCruds\Traits\Inputs;
 use Exist404\DatatableCruds\Traits\Common;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Collection;
 
 class DatatableCruds
 {
@@ -35,6 +34,11 @@ class DatatableCruds
     protected array $searchBar = [
         "debounce" => "500ms",
         "class" => "form-control"
+    ];
+
+    protected array $pagination = [
+        "show" => true,
+        "hideIfContainOnePage" => true,
     ];
 
     protected array $limits = [10, 25, 50, 100];
@@ -99,13 +103,15 @@ class DatatableCruds
     */
     protected function create(string $instance, string|callable $name): self
     {
+        $this->addCurrentInstance();
+
         if (is_callable($name)) {
             $name = $name();
             if (!$name) {
                 return $this;
             }
         }
-        $this->addCurrentInstance();
+
         $this->instance = $instance;
         $this->$instance = [];
         $this->name($name);
@@ -125,12 +131,23 @@ class DatatableCruds
         return $this;
     }
 
-    /**
-     * Get Datatable Data
-    */
-    public function getDatatableData(): array
+    public function dump(): mixed
     {
-        return [
+        $this->addCurrentInstance();
+        return dump($this);
+    }
+
+    public function dd(): void
+    {
+        $this->addCurrentInstance();
+        dd($this);
+    }
+
+    public function renderData(): array
+    {
+        $this->addCurrentInstance();
+
+        $datatable = [
             'title' => $this->pageTitle,
             'dir' => $this->dir,
             'dateFormat' => $this->dateFormat,
@@ -147,6 +164,7 @@ class DatatableCruds
             'addButton' => $this->addButton,
             'searchBar' => $this->searchBar,
             'exports' => $this->exports,
+            'pagination' => $this->pagination,
             'columns' => $this->columns,
             'forms' => [
                 'width' => $this->formWidth,
@@ -157,9 +175,13 @@ class DatatableCruds
                 'deleteInput' => $this->deleteButton
             ]
         ];
+
+        $this->reset();
+
+        return $datatable;
     }
 
-    public function render(array $extendsData = []): View|LengthAwarePaginator|Collection
+    public function render(array $extendsData = []): View|LengthAwarePaginator
     {
         if (!isset($this->model)) {
             throw ModelIsNotSet::create();
@@ -168,24 +190,12 @@ class DatatableCruds
             return dataTableOf($this->model);
         }
 
-        $this->addCurrentInstance();
         return view('datatable::datatable-cruds')->with([
-            "datatable" => $this->getDatatableData(),
+            "datatable" => $this->renderData(),
             "extends" => $this->bladeExtends,
             "section" => $this->bladeSection,
             "extendsData" => $extendsData,
         ]);
-    }
-
-    public function renderData(): array
-    {
-        $this->addCurrentInstance();
-
-        $datatable = $this->getDatatableData();
-
-        $this->reset();
-
-        return $datatable;
     }
 
     protected function getInputs(): array

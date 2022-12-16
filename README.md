@@ -11,7 +11,7 @@ Run the Composer require command from the Terminal:
     composer require exist404/datatable-cruds
     
 
-After completing the step above, use the following command to publish assets:
+After completing the step above, use the following command to publish config file:
 
 	php artisan datatablecruds:install
 
@@ -45,13 +45,27 @@ class UserController extends Controller
         return DatatableCruds::setModel(User::class)
             ->with("profile")
             ->column("id")->sortable()->setAttribute("class", "test")
-            ->column("name.en")->label("Name")->searchable()
+            ->columns($this->columns())
+            ->inputs($this->inputs())
+            ->cloneAction(false)
+            ->render();
+    }
+
+    protected function columns()
+    {
+        return datatableCruds()->column("name.en")->label("Name")->searchable()
             ->column("profile.name.en")->sortable()->searchable()->exportable()
             ->column("created_at")->date()->exportable()
             ->column("updated_at")->date("DD/MM/YYYY")->sortable()
-            ->column("actions")->actions()
-            ->cloneAction(false)
-            ->render();
+            ->column("actions")->actions();
+    }
+
+    protected function inputs()
+    {
+        return datatableCruds()
+            ->input("name")->type("text")
+            ->input("email")->type("email")
+            ->input("password")->type("password");
     }
 
     public function store(Request $request)
@@ -122,7 +136,7 @@ class UserController extends Controller
 
     public function getProducts()
     {
-        return dataTableOf(Product::class);
+        return dataTableOf(Product::where('quantity', '>', 0));
     }
 
 }
@@ -151,7 +165,7 @@ class UserController extends Controller
 
 Use the `setModel()` method at first it will define the model to get data from, it will specify the page title also by model table name.
 ```php
-DatatableCruds::setModel(User::class);
+datatableCruds()->setModel(User::class);
 ```
 ### setPageTitle()
 
@@ -354,6 +368,16 @@ use this method to set `@section` name that will go to `@yield` in the blade lay
 **you can set the default `@section` from datatablecruds config file**
 ```php
 $datatable->setBladeSection("content");
+```
+### showPagination()
+this method accepts one boolean prameter, by default it's true.
+```php
+$datatable->showPagination(false);
+```
+### hidePaginationIfContainOnePage()
+this method accepts one boolean prameter, by default it's true.
+```php
+$datatable->hidePaginationIfContainOnePage(false);
 ```
 ### render()
 Finally, use this method to render your datatable view.

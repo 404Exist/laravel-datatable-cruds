@@ -3,6 +3,7 @@
 namespace Exist404\DatatableCruds\Traits;
 
 use Exist404\DatatableCruds\Exceptions\MethodNotAllowedWithCurrentInstance;
+use Illuminate\Support\Arr;
 
 trait Inputs
 {
@@ -21,6 +22,22 @@ trait Inputs
     public function input(string|callable $name): self
     {
         return $this->create('input', $name);
+    }
+    /**
+     * Push inputs from other instance
+    */
+    public function inputs(self $instance): self
+    {
+        $this->addCurrentInstance();
+        $instance->addCurrentInstance();
+
+        if (array_diff(Arr::dot($this->inputs), Arr::dot($instance->inputs))) {
+            $instance->inputs = array_merge($this->inputs, $instance->inputs);
+        }
+
+        $this->inputs = $instance->inputs;
+
+        return $this;
     }
     /**
      * Set type for current input

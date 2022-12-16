@@ -181,17 +181,19 @@ trait Globals
     /**
      * Datatable export csv
     */
-    public function exportCsvBtn(bool|string $csv = true): self
+    public function exportCsvBtn(bool|string $csv = true, string $filename = null): self
     {
-        $this->exports["csv"] = $csv;
+        $this->exports["csv"]["html"] = $csv;
+        $this->exports["csv"]["filename"] = $filename;
         return $this;
     }
     /**
      * Datatable export excel
     */
-    public function exportExcelBtn(bool|string $excel = true): self
+    public function exportExcelBtn(bool|string $excel = true, string $filename = null): self
     {
-        $this->exports["excel"] = $excel;
+        $this->exports["excel"]["html"] = $excel;
+        $this->exports["excel"]["filename"] = $filename;
         return $this;
     }
     /**
@@ -207,7 +209,28 @@ trait Globals
     */
     public function setText(string $key, string $text): self
     {
-        $this->texts[$key] = $text;
+        $texts = &$this->texts;
+
+        foreach (explode('.', $key) as $key) {
+            $texts = &$texts[$key];
+        }
+
+        $texts = $text;
+
+        unset($texts);
+
+        return $this;
+    }
+
+    public function showPagination(bool $show = true): self
+    {
+        $this->pagination["show"] = $show;
+        return $this;
+    }
+
+    public function hidePaginationIfContainOnePage(bool $hide = true): self
+    {
+        $this->pagination["hideIfContainOnePage"] = $hide;
         return $this;
     }
     /**
@@ -270,17 +293,17 @@ trait Globals
     /**
      * Set blade extends
     */
-    public function setBladeExtends(string $extends): self
+    public function setBladeExtends(string $bladeExtends): self
     {
-        $this->extends = $extends;
+        $this->bladeExtends = $bladeExtends;
         return $this;
     }
     /**
      * Set blade section
     */
-    public function setBladeSection(string $section): self
+    public function setBladeSection(string $bladeSection): self
     {
-        $this->section = $section;
+        $this->bladeSection = $bladeSection;
         return $this;
     }
 }

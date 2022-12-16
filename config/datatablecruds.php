@@ -28,8 +28,14 @@ return [
         'color' => "primary",
     ],
     "exports" => [
-        "excel" => true, // bool || html
-        "csv" => true, // bool || html
+        "excel" => [
+            "html" => true, // bool || html
+            "filename" => null
+        ],
+        "csv" => [
+            "html" => true, // bool || html
+            "filename" => null
+        ],
         "print" => true, // bool || html
     ],
     "storeButton" => [
@@ -75,6 +81,10 @@ return [
             "message" => 'Are you sure you want to delete these {id} ?',
             "title" => null
         ],
+    ],
+    "pagination" => [
+        "show" => true,
+        "hideIfContainOnePage" => true,
     ],
     "script_file_url" => "/_datatablecrudsminfindjs",
 ];

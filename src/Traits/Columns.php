@@ -3,6 +3,7 @@
 namespace Exist404\DatatableCruds\Traits;
 
 use Exist404\DatatableCruds\Exceptions\MethodNotAllowedWithCurrentInstance;
+use Illuminate\Support\Arr;
 
 trait Columns
 {
@@ -21,6 +22,22 @@ trait Columns
     public function column(string|callable $name): self
     {
         return $this->create('column', $name);
+    }
+    /**
+     * Push columns from other instance
+    */
+    public function columns(self $instance): self
+    {
+        $this->addCurrentInstance();
+        $instance->addCurrentInstance();
+
+        if (array_diff(Arr::dot($this->columns), Arr::dot($instance->columns))) {
+            $instance->columns = array_merge($this->columns, $instance->columns);
+        }
+
+        $this->columns = $instance->columns;
+
+        return $this;
     }
     /**
      * Set sortable for current column

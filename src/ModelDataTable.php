@@ -5,7 +5,6 @@ namespace Exist404\DatatableCruds;
 use Exist404\DatatableCruds\Exceptions\ModelIsNotSet;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -22,22 +21,26 @@ class ModelDataTable
     ];
 
     private Model $model;
+    private Builder $query;
     private string $tableName;
     private string $primaryKeyName;
     private object $request;
 
-    public function __construct(string $model)
+    public function __construct(Builder|string $model)
     {
         if (!isset($model)) {
             throw ModelIsNotSet::create();
         }
-        $this->request = (object) array_merge($this->defaultRequest, $_GET);
-        $this->model = new $model();
-        $this->tableName = $this->model->getTable();
-        $this->primaryKeyName = $this->model->getKeyName();
+        if (is_string($model)) {
+            $model = (new $model())->query();
+        }
+
+        $this->setData($model);
+
+        $this->fixQueryWheresColumnsNames();
     }
 
-    public function get(): LengthAwarePaginator|Collection
+    public function get(): LengthAwarePaginator
     {
         $query = $this->applyOrderRequest();
 
@@ -45,13 +48,29 @@ class ModelDataTable
 
         if ($this->request->search && $this->request->search != '') {
             $query = $this->applySearch($query);
-
-            if (!isset($this->request->limit)) {
-                return $query->select("{$this->tableName}.*")->get();
-            }
         }
         return $query->select("{$this->tableName}.*")
                     ->paginate($this->request->limit, ['*'], 'page', $this->request->page);
+    }
+
+    private function setData(Builder $model): void
+    {
+        $this->query = $model;
+        $this->model = $model->getModel();
+        $this->tableName = $this->model->getTable();
+        $this->primaryKeyName = $this->model->getKeyName();
+        $this->request = (object) array_merge($this->defaultRequest, $_GET);
+    }
+
+    private function fixQueryWheresColumnsNames(): void
+    {
+        $this->query->getQuery()->wheres = array_map(
+            function ($where) {
+                $where['column'] = $this->tableName . "." . $where['column'];
+                return $where;
+            },
+            $this->query->getQuery()->wheres
+        );
     }
 
     private function applyOrderRequest(): Builder
@@ -59,7 +78,7 @@ class ModelDataTable
         if ($this->isRelatedToModel($this->request->orderBy)) {
             return $this->orderByRelated();
         }
-        return $this->model->orderBy($this->request->orderBy, $this->request->order);
+        return $this->query->orderBy($this->request->orderBy, $this->request->order);
     }
 
     private function applyWithRelations(Builder $query): Builder
@@ -78,15 +97,14 @@ class ModelDataTable
         $searchBy = $this->request->searchBy ?: [];
         $searchBy = !is_array($searchBy) ? explode(',', $searchBy) : $searchBy;
         foreach ($searchBy as $index => $field) {
+            $method = $index == 0 ? "where" : "orWhere";
             if ($this->isRelatedToModel($field)) {
                 @list($relation, $column) = explode('.', $field);
-                $method = $index == 0 ? "whereHas" : "orWhereHas";
-                $query = $query->$method(
+                $query = $query->{$method . "Has"}(
                     $relation,
                     fn($query)=> $query->where($column, 'like', "%{$this->request->search}%")
                 );
             } else {
-                $method = $index == 0 ? "where" : "orWhere";
                 $query = $query->$method("{$this->tableName}.$field", 'like', "%{$this->request->search}%");
             }
         }
@@ -110,7 +128,7 @@ class ModelDataTable
 
     private function leftJoinRelation(string $relationName): Builder
     {
-        return $this->model->distinct("{$this->tableName}.{$this->primaryKeyName}")
+        return $this->query->distinct("{$this->tableName}.{$this->primaryKeyName}")
             ->leftJoin($this->relatedTableName($relationName), function ($join) use ($relationName) {
                 $relation = $this->model->$relationName();
                 $relatedModel = $this->relatedModel($relationName);

@@ -1,10 +1,18 @@
 <?php
 
+use Exist404\DatatableCruds\DatatableCruds;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
+
+if (!function_exists('datatableCruds')) {
+    function datatableCruds(): DatatableCruds
+    {
+        return new DatatableCruds();
+    }
+}
 
 if (!function_exists('dataTableOf')) {
-    function dataTableOf($model = null): LengthAwarePaginator|Collection
+    function dataTableOf(Builder|string $model = null): LengthAwarePaginator
     {
         return (new \Exist404\DatatableCruds\ModelDataTable($model))->get();
     }
