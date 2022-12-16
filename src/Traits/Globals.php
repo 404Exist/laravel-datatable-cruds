@@ -2,15 +2,21 @@
 
 namespace Exist404\DatatableCruds\Traits;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
+
 trait Globals
 {
     /**
      * Datatable model
     */
-    public function setModel(string $model): self
+    public function for(Builder|string $model): self
     {
+        if (is_string($model)) {
+            $model = (new $model())->query();
+        }
+
         $this->model = $model;
-        $this->tableName = (new $model())->getTable();
+        $this->tableName = $model->getModel()->getTable();
 
         if (!$this->pageTitle) {
             $this->setPageTitle(str($this->tableName)->headline());

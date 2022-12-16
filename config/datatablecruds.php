@@ -65,7 +65,7 @@ return [
         ],
     ],
     "texts" => [
-        "info" => 'Showing {from} to {to} of {total} entries',
+        "info" => 'Showing |from| to |to| of |total| entries',
         "entries" => 'Entries',
         "filesUpload" => 'Uploading files...',
         "noResult" => 'There are no data!!',
@@ -74,11 +74,11 @@ return [
             "title" => null
         ],
         "delete" => [
-            "message" => 'Are you sure you want to delete {id} ?',
+            "message" => 'Are you sure you want to delete |id| ?',
             "title" => null
         ],
         "deleteAll" => [
-            "message" => 'Are you sure you want to delete these {id} ?',
+            "message" => 'Are you sure you want to delete these |id| ?',
             "title" => null
         ],
     ],

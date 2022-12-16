@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @method static \Exist404\DatatableCruds\DatatableCruds render(array $extendsData = []): \Illuminate\Contracts\View\View|\Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Database\Eloquent\Collection
  * @method static \Exist404\DatatableCruds\DatatableCruds renderData(): array
- * @method static \Exist404\DatatableCruds\DatatableCruds setModel(string $model): self
+ * @method static \Exist404\DatatableCruds\DatatableCruds for(\Illuminate\Contracts\Database\Eloquent\Builder|string $model): self
  * @method static \Exist404\DatatableCruds\DatatableCruds setPageTitle(string $title): self
  * @method static \Exist404\DatatableCruds\DatatableCruds setDir(string|callable $dir): self
  * @method static \Exist404\DatatableCruds\DatatableCruds setHeader(string $name, string $value): self

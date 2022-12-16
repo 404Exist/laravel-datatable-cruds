@@ -42,7 +42,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        return DatatableCruds::setModel(User::class)
+        return DatatableCruds::for(User::class)
             ->with("profile")
             ->column("id")->sortable()->setAttribute("class", "test")
             ->columns($this->columns())
@@ -53,7 +53,8 @@ class UserController extends Controller
 
     protected function columns()
     {
-        return datatableCruds()->column("name.en")->label("Name")->searchable()
+        return datatableCruds()
+            ->column("name.en")->href(route('users.show', '|id|'))->label("Name")->searchable()
             ->column("profile.name.en")->sortable()->searchable()->exportable()
             ->column("created_at")->date()->exportable()
             ->column("updated_at")->date("DD/MM/YYYY")->sortable()
@@ -161,11 +162,13 @@ class UserController extends Controller
 </html>
 ```
 ## General Methods
-### setModel()
+### for()
 
-Use the `setModel()` method at first it will define the model to get data from, it will specify the page title also by model table name.
+Use the `for()` method at first it will define the model to get data from, it will specify the page title also by model table name.
+this method accepts `Model::query()` or `Model::class`
 ```php
-datatableCruds()->setModel(User::class);
+datatableCruds()->for(User::class);
+// datatableCruds()->for(User::where("active", 1));
 ```
 ### setPageTitle()
 
@@ -212,7 +215,7 @@ $datatable->searchBy('id', 'name->en', ...);
 you can use this method to remove export csv button or to set your own button.
 
 ```php
-$datatable->exportCsvBtn("<a href='/csv'>Csv</a>");
+$datatable->exportCsvBtn("<a href='/csv?page=|current_page|&limit=|per_page|'>Csv</a>", "exportedFileName");
 ```
 ### exportExcelBtn()
 
@@ -234,8 +237,8 @@ $datatable->printBtn(false);
 | ------------------| -------|
 | CURRENT_URL       | GET    |
 | CURRENT_URL       | POST   |
-| CURRENT_URL/{id}  | PATCH  |
-| CURRENT_URL/{id}  | DELETE |
+| CURRENT_URL/|id|  | PATCH  |
+| CURRENT_URL/|id|  | DELETE |
 ### setGetRoute()
 use it to set a custom route to get data from.
 in the route controller method you can just return this helper function and pass your model to it `dataTableOf(User::class)`.
@@ -252,20 +255,20 @@ $datatable->setStoreRoute('/store-route');
 ### setUpdateRoute()
 use it to set a route to send form update data to it.
 the first parameter is for the route , and the second for the route method, by default it's `PATCH`.
-**route parameters must be written in curly brackets {} and these parameters will be replaced with the value from the row we are modifying**
+**route parameters must be written between two columns || and these parameters will be replaced with the value from the row we are modifying**
 Also with the request you will get a request key called `findBy` whose value in this case will be `id` and you can change the `findBy` request key name with this method `setRequestFindByKeyName("newFindByKey")`.
 
 ```php
-$datatable->setUpdateRoute('/update-route/{id}');
+$datatable->setUpdateRoute(route('update-route', '|id|'));
 ```
 ### setDeleteRoute()
 use it to set a route to send form delete data to it.
 the first parameter is for the route , and the second for the route method, by default it's `DELETE`.
-**route parameters must be written in curly brackets {} and these parameters will be replaced with the value from the row we are deleting**
+**route parameters must be written between two columns || and these parameters will be replaced with the value from the row we are deleting**
 you will also get the request key `findBy` with the request as in the above example.
 
 ```php
-$datatable->setDeleteRoute('/delete-route/{id}');
+$datatable->setDeleteRoute(route('delete-route', '|id|'));
 ```
 ### setDefaultDateFormat()
 
@@ -313,7 +316,8 @@ the first parameter is for the text key and the second one is for its value.
 you will find all available text keys at `config/datatablecruds.php`
 
 ```php
-$datatable->setText("info", "Showing {from} to {to} of {total} entries");
+$datatable->setText("delete.title", "Delete");
+$datatable->setText("info", "Showing |from| to |to| of |total| entries");
 ```
 ### setLimits()
 
@@ -399,7 +403,7 @@ $datatable->input("name")->label("User Name");
 ### html()
 you can use this method to set custom column or input html.
 ```php
-$datatable->column("image")->html("Img: <img src='/{id}/{category.name.en}' />");
+$datatable->column("image")->html("Img: <img src='/|id|/|category.name.en|' />");
 $datatable->input("hr")->html("<hr />");
 ```
 ### attributes()
@@ -454,7 +458,7 @@ this method accepts `@mixed` parameters.
 $datatable->setColumns(
     'id',
     'name|sortable|searchable|attributes({"class":"bg-danger p-2"})',
-    'email|href({id})',
+    'email|href(|id|)',
     'status|$#"{email_verified_at}" ? "<span>Verified</span>" : "<span>Not Verified</span>"',
     'created_at|date(YYYY-MM-DD)',
     'updated_at|date',
@@ -494,13 +498,13 @@ the image src will be the value of the db_column.
 you can pass any value to this method and that value will be applied before the value of the db_column or you can pass `false` to this method to remove the image element.
 
 ```php
-$datatable->column("image")->image("images/{id}/");
+$datatable->column("image")->image("images/|id|/");
 ```
 ### href()
-**if you want to access any field value just write that field in curly brackets {} `{created_at}`**
+**if you want to access any field value just write that field between two columns || `|created_at|`**
 you can use this method to set href to the column.
 ```php
-$datatable->column("image")->href("{id}/{category.name.en}");
+$datatable->column("image")->href("|id|/|category.name.en|");
 ```
 ### actions()
 You can use this method to create clone, edit and delete actions buttons, and you can optionally pass the given column label to the method the default label will be set from the column name.
@@ -517,10 +521,10 @@ $datatable->column("select")->checkall();
 ### execHtml() && execHref()
 
 you can use these methods to execute any `javascript code`, by default it will return the whole code , if you want to return specfic data you will need to write `return` before it.
-**in these methods if field you are going to write in curly brackets {} is not number then you must enclose it in double quotes `"{created_at}"`**
+**in these methods if field you are going to write between two columns || is not number then you must enclose it in double quotes `"|created_at|"`**
 ```php
-$datatable->column("custom_one")->execHtml('{status} == 1 ? "<span class="badge bg-success"> Active </span>" : "<span class="badge bg-danger"> InActive </span>"');
-$datatable->column("custom_one")->execHref('/{id}');
+$datatable->column("custom_one")->execHtml('|status| == 1 ? "<span class="badge bg-success"> Active </span>" : "<span class="badge bg-danger"> InActive </span>"');
+$datatable->column("custom_one")->execHref('/|id|');
 ```
 
 ****
