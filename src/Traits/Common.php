@@ -2,12 +2,14 @@
 
 namespace Exist404\DatatableCruds\Traits;
 
+use Exist404\DatatableCruds\DatatableCruds;
+
 trait Common
 {
     /**
      * Set label for current instance
     */
-    public function label(string $label): self
+    public function label(string $label): DatatableCruds
     {
         $this->setValue('label', $label);
 
@@ -18,7 +20,7 @@ trait Common
     /**
      * Use html tags with current instance
     */
-    public function html(string|callable $html = ''): self
+    public function html(string|callable $html = ''): DatatableCruds
     {
         $this->setValue('isDate', false);
         $this->setValue('isImage', false);
@@ -30,7 +32,7 @@ trait Common
     /**
      * Apply html tag attributes to current instance
     */
-    public function attributes(array $attributes): self
+    public function attributes(array $attributes): DatatableCruds
     {
         if (!isset($this->{$this->instance}['attributes'])) {
             $this->{$this->instance}['attributes'] = [];
@@ -42,7 +44,7 @@ trait Common
     /**
      * Apply html tag attributes to current instance
     */
-    public function setAttribute(string $name, string $value): self
+    public function setAttribute(string $name, string $value): DatatableCruds
     {
         $this->attributes([$name => $value]);
         return $this;

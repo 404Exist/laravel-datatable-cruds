@@ -7,6 +7,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class ModelDataTable
 {
@@ -50,7 +51,7 @@ class ModelDataTable
             $query = $this->applySearch($query);
         }
         return $query->select("{$this->tableName}.*")
-                    ->paginate($this->request->limit, ['*'], 'page', $this->request->page);
+                    ->paginate($this->request->limit);
     }
 
     private function setData(Builder $model): void
@@ -66,7 +67,9 @@ class ModelDataTable
     {
         $this->query->getQuery()->wheres = array_map(
             function ($where) {
-                $where['column'] = $this->tableName . "." . $where['column'];
+                if (! isset(explode(".", $where['column'])[1])) {
+                    $where['column'] = $this->tableName . "." . $where['column'];
+                }
                 return $where;
             },
             $this->query->getQuery()->wheres
@@ -99,7 +102,7 @@ class ModelDataTable
         foreach ($searchBy as $index => $field) {
             $method = $index == 0 ? "where" : "orWhere";
             if ($this->isRelatedToModel($field)) {
-                @list($relation, $column) = explode('.', $field);
+                @list($relation, $column) = $this->listRelationAndColumn($field);
                 $query = $query->{$method . "Has"}(
                     $relation,
                     fn($query)=> $query->where($column, 'like', "%{$this->request->search}%")
@@ -118,7 +121,7 @@ class ModelDataTable
 
     private function orderByRelated(): Builder
     {
-        @list($relationName, $orderBy) = explode('.', $this->request->orderBy);
+        @list($relationName, $orderBy) = $this->listRelationAndColumn($this->request->orderBy);
 
         $relatedTableName = $this->relatedTableName($relationName);
 
@@ -130,7 +133,7 @@ class ModelDataTable
     {
         return $this->query->distinct("{$this->tableName}.{$this->primaryKeyName}")
             ->leftJoin($this->relatedTableName($relationName), function ($join) use ($relationName) {
-                $relation = $this->model->$relationName();
+                $relation = $this->relatedRelation($relationName);
                 $relatedModel = $this->relatedModel($relationName);
                 $relatedForeign = $relation->getForeignKeyName();
                 $relatedTableName = $relatedModel->getTable();
@@ -148,9 +151,41 @@ class ModelDataTable
             });
     }
 
+    private function listRelationAndColumn(string $field)
+    {
+        $fields = explode('.', $field);
+        $column = $fields[count($fields) - 1];
+        $relations = "";
+        array_pop($fields);
+        foreach ($fields as $relation) {
+            $relations .= ".$relation";
+        }
+        $relations = ltrim($relations, ".");
+        return [
+            $relations,
+            $column
+        ];
+    }
+
+    private function relatedRelation(string $relationName): Relation
+    {
+        $relationNames = explode('.', $relationName);
+        $relatedModel = $this->model;
+        $relation = $relationName;
+        if (count($relationNames) > 1) {
+            $relation = array_pop($relationNames);
+
+            foreach ($relationNames as $relationName) {
+                $relatedModel = $relatedModel->$relationName()->getModel();
+            }
+        }
+
+        return $relatedModel->$relation();
+    }
+
     private function relatedModel(string $relationName): Model
     {
-        return $this->model->$relationName()->getModel();
+        return $this->relatedRelation($relationName)->getModel();
     }
 
     private function relatedTableName(string $relationName): string

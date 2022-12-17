@@ -3,6 +3,7 @@
 namespace Exist404\DatatableCruds;
 
 use Exist404\DatatableCruds\Console\Commands\InstallPackageCommand;
+use Exist404\DatatableCruds\Console\Commands\NewDatatableCrudsCommand;
 use Exist404\DatatableCruds\Middleware\DatatableInjection;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\Facades\Blade;
@@ -31,7 +32,7 @@ class DatatableCrudsProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . '/views', 'datatable');
         $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
         $this->publishes([__DIR__ . '/../config/datatablecruds.php' => config_path('datatablecruds.php')], 'config');
-        $this->commands([InstallPackageCommand::class]);
+        $this->commands([InstallPackageCommand::class, NewDatatableCrudsCommand::class]);
         $this->registerMiddleware(DatatableInjection::class);
         Blade::directive('datatable', function ($data) {
             return "<data-list data='{{ json_encode($data) }}'></data-list>";

@@ -2,6 +2,7 @@
 
 namespace Exist404\DatatableCruds\Traits;
 
+use Exist404\DatatableCruds\DatatableCruds;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 trait Globals
@@ -9,7 +10,7 @@ trait Globals
     /**
      * Datatable model
     */
-    public function for(Builder|string $model): self
+    public function for(Builder|string $model): DatatableCruds
     {
         if (is_string($model)) {
             $model = (new $model())->query();
@@ -26,7 +27,7 @@ trait Globals
     /**
      * Datatable page title
     */
-    public function setPageTitle(string $pageTitle): self
+    public function setPageTitle(string $pageTitle): DatatableCruds
     {
         $this->pageTitle = $pageTitle;
         return $this;
@@ -34,7 +35,7 @@ trait Globals
     /**
      * Datatable direction
     */
-    public function setDir(string|callable $dir): self
+    public function setDir(string|callable $dir): DatatableCruds
     {
         $this->dir = $dir;
         return $this;
@@ -42,7 +43,7 @@ trait Globals
     /**
      * Request Headers
     */
-    public function setHeader(string $name, string $value): self
+    public function setHeader(string $name, string $value): DatatableCruds
     {
         $this->headers = array_merge($this->headers, [$name => $value]);
         return $this;
@@ -50,7 +51,7 @@ trait Globals
     /**
      * Relations to load with model
     */
-    public function with(mixed ...$with): self
+    public function with(string ...$with): DatatableCruds
     {
         foreach ($with as $index => $value) {
             $this->with .= $index == 0 ? $value : '|' . $value;
@@ -60,7 +61,7 @@ trait Globals
     /**
      * Columns names to search by
     */
-    public function searchBy(mixed ...$searchBy): self
+    public function searchBy(string ...$searchBy): DatatableCruds
     {
         $this->searchBy = array_merge($this->searchBy, $searchBy);
         return $this;
@@ -68,7 +69,7 @@ trait Globals
     /**
      * Set get route
     */
-    public function setGetRoute(string $route): self
+    public function setGetRoute(string $route): DatatableCruds
     {
         $this->routes['get'] = $route;
         return $this;
@@ -76,7 +77,7 @@ trait Globals
     /**
      * Set store route
     */
-    public function setStoreRoute(string $route, string $method = 'post'): self
+    public function setStoreRoute(string $route, string $method = 'post'): DatatableCruds
     {
         $this->routes['store'] = $route;
         $this->routesMethods['store'] = $method;
@@ -85,7 +86,7 @@ trait Globals
     /**
      * Set update route
     */
-    public function setUpdateRoute(string $route, string $method = 'patch'): self
+    public function setUpdateRoute(string $route, string $method = 'patch'): DatatableCruds
     {
         $this->routes['update'] = $route;
         $this->routesMethods['update'] = $method;
@@ -94,7 +95,7 @@ trait Globals
     /**
      * Set delete route
     */
-    public function setDeleteRoute(string $route, string $method = 'delete'): self
+    public function setDeleteRoute(string $route, string $method = 'delete'): DatatableCruds
     {
         $this->routes['delete'] = $route;
         $this->routesMethods['delete'] = $method;
@@ -103,7 +104,7 @@ trait Globals
     /**
      * Request FindBy Key Name
     */
-    public function setRequestFindByKeyName(string $findBy): self
+    public function setRequestFindByKeyName(string $findBy): DatatableCruds
     {
         $this->findBy = $findBy;
         return $this;
@@ -111,7 +112,7 @@ trait Globals
     /**
      * Default Date Format
     */
-    public function setDefaultDateFormat(string $dateFormat): self
+    public function setDefaultDateFormat(string $dateFormat): DatatableCruds
     {
         $this->dateFormat = str($dateFormat)->wrap("format(", ")");
         return $this;
@@ -119,7 +120,7 @@ trait Globals
     /**
      * Datatable order
     */
-    public function setDefaultOrder(string $orderBy = 'created_at', string $order = 'desc'): self
+    public function setDefaultOrder(string $orderBy = 'created_at', string $order = 'desc'): DatatableCruds
     {
         $this->request['order'] = $order;
         $this->request['orderBy'] = $orderBy;
@@ -128,7 +129,7 @@ trait Globals
     /**
      * Update addAction
     */
-    public function addAction(string|bool $html = null, string $onclick = 'openModal', string|bool $value = true): self
+    public function addAction(string|bool $html = null, string $onclick = 'openModal', string|bool $value = true): DatatableCruds
     {
         $this->addButton['onclick'] = [$onclick => $value];
         $this->addButton['html'] = $html;
@@ -140,7 +141,7 @@ trait Globals
     /**
      * Update editAction
     */
-    public function editAction(string|bool $html = null, string $onclick = 'openModal', string|bool $value = true): self
+    public function editAction(string|bool $html = null, string $onclick = 'openModal', string|bool $value = true): DatatableCruds
     {
         $this->actions["edit"]['onclick'] = [$onclick => $value];
         $this->actions["edit"]['html'] = $html;
@@ -152,7 +153,7 @@ trait Globals
     /**
      * Update deleteAction
     */
-    public function deleteAction(string|bool $html = null, string $onclick = 'openModal', string|bool $value = true): self
+    public function deleteAction(string|bool $html = null, string $onclick = 'openModal', string|bool $value = true): DatatableCruds
     {
         $this->actions["delete"]['onclick'] = [$onclick => $value];
         $this->actions["delete"]['html'] = $html;
@@ -164,7 +165,7 @@ trait Globals
     /**
      * Update cloneAction
     */
-    public function cloneAction(string|bool $html = null, string $onclick = 'openModal', string|bool $value = true): self
+    public function cloneAction(string|bool $html = null, string $onclick = 'openModal', string|bool $value = true): DatatableCruds
     {
         $this->actions["clone"]['onclick'] = [$onclick => $value];
         $this->actions["clone"]['html'] = $html;
@@ -176,7 +177,7 @@ trait Globals
     /**
      * Set search debounce and class name
     */
-    public function search(string $debounce, string $class = 'form-control'): self
+    public function search(string $debounce, string $class = 'form-control'): DatatableCruds
     {
         $this->searchBar = [
             "class" => $class,
@@ -187,7 +188,7 @@ trait Globals
     /**
      * Datatable export csv
     */
-    public function exportCsvBtn(bool|string $csv = true, string $filename = null): self
+    public function exportCsvBtn(bool|string $csv = true, string $filename = null): DatatableCruds
     {
         $this->exports["csv"]["html"] = $csv;
         $this->exports["csv"]["filename"] = $filename;
@@ -196,7 +197,7 @@ trait Globals
     /**
      * Datatable export excel
     */
-    public function exportExcelBtn(bool|string $excel = true, string $filename = null): self
+    public function exportExcelBtn(bool|string $excel = true, string $filename = null): DatatableCruds
     {
         $this->exports["excel"]["html"] = $excel;
         $this->exports["excel"]["filename"] = $filename;
@@ -205,7 +206,7 @@ trait Globals
     /**
      * Datatable print
     */
-    public function printBtn(bool|string $print = true): self
+    public function printBtn(bool|string $print = true): DatatableCruds
     {
         $this->exports["print"] = $print;
         return $this;
@@ -213,7 +214,7 @@ trait Globals
     /**
      * Default Texts
     */
-    public function setText(string $key, string $text): self
+    public function setText(string $key, string $text): DatatableCruds
     {
         $texts = &$this->texts;
 
@@ -228,13 +229,13 @@ trait Globals
         return $this;
     }
 
-    public function showPagination(bool $show = true): self
+    public function showPagination(bool $show = true): DatatableCruds
     {
         $this->pagination["show"] = $show;
         return $this;
     }
 
-    public function hidePaginationIfContainOnePage(bool $hide = true): self
+    public function hidePaginationIfContainOnePage(bool $hide = true): DatatableCruds
     {
         $this->pagination["hideIfContainOnePage"] = $hide;
         return $this;
@@ -242,7 +243,7 @@ trait Globals
     /**
      * Set view limits
     */
-    public function setLimits(mixed ...$limits): self
+    public function setLimits(int ...$limits): DatatableCruds
     {
         $this->limits = $limits;
         return $this;
@@ -250,7 +251,7 @@ trait Globals
     /**
      * Set form width
     */
-    public function formWidth(string $width): self
+    public function formWidth(string $width): DatatableCruds
     {
         $this->formWidth = $width;
         return $this;
@@ -258,7 +259,7 @@ trait Globals
     /**
      * Set form height
     */
-    public function formHeight(string $height): self
+    public function formHeight(string $height): DatatableCruds
     {
         $this->formHeight = $height;
         return $this;
@@ -266,7 +267,7 @@ trait Globals
     /**
      * Update form store button
     */
-    public function storeButton(string $label = 'Create', string $color = 'primary'): self
+    public function storeButton(string $label = 'Create', string $color = 'primary'): DatatableCruds
     {
         $this->storeButton = [
             'label' => $label,
@@ -277,7 +278,7 @@ trait Globals
     /**
      * Update form update button
     */
-    public function updateButton(string $label = 'Update', string $color = 'primary'): self
+    public function updateButton(string $label = 'Update', string $color = 'primary'): DatatableCruds
     {
         $this->updateButton = [
             'label' => $label,
@@ -288,7 +289,7 @@ trait Globals
     /**
      * Update form delete button
     */
-    public function deleteButton(string $label = 'Delete', string $color = 'danger'): self
+    public function deleteButton(string $label = 'Delete', string $color = 'danger'): DatatableCruds
     {
         $this->deleteButton = [
             'label' => $label,
@@ -299,7 +300,7 @@ trait Globals
     /**
      * Set blade extends
     */
-    public function setBladeExtends(string $bladeExtends): self
+    public function setBladeExtends(string $bladeExtends): DatatableCruds
     {
         $this->bladeExtends = $bladeExtends;
         return $this;
@@ -307,7 +308,7 @@ trait Globals
     /**
      * Set blade section
     */
-    public function setBladeSection(string $bladeSection): self
+    public function setBladeSection(string $bladeSection): DatatableCruds
     {
         $this->bladeSection = $bladeSection;
         return $this;

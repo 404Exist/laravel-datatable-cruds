@@ -2,6 +2,7 @@
 
 namespace Exist404\DatatableCruds\Traits;
 
+use Exist404\DatatableCruds\DatatableCruds;
 use Exist404\DatatableCruds\Exceptions\MethodNotAllowedWithCurrentInstance;
 use Illuminate\Support\Arr;
 
@@ -10,7 +11,7 @@ trait Columns
     /**
      * Set View Columns.
     */
-    public function setColumns(string ...$columns): self
+    public function setColumns(string ...$columns): DatatableCruds
     {
         $this->instance = 'column';
         $this->executeMethodsFromStr(...$columns);
@@ -19,14 +20,14 @@ trait Columns
     /**
      * Create a new column
     */
-    public function column(string|callable $name): self
+    public function column(string|callable $name): DatatableCruds
     {
         return $this->create('column', $name);
     }
     /**
      * Push columns from other instance
     */
-    public function columns(self $instance): self
+    public function columns(self $instance): DatatableCruds
     {
         $this->addCurrentInstance();
         $instance->addCurrentInstance();
@@ -42,7 +43,7 @@ trait Columns
     /**
      * Set sortable for current column
     */
-    public function sortable(bool|callable $sortable = true): self
+    public function sortable(bool|callable $sortable = true): DatatableCruds
     {
         $this->setColumnValue(["key" => 'sortable', "value" => $sortable]);
         return $this;
@@ -50,7 +51,7 @@ trait Columns
     /**
      * Set searchable for current column
     */
-    public function searchable(bool|callable $searchable = true): self
+    public function searchable(bool|callable $searchable = true): DatatableCruds
     {
         $this->setColumnValue(["key" => 'searchable', "value" => $searchable]);
         return $this;
@@ -58,7 +59,7 @@ trait Columns
     /**
      * Set exportable for current column
     */
-    public function exportable(bool|callable $exportable = true): self
+    public function exportable(bool|callable $exportable = true): DatatableCruds
     {
         $this->setColumnValue(["key" => 'exportable', "value" => $exportable]);
         return $this;
@@ -66,7 +67,7 @@ trait Columns
     /**
      * Specify that current column is image
     */
-    public function image(string|bool|null $path = ''): self
+    public function image(string|bool|null $path = ''): DatatableCruds
     {
         $isImage = !$path && $path !== '' ? false : true;
 
@@ -78,7 +79,7 @@ trait Columns
         return $this;
     }
 
-    public function href(string|callable $href = ''): self
+    public function href(string|callable $href = ''): DatatableCruds
     {
         $this->setColumnValue(["key" => 'href', "value" => $href]);
         return $this;
@@ -86,7 +87,7 @@ trait Columns
     /**
      * Specify that current column is date
     */
-    public function date(string|bool|null $format = null): self
+    public function date(string|bool|null $format = null): DatatableCruds
     {
         $isDate = $format === false ? false : true;
 
@@ -101,7 +102,7 @@ trait Columns
     /**
      * Specify that current column is checkall
     */
-    public function checkall(string|bool|null $label = null): self
+    public function checkall(string|bool|null $label = null): DatatableCruds
     {
         $isSelect = $label === false ? false : true;
         $this->setColumnValue(["key" => 'isSelect', "value" => $isSelect, "calledMethodName" => __FUNCTION__]);
@@ -114,7 +115,7 @@ trait Columns
     /**
      * Specify that current column is actions
     */
-    public function actions(string|bool|null $label = null): self
+    public function actions(string|bool|null $label = null): DatatableCruds
     {
         $isAction = $label === false ? false : true;
         $this->setColumnValue(["key" => 'isAction', "value" => $isAction, "calledMethodName" => __FUNCTION__]);
@@ -127,7 +128,7 @@ trait Columns
     /**
      * Execute javascript functions and push returned value to (html)
     */
-    public function execHtml(string|callable $js): self
+    public function execHtml(string|callable $js): DatatableCruds
     {
         $this->setColumnValue([
             "key" => "html",
@@ -140,7 +141,7 @@ trait Columns
     /**
      * Execute javascript functions and push returned value to (href)
     */
-    public function execHref(string|callable $js): self
+    public function execHref(string|callable $js): DatatableCruds
     {
         $this->setColumnValue([
             "key" => "href",

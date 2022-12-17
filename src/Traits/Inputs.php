@@ -2,6 +2,7 @@
 
 namespace Exist404\DatatableCruds\Traits;
 
+use Exist404\DatatableCruds\DatatableCruds;
 use Exist404\DatatableCruds\Exceptions\MethodNotAllowedWithCurrentInstance;
 use Illuminate\Support\Arr;
 
@@ -10,7 +11,7 @@ trait Inputs
     /**
      * Set View Inputs.
     */
-    public function setInputs(string ...$inputs): self
+    public function setInputs(string ...$inputs): DatatableCruds
     {
         $this->instance = 'input';
         $this->executeMethodsFromStr(...$inputs);
@@ -19,14 +20,14 @@ trait Inputs
     /**
      * Create a new input
     */
-    public function input(string|callable $name): self
+    public function input(string|callable $name): DatatableCruds
     {
         return $this->create('input', $name);
     }
     /**
      * Push inputs from other instance
     */
-    public function inputs(self $instance): self
+    public function inputs(self $instance): DatatableCruds
     {
         $this->addCurrentInstance();
         $instance->addCurrentInstance();
@@ -42,7 +43,7 @@ trait Inputs
     /**
      * Set type for current input
     */
-    public function type(string $type): self
+    public function type(string $type): DatatableCruds
     {
         $this->setInputValue('type', $type);
         return $this;
@@ -50,7 +51,7 @@ trait Inputs
     /**
      * Push input to the edit form only
     */
-    public function editForm(): self
+    public function editForm(): DatatableCruds
     {
         $this->setInputValue(["key" => 'form', "value" => "Edit", "calledMethodName" => __FUNCTION__]);
         return $this;
@@ -58,7 +59,7 @@ trait Inputs
     /**
      * Push input to the create form only
     */
-    public function createForm(): self
+    public function createForm(): DatatableCruds
     {
         $this->setInputValue(["key" => 'form', "value" => "Add", "calledMethodName" => __FUNCTION__]);
         return $this;
@@ -66,7 +67,7 @@ trait Inputs
     /**
      * Set current input page
     */
-    public function page(int $page): self
+    public function page(int $page): DatatableCruds
     {
         for ($i = 0; $i <= $page; $i++) {
             $this->pages[$i] = [];
@@ -77,7 +78,7 @@ trait Inputs
     /**
      * Set class for current input parent
     */
-    public function parentClass(string|callable $parentClass): self
+    public function parentClass(string|callable $parentClass): DatatableCruds
     {
         $this->setInputValue("parentClass", $parentClass);
         return $this;
@@ -85,7 +86,7 @@ trait Inputs
     /**
      * Set class for current input label
     */
-    public function labelClass(string|callable $labelClass): self
+    public function labelClass(string|callable $labelClass): DatatableCruds
     {
         $this->setInputValue("labelClass", $labelClass);
         return $this;
@@ -93,7 +94,7 @@ trait Inputs
     /**
      * Make multi select input
     */
-    public function multiSelect(string $label = "name", string $val = "id", bool $multiple = true): self
+    public function multiSelect(string $label = "name", string $val = "id", bool $multiple = true): DatatableCruds
     {
         $this->setInputValue(["key" => 'type', "value" => "multi-select", "calledMethodName" => __FUNCTION__]);
         $this->attributes([
@@ -110,7 +111,7 @@ trait Inputs
     /**
      * Make select input
     */
-    public function select(string $label = "name", string $val = "id"): self
+    public function select(string $label = "name", string $val = "id"): DatatableCruds
     {
         $this->setInputValue(["key" => 'type', "value" => "select", "calledMethodName" => __FUNCTION__]);
         $this->options([]);
@@ -121,7 +122,7 @@ trait Inputs
     /**
      * Set options for current input (select)
     */
-    public function options(array $options = []): self
+    public function options(array $options = []): DatatableCruds
     {
         $this->setInputValue("options", $options);
         return $this;
@@ -132,7 +133,7 @@ trait Inputs
      * @param string $update input (select) name to update it with data onchange current select
      * @param string $urlToGetOptions url to get data
     */
-    public function onChange(string $update, string $urlToGetOptions): self
+    public function onChange(string $update, string $urlToGetOptions): DatatableCruds
     {
         $this->setInputValue('onChange', ['update' => $update, 'getDataFrom' => $urlToGetOptions]);
         return $this;
@@ -140,7 +141,7 @@ trait Inputs
     /**
      * Make dropzone input
     */
-    public function dropzone(array $dropZoneAttributes = []): self
+    public function dropzone(array $dropZoneAttributes = []): DatatableCruds
     {
         $this->setInputValue(["key" => 'type', "value" => "drop_zone", "calledMethodName" => __FUNCTION__]);
         $this->setInputValue('dropZoneAttributes', $dropZoneAttributes);
@@ -152,7 +153,7 @@ trait Inputs
     /**
      * Make checkbox input
     */
-    public function checkbox(bool|string|int $selectedValue = true, bool|string|int $unselectedValue = false): self
+    public function checkbox(bool|string|int $selectedValue = true, bool|string|int $unselectedValue = false): DatatableCruds
     {
         $this->setInputValue(["key" => 'type', "value" => "checkbox", "calledMethodName" => __FUNCTION__]);
         $this->attributes([
@@ -165,7 +166,7 @@ trait Inputs
     /**
      * Make radio input
     */
-    public function radio($value): self
+    public function radio($value): DatatableCruds
     {
         $this->setInputValue(["key" => 'type', "value" => "radio", "calledMethodName" => __FUNCTION__]);
         $this->attributes([
@@ -178,25 +179,15 @@ trait Inputs
     /**
      * Make tags input
     */
-    public function tags(): self
+    public function tags(): DatatableCruds
     {
         $this->setInputValue(["key" => 'type', "value" => "tags", "calledMethodName" => __FUNCTION__]);
         return $this;
     }
     /**
-     * Make editor input
-    */
-    public function editor(string|null $value = null): self
-    {
-        $value = $value ?: $this->input['label'];
-        $this->setInputValue(["key" => 'type', "value" => "editor", "calledMethodName" => __FUNCTION__]);
-        $this->attributes(['value' => $this->dynamicLabel($value)]);
-        return $this;
-    }
-    /**
      * To fill multiselect from $optionsRoute url with data on search
     */
-    public function optionsRoute(string $optionsRoute): self
+    public function optionsRoute(string $optionsRoute): DatatableCruds
     {
         $this->setInputValue(["key" => 'getDataFrom', "value" => $optionsRoute, "calledMethodName" => __FUNCTION__]);
         return $this;

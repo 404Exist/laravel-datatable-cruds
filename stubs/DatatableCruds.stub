@@ -1,0 +1,66 @@
+<?php
+
+namespace {{namespace}};
+
+use {{modelNameSpace}};
+use Exist404\DatatableCruds\DatatableCruds;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\View\View;
+
+class {{class}}DatatableCruds
+{
+    protected static DatatableCruds $datatable;
+
+    /**
+     * you can define all of your datatable globals methods here
+    */
+    protected static function init(): DatatableCruds
+    {
+        return datatableCruds()
+            ->for({{class}}::class)
+            ->columns(static::columns())
+            ->inputs(static::inputs())
+            ;
+    }
+
+    /**
+     * you can define all of your datatable columns here
+    */
+    protected static function columns(): DatatableCruds
+    {
+        return datatableCruds()
+            ->column("id")->sortable()->searchable()->exportable()
+            ;
+    }
+
+    /**
+     * you can define all of your datatable forms inputs here
+    */
+    protected static function inputs(): DatatableCruds
+    {
+        return datatableCruds()
+            ->input("name")->type("text")
+            ;
+    }
+
+    /**
+     * you need to call any of the next methods in your controller to work with it
+    */
+    public static function getInstance(): DatatableCruds
+    {
+        static::$datatable = static::init();
+        return self::$datatable;
+    }
+
+    public static function render(array $extendsData = []): View|LengthAwarePaginator
+    {
+        static::$datatable = static::init();
+        return self::$datatable->render($extendsData);
+    }
+
+    public static function renderData(): array
+    {
+        static::$datatable = static::init();
+        return self::$datatable->renderData();
+    }
+}

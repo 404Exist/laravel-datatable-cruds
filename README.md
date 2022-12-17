@@ -17,6 +17,10 @@ After completing the step above, use the following command to publish config fil
 
 Now you're ready to start using datatable cruds in your application.
 ****
+## Create DatatableCruds Class For Model Command
+```bash 
+php artisan datatablecruds:for User
+```
 
 ## Overview
 * [Usage 1](#usage-1)
@@ -35,14 +39,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Exist404\DatatableCruds\Facades\DatatableCruds;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     public function index()
     {
-        return DatatableCruds::for(User::class)
+        return datatableCruds()
+            ->for(User::class)
             ->with("profile")
             ->column("id")->sortable()->setAttribute("class", "test")
             ->columns($this->columns())
@@ -108,20 +112,19 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\User;
-use Exist404\DatatableCruds\Facades\DatatableCruds;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $usersDatatable = DatatableCruds::setPageTitle("Users")
+        $usersDatatable = datatableCruds()->setPageTitle("Users")
             ->setGetRoute(route('getUsers'))
             ->with("profile")
             ->column("id")->sortable()
             ->column("profile.name.en")->sortable()
             ->renderData();
 
-        $productsDatatable = DatatableCruds::setPageTitle("Products")
+        $productsDatatable = datatableCruds()->setPageTitle("Products")
             ->setGetRoute(route('getProducts'))
             ->column("id")->sortable()->setAttribute("class", "test")
             ->column("name.en")->label("Name")->searchable()
@@ -197,7 +200,7 @@ $datatable->setHeader('X-CUSTOM-HEADER', '`Bearer ${localStorage.getItem("token"
 ### with()
 
 when you need to call column or input from table relation you must use this method to get the relation data.
-this method accepts `@mixed` parameters.
+this method accepts list of `string` parameters.
 
 ```php
 $datatable->with('relation1', 'relation2:column1,column2', ...);
@@ -205,7 +208,7 @@ $datatable->with('relation1', 'relation2:column1,column2', ...);
 ### searchBy()
 
 use it to set the columns to search by. or you can just use `searchable()` method while rendering the column, we will explain it recently.
-this method accepts `@mixed` parameters.
+this method accepts list of `string` parameters.
 
 ```php
 $datatable->searchBy('id', 'name->en', ...);
@@ -215,7 +218,7 @@ $datatable->searchBy('id', 'name->en', ...);
 you can use this method to remove export csv button or to set your own button.
 
 ```php
-$datatable->exportCsvBtn("<a href='/csv?page=|current_page|&limit=|per_page|'>Csv</a>", "exportedFileName");
+$datatable->exportCsvBtn("<a href='/csv?page=|current_page|&limit=|per_page|'>Csv</a>");
 ```
 ### exportExcelBtn()
 
@@ -223,6 +226,7 @@ you can use this method to remove export excel button or to set your own button.
 
 ```php
 $datatable->exportExcelBtn(false);
+$datatable->exportExcelBtn(true, "exportedFileName");
 ```
 ### printBtn()
 
@@ -237,8 +241,8 @@ $datatable->printBtn(false);
 | ------------------| -------|
 | CURRENT_URL       | GET    |
 | CURRENT_URL       | POST   |
-| CURRENT_URL/|id|  | PATCH  |
-| CURRENT_URL/|id|  | DELETE |
+| CURRENT_URL/\|id\|  | PATCH  |
+| CURRENT_URL/\|id\|  | DELETE |
 ### setGetRoute()
 use it to set a custom route to get data from.
 in the route controller method you can just return this helper function and pass your model to it `dataTableOf(User::class)`.
@@ -322,7 +326,7 @@ $datatable->setText("info", "Showing |from| to |to| of |total| entries");
 ### setLimits()
 
 use it to set select limit entries options.
-this method accepts `@mixed` parameters.
+this method accepts list of `int` parameters.
 ```php
 $datatable->setLimits(10, 20, 30, 40, ...);
 ```
@@ -382,6 +386,16 @@ $datatable->showPagination(false);
 this method accepts one boolean prameter, by default it's true.
 ```php
 $datatable->hidePaginationIfContainOnePage(false);
+```
+### renderData()
+This method will return an array and you can use it with `@datatable` directive to render datatable cruds.
+**if you want to render one datatable only it's better for you to use render method instead of this**
+
+```php
+$datatable = $datatable->renderData();
+return view('app', compact('datatable'));
+// in app.blade.php file render this directive
+@datatable($datatable)
 ```
 ### render()
 Finally, use this method to render your datatable view.
@@ -446,7 +460,7 @@ $datatable->column(function() {
 ### setColumns() 
 
 use this magic method to display columns to the view, you can use any column method in this method.
-this method accepts `@mixed` parameters.
+this method accepts list of `string` parameters.
 ##### how to write each parameter in this method ?
 * parameter text must begin with the column name.
 * you can implement any of the column methods using this symbol `|` and then type the method name `"email|sortable"`.
@@ -548,7 +562,7 @@ if you make input name like above example `"name.en"` then you can access it in 
 ### setInputs() 
 
 use this magic method to display inputs to the forms, you can use any input method in this method.
-this method accepts `@mixed` parameters.
+this method accepts list of `string` parameters.
 ##### how to write each parameter in this method ?
 * parameter text must begin with the input name `"email"`.
 * you can implement any of the input methods using this symbol `|` and then type the method name `"the_tags|tags"`, you can also write the input type after this symbol `"email|email"`.
@@ -668,12 +682,6 @@ $datatable->input("image")->dropzone([
 you can use this method to make a `tags` input.
 ```php
 $datatable->input("name.en")->tags();
-```
-### editor()
-
-you can use this method to make a CkEditor, this method accepts one parameter which will be the default editor data.
-```php
-$datatable->input("editor")->editor("<h1>support me</h1>");
 ```
 ### checkbox()
 
