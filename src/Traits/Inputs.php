@@ -9,15 +9,6 @@ use Illuminate\Support\Arr;
 trait Inputs
 {
     /**
-     * Set View Inputs.
-    */
-    public function setInputs(string ...$inputs): DatatableCruds
-    {
-        $this->instance = 'input';
-        $this->executeMethodsFromStr(...$inputs);
-        return $this;
-    }
-    /**
      * Create a new input
     */
     public function input(string|callable $name): DatatableCruds

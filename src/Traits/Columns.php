@@ -9,15 +9,6 @@ use Illuminate\Support\Arr;
 trait Columns
 {
     /**
-     * Set View Columns.
-    */
-    public function setColumns(string ...$columns): DatatableCruds
-    {
-        $this->instance = 'column';
-        $this->executeMethodsFromStr(...$columns);
-        return $this;
-    }
-    /**
      * Create a new column
     */
     public function column(string|callable $name): DatatableCruds

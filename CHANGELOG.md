@@ -1,4 +1,16 @@
 # Release Notes
+## [v1.1.4](https://github.com/404Exist/datatable-cruds/compare/v1.1.3...v1.1.4) - 2022-12-18
+
+### Added
+
+- Apility to use `withCount` and `withSum` and render these columns in datatable view
+### Fixed
+
+- Nested relationship order issue fixed
+- Case insensitive search now works
+### Removed
+
+- `setInputs()` & `setColumns()` methods have been removed.
 ## [v1.1.3](https://github.com/404Exist/datatable-cruds/compare/v1.1.2...v1.1.3) - 2022-12-17
 
 ### Added

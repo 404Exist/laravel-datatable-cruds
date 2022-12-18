@@ -248,53 +248,6 @@ class DatatableCruds
         return $item;
     }
 
-    protected function executeMethodsFromStr(string ...$items): void
-    {
-        $for = $this->instance;
-        foreach ($items as $item) {
-            $data = explode('|', $item);
-            $instance = $this->$for($data[0]);
-            array_splice($data, 0, 1);
-            foreach ($data as $val) {
-                if (str_starts_with($val, '$@') && $for == 'column') {
-                    $instance->execHref(ltrim($val, '$@'));
-                } elseif (str_starts_with($val, '$#') && $for == 'column') {
-                    $instance->execHtml(ltrim($val, '$#'));
-                } else {
-                    $method = explode('(', $val)[0];
-                    if (!method_exists($this, $method) && $for == 'input') {
-                        $instance->type($method);
-                    } else {
-                        preg_match('/\((.*)\)/', $val, $params);
-                        if (isset($params[1])) {
-                            $params = $params[1];
-                            $fixedParams = [];
-                            foreach (explode(',', $params) as $param) {
-                                if ($param == 'true') {
-                                    $param = true;
-                                } elseif ($param == 'false') {
-                                    $param = false;
-                                } elseif ($param == 'null') {
-                                    $param = null;
-                                } elseif (is_numeric($param)) {
-                                    $param = (int)$param;
-                                }
-                                array_push($fixedParams, $param);
-                            }
-                            $arr = [];
-                            if (str_ends_with($params, '}') || str_ends_with($params, ']')) {
-                                $arr = json_decode($params, true);
-                            }
-                            $arr ? $instance->{$method}($arr) : $instance->{$method}(...$fixedParams);
-                        } else {
-                            $instance->{$method}();
-                        }
-                    }
-                }
-            }
-            $instance->addCurrentInstance();
-        }
-    }
     /**
      * To push current instance to ($this->inputs, $this->columns)
     */

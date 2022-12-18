@@ -14,7 +14,7 @@ if (!function_exists('datatableCruds')) {
 if (!function_exists('dataTableOf')) {
     function dataTableOf(Builder|string $model = null): LengthAwarePaginator
     {
-        return (new \Exist404\DatatableCruds\ModelDataTable($model))->get();
+        return (new \Exist404\DatatableCruds\QueryBuilder\ModelDataTable($model))->get();
     }
 }
 

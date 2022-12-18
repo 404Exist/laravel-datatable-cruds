@@ -45,7 +45,6 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Exist404\DatatableCruds\DatatableCruds html(string|callable $html = ''): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds attributes(array $attributes): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds setAttribute(string $name, string $value): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds setColumns(string ...$columns): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds column(string|callable $name): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds columns(self $instance): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds sortable(bool|callable $sortable = true): \Exist404\DatatableCruds\DatatableCruds
@@ -58,7 +57,6 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Exist404\DatatableCruds\DatatableCruds href(string|callable $href = ''): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds execHtml(string|callable $js): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds execHref(string|callable $js): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds setInputs(string ...$inputs): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds input(string|callable $name): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds inputs(self $instance): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds type(string $type): \Exist404\DatatableCruds\DatatableCruds

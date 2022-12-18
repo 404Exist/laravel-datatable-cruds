@@ -456,30 +456,6 @@ $datatable->column(function() {
     }
 });
 ```
-
-### setColumns() 
-
-use this magic method to display columns to the view, you can use any column method in this method.
-this method accepts list of `string` parameters.
-##### how to write each parameter in this method ?
-* parameter text must begin with the column name.
-* you can implement any of the column methods using this symbol `|` and then type the method name `"email|sortable"`.
-* how to pass parameters to the method ?
-  * if you want to pass parameters just put the prameters in half circle brackets `()` for example `|multiSelect(name,id,true)` it's the same as `->multiSelect("name", "id", true)`.
-  * If you want to pass an array as a parameter, you have to write that array in json format `{"class":"bg-danger p-2"}`.
-* you can use these symbols `|$#` to write javascript code and set the value to column html or you can use these symbols `|$@` to write javascript code and set the value to column href.
-```php
-$datatable->setColumns(
-    'id',
-    'name|sortable|searchable|attributes({"class":"bg-danger p-2"})',
-    'email|href(|id|)',
-    'status|$#"{email_verified_at}" ? "<span>Verified</span>" : "<span>Not Verified</span>"',
-    'created_at|date(YYYY-MM-DD)',
-    'updated_at|date',
-    'select|checkall',
-    'actions|actions',
-);
-```
 ### sortable()
 You can use this method to make column is sortable.
 this method accepts one boolean parameter by default it's true.
@@ -559,23 +535,6 @@ $datatable->input(function() {
 ```
 if you make input name like above example `"name.en"` then you can access it in store and update requests this way `$request->name->en`
 
-### setInputs() 
-
-use this magic method to display inputs to the forms, you can use any input method in this method.
-this method accepts list of `string` parameters.
-##### how to write each parameter in this method ?
-* parameter text must begin with the input name `"email"`.
-* you can implement any of the input methods using this symbol `|` and then type the method name `"the_tags|tags"`, you can also write the input type after this symbol `"email|email"`.
-* how to pass parameters to the method ?
-    * if you want to pass parameters just put the prameters in half circle brackets `()` for example `|multiSelect(name,id,true)` it's the same as `->multiSelect("name", "id", true)`.
-    * If you want to pass an array as a parameter, you have to write that array in json format `[{"id":1, "name": "name1"}, {"id": 2, "name": "name2"}]`.
-```php
-$datatable->setInputs(
-    'name|text', 'email|email', 'password|password',
-    'images|dropzone({"multiple":true, "acceptedFiles":"mp4,png"})',
-    'choices|multiSelect(name,id,false)|options([{"id":1, "name": "name1"}, {"id": 2, "name": "name2"}])',
-);
-```
 ### editForm()
 
 You can use this method to add the input to the edit form only, by default it will be added in all forms. 
