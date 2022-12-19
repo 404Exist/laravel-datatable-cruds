@@ -17,13 +17,13 @@ class DatatableCruds
     use Inputs;
     use Common;
 
-    protected string $bladeExtends = 'app';
+    protected string $bladeExtends = '';
 
-    protected string $bladeSection = 'content';
+    protected string $bladeSection = '';
 
     protected string $pageTitle = '';
 
-    protected string $dir = 'ltr';
+    protected string $dir = '';
 
     protected string $dateFormat = '';
 
@@ -31,21 +31,15 @@ class DatatableCruds
 
     protected array $texts = [];
 
-    protected array $searchBar = [
-        "debounce" => "500ms",
-        "class" => "form-control"
-    ];
+    protected array $searchBar = [];
 
-    protected array $pagination = [
-        "show" => true,
-        "hideIfContainOnePage" => true,
-    ];
+    protected array $pagination = [];
 
-    protected array $limits = [10, 25, 50, 100];
+    protected array $limits = [];
 
-    protected string $formWidth = "100%";
+    protected string $formWidth = "";
 
-    protected string $formHeight = "100vh";
+    protected string $formHeight = "";
 
     protected array $columns = [];
 
@@ -95,7 +89,9 @@ class DatatableCruds
     public function __construct()
     {
         foreach (config('datatablecruds') as $key => $value) {
-            $this->$key = $value;
+            if (empty($this->$key)) {
+                $this->$key = $value;
+            }
         }
     }
     /**

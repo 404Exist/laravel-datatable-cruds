@@ -84,9 +84,11 @@ class ModelDataTable
 
     private function applyWithRelations(Builder $query): Builder
     {
-        foreach ($this->query->getQuery()->columns as $column) {
-            if ($column instanceof \Illuminate\Database\Query\Expression) {
-                $this->select[] = DB::raw($column->getValue());
+        if ($this->query->getQuery()->columns) {
+            foreach ($this->query->getQuery()->columns as $column) {
+                if ($column instanceof \Illuminate\Database\Query\Expression) {
+                    $this->select[] = DB::raw($column->getValue());
+                }
             }
         }
 

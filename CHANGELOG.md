@@ -1,4 +1,9 @@
 # Release Notes
+## [v1.1.5](https://github.com/404Exist/datatable-cruds/compare/v1.1.4...v1.1.5) - 2022-12-19
+
+### Fixed
+
+- Reassign class properties from config after it already signed issue fixed.
 ## [v1.1.4](https://github.com/404Exist/datatable-cruds/compare/v1.1.3...v1.1.4) - 2022-12-18
 
 ### Added
