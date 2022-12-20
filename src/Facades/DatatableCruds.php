@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Exist404\DatatableCruds\DatatableCruds setHeader(string $name, string $value): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds with(string ...$with): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds searchBy(string ...$searchBy): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds selectFilter(string $filterBy, array $options, string $label, string $defaultValue = null): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds setGetRoute(string $route): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds setStoreRoute(string $route, string $method = 'post'): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds setUpdateRoute(string $route, string $method = 'patch'): \Exist404\DatatableCruds\DatatableCruds
@@ -39,8 +40,10 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Exist404\DatatableCruds\DatatableCruds storeButton(string $label = 'Create', string $color = 'primary'): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds updateButton(string $label = 'Update', string $color = 'primary'): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds deleteButton(string $label = 'Delete', string $color = 'danger'): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds setBladeExtends(string $extends): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds setBladeSection(string $section): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds setBladeExtendsName(string $bladeExtendsName): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds setBladeSectionName(string $bladeSectionName): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds pushSectionToBlade(string $name, mixed $value): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds pushStackToBlade(string $name, mixed $value): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds label(string $label): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds html(string|callable $html = ''): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds attributes(array $attributes): \Exist404\DatatableCruds\DatatableCruds

@@ -67,6 +67,16 @@ trait Globals
         return $this;
     }
     /**
+     * Column to filter by
+    */
+    public function selectFilter(string $filterBy, array $options, string $label, string $defaultValue = null): DatatableCruds
+    {
+        $this->filterBy = array_merge($this->filterBy, [
+            $filterBy => ["options" => $options, "label" => $label, "defaultValue" => $defaultValue]
+        ]);
+        return $this;
+    }
+    /**
      * Set get route
     */
     public function setGetRoute(string $route): DatatableCruds
@@ -300,17 +310,29 @@ trait Globals
     /**
      * Set blade extends
     */
-    public function setBladeExtends(string $bladeExtends): DatatableCruds
+    public function setBladeExtendsName(string $bladeExtendsName): DatatableCruds
     {
-        $this->bladeExtends = $bladeExtends;
+        $this->bladeExtendsName = $bladeExtendsName;
         return $this;
     }
     /**
      * Set blade section
     */
-    public function setBladeSection(string $bladeSection): DatatableCruds
+    public function setBladeSectionName(string $bladeSectionName): DatatableCruds
     {
-        $this->bladeSection = $bladeSection;
+        $this->bladeSectionName = $bladeSectionName;
+        return $this;
+    }
+
+    public function pushSectionToBlade(string $name, mixed $value): DatatableCruds
+    {
+        $this->bladeSections[] = ['name' => $name, 'value' => $value];
+        return $this;
+    }
+
+    public function pushStackToBlade(string $name, mixed $value): DatatableCruds
+    {
+        $this->bladeStacks[] = ['name' => $name, 'value' => $value];
         return $this;
     }
 }

@@ -1,4 +1,17 @@
 # Release Notes
+## [v1.1.6](https://github.com/404Exist/datatable-cruds/compare/v1.1.5...v1.1.6) - 2022-12-20
+
+### Added
+
+- `pushSectionToBlade` & `pushStackToBlade` methods have been added.
+- `selectFilter` method have been added.
+### Updated
+
+- `setBladeExtends` method name updated to `setBladeExtendsName`
+- `setBladeSection` method name updated to `setBladeSectionName`
+### Fixed
+
+- Delete all selected rows issue fixed.
 ## [v1.1.5](https://github.com/404Exist/datatable-cruds/compare/v1.1.4...v1.1.5) - 2022-12-19
 
 ### Fixed

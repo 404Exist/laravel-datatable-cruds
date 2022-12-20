@@ -17,9 +17,13 @@ class DatatableCruds
     use Inputs;
     use Common;
 
-    protected string $bladeExtends = '';
+    protected string $bladeExtendsName = '';
 
-    protected string $bladeSection = '';
+    protected string $bladeSectionName = '';
+
+    protected array $bladeSections = [];
+
+    protected array $bladeStacks = [];
 
     protected string $pageTitle = '';
 
@@ -81,6 +85,7 @@ class DatatableCruds
      * @var array
     */
     protected array $searchBy = [];
+    protected array $filterBy = [];
     protected array $exports = [];
     /**
      * Create a new DatatableCruds instance.
@@ -154,6 +159,7 @@ class DatatableCruds
             'methods' => $this->routesMethods,
             'with' => $this->with,
             'searchBy' => $this->searchBy,
+            'filterBy' => $this->filterBy,
             'limits' => $this->limits,
             'actions' => $this->actions,
             'routes' => $this->routes,
@@ -188,8 +194,10 @@ class DatatableCruds
 
         return view('datatable::datatable-cruds')->with([
             "datatable" => $this->renderData(),
-            "extends" => $this->bladeExtends,
-            "section" => $this->bladeSection,
+            "extendsName" => $this->bladeExtendsName,
+            "sectionName" => $this->bladeSectionName,
+            "sections" => $this->bladeSections,
+            "stacks" => $this->bladeStacks,
             "extendsData" => $extendsData,
         ]);
     }
@@ -268,6 +276,7 @@ class DatatableCruds
         $this->routesMethods = [];
         $this->pages = [];
         $this->searchBy = [];
+        $this->filterBy = [];
         $this->pageTitle = "";
         $this->instance = "";
         $this->with = "";

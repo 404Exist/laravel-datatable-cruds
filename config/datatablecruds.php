@@ -1,8 +1,8 @@
 <?php
 
 return [
-    "bladeExtends" => "app",
-    "bladeSection" => "content",
+    "bladeExtendsName" => "app",
+    "bladeSectionName" => "content",
     "dir" => "ltr",
     "headers" => [],
     "formWidth" => "100%",

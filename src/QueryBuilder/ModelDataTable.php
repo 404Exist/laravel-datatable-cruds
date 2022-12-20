@@ -20,6 +20,7 @@ class ModelDataTable
         'with' => null,
         'search' => null,
         'searchBy' => [],
+        'filterBy' => [],
     ];
 
     private Model $model;
@@ -76,6 +77,10 @@ class ModelDataTable
             $query = $this->applySearch($query);
         }
 
+        if ($this->request->filterBy) {
+            $query = $this->applyFilters($query);
+        }
+
         return $query
             ->select(...$this->select)
             ->distinct("{$this->tableName}.{$this->primaryKeyName}")
@@ -113,10 +118,8 @@ class ModelDataTable
     {
         $this->request->page = 1;
         $this->request->search = strtolower($this->request->search);
-        $searchBy = $this->request->searchBy ?: [];
-        $searchBy = !is_array($searchBy) ? explode(',', $searchBy) : $searchBy;
 
-        foreach ($searchBy as $index => $field) {
+        foreach ($this->request->searchBy as $index => $field) {
             $method = $index == 0 ? "where" : "orWhere";
             if ($this->isRelatedToModel($field)) {
                 @list($relation, $column) = $this->listRelationAndColumn($field);
@@ -130,6 +133,27 @@ class ModelDataTable
             } else {
                 $column = $this->fixColumnName("{$this->tableName}.$field");
                 $query = $query->{$method . "Raw"}("LOWER($column) LIKE (?)", ["%{$this->request->search}%"]);
+            }
+        }
+
+        return $query;
+    }
+
+    private function applyFilters(Builder $query): Builder
+    {
+        $this->request->page = 1;
+
+        foreach ($this->request->filterBy as $field => $value) {
+            if (!empty($value)) {
+                if ($this->isRelatedToModel($field)) {
+                    @list($relation, $column) = $this->listRelationAndColumn($field);
+                    $query = $query->whereHas(
+                        $relation,
+                        fn($query)=> $query->where($column, $value)
+                    );
+                } else {
+                    $query = $query->where("{$this->tableName}.$field", $value);
+                }
             }
         }
 
