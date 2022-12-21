@@ -1,4 +1,9 @@
 # Release Notes
+## [v1.1.7](https://github.com/404Exist/datatable-cruds/compare/v1.1.6...v1.1.7) - 2022-12-21
+
+### Updated
+
+- DatatableCruds.stub 
 ## [v1.1.6](https://github.com/404Exist/datatable-cruds/compare/v1.1.5...v1.1.6) - 2022-12-20
 
 ### Added
