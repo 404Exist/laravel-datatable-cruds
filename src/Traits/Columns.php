@@ -119,7 +119,7 @@ trait Columns
     /**
      * Execute javascript functions and push returned value to (html)
     */
-    public function execHtml(string|callable $js): DatatableCruds
+    public function jsToHtml(string|callable $js): DatatableCruds
     {
         $this->setColumnValue([
             "key" => "html",
@@ -132,7 +132,7 @@ trait Columns
     /**
      * Execute javascript functions and push returned value to (href)
     */
-    public function execHref(string|callable $js): DatatableCruds
+    public function jsToHref(string|callable $js): DatatableCruds
     {
         $this->setColumnValue([
             "key" => "href",

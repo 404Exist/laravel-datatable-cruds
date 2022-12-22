@@ -39,9 +39,7 @@ class DatatableInjection
 
     protected function injectScript(): void
     {
-        $route = route("datatablecruds.script_file_url", [
-            'v' => filemtime(datatableScriptPath())
-        ]);
+        $route = route("datatablecruds.script_file_url", ['v' => filemtime(datatableScriptPath())]);
 
         $script = "<script src=\"$route\" defer></script>";
 
@@ -77,7 +75,7 @@ class DatatableInjection
 
     protected function isDataTableRenderd(): bool
     {
-        return (bool) strripos($this->content, '<data-list');
+        return (bool) strripos($this->content, '<datatable-cruds');
     }
 
     protected function isNotDatatableScriptLoaded(): bool

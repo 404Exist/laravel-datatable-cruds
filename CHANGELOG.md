@@ -1,4 +1,20 @@
 # Release Notes
+## [v1.1.8](https://github.com/404Exist/datatable-cruds/compare/v1.1.7...v1.1.8) - 2022-12-22
+
+### Added
+
+- Ability to use not null in filters.
+- Ability to access row value in actions column.
+- create directive for datatable script tag.
+- create `datatableScript` directive for datatable script tag.
+
+### Updated
+- `execHtml` && `execHref` mehods updated to `jsToHtml` && `jsToHref`
+- `storeButton` && `updateButton` && `deleteButton` mehods updated to `formStoreButton` && `formUpdateButton` && `formDeleteButton`
+- `addAction` && `editAction` && `deleteAction` && `cloneAction` mehods updated to `rowAddButton` && `rowEditButton` && `rowDeleteButton` && `rowCloneButton`
+
+### Removed
+- tags input has been removed
 ## [v1.1.7](https://github.com/404Exist/datatable-cruds/compare/v1.1.6...v1.1.7) - 2022-12-21
 
 ### Updated

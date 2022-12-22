@@ -1,7 +1,7 @@
 <?php
 
 use Exist404\DatatableCruds\DatatableCruds;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 if (!function_exists('datatableCruds')) {

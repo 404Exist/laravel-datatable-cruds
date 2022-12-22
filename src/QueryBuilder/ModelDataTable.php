@@ -3,7 +3,7 @@
 namespace Exist404\DatatableCruds\QueryBuilder;
 
 use Exist404\DatatableCruds\Exceptions\ModelIsNotSet;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -116,9 +116,6 @@ class ModelDataTable
 
     private function applySearch(Builder $query): Builder
     {
-        $this->request->page = 1;
-        $this->request->search = strtolower($this->request->search);
-
         foreach ($this->request->searchBy as $index => $field) {
             $method = $index == 0 ? "where" : "orWhere";
             if ($this->isRelatedToModel($field)) {
@@ -141,18 +138,19 @@ class ModelDataTable
 
     private function applyFilters(Builder $query): Builder
     {
-        $this->request->page = 1;
-
         foreach ($this->request->filterBy as $field => $value) {
             if (!empty($value)) {
+                $operator = $value == "!null" ? "!=" : "=";
+                $value = $value == "!null" || $value == "null" ? null : $value;
+
                 if ($this->isRelatedToModel($field)) {
                     @list($relation, $column) = $this->listRelationAndColumn($field);
                     $query = $query->whereHas(
                         $relation,
-                        fn($query)=> $query->where($column, $value)
+                        fn($query)=> $query->where($column, $operator, $value)
                     );
                 } else {
-                    $query = $query->where("{$this->tableName}.$field", $value);
+                    $query = $query->where("{$this->tableName}.$field", $operator, $value);
                 }
             }
         }

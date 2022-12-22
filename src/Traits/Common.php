@@ -24,8 +24,6 @@ trait Common
     {
         $this->setValue('isDate', false);
         $this->setValue('isImage', false);
-        $this->setValue('isAction', false);
-        $this->setValue('isSelect', false);
         $this->setValue('html', $html, true);
         return $this;
     }

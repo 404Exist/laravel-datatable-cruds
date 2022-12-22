@@ -35,7 +35,12 @@ class DatatableCrudsProvider extends ServiceProvider
         $this->commands([InstallPackageCommand::class, NewDatatableCrudsCommand::class]);
         $this->registerMiddleware(DatatableInjection::class);
         Blade::directive('datatable', function ($data) {
-            return "<data-list data='{{ json_encode($data) }}'></data-list>";
+            return "<datatable-cruds data='{{ json_encode($data) }}'></datatable-cruds>";
+        });
+        Blade::directive('datatableScript', function () {
+            $route = route("datatablecruds.script_file_url", ['v' => filemtime(datatableScriptPath())]);
+
+            return "<script src=\"$route\" defer></script>";
         });
     }
 

@@ -172,9 +172,9 @@ class DatatableCruds
                 'width' => $this->formWidth,
                 'height' => $this->formHeight,
                 'inputs' => $this->getInputs(),
-                'storeInput' => $this->storeButton,
-                'updateInput' => $this->updateButton,
-                'deleteInput' => $this->deleteButton
+                'storeInput' => $this->formStoreButton,
+                'updateInput' => $this->formUpdateButton,
+                'deleteInput' => $this->formDeleteButton
             ]
         ];
 

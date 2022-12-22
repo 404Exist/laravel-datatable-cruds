@@ -3,13 +3,10 @@
 namespace Exist404\DatatableCruds\Traits;
 
 use Exist404\DatatableCruds\DatatableCruds;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 trait Globals
 {
-    /**
-     * Datatable model
-    */
     public function for(Builder|string $model): DatatableCruds
     {
         if (is_string($model)) {
@@ -76,109 +73,87 @@ trait Globals
         ]);
         return $this;
     }
-    /**
-     * Set get route
-    */
+
     public function setGetRoute(string $route): DatatableCruds
     {
         $this->routes['get'] = $route;
         return $this;
     }
-    /**
-     * Set store route
-    */
+
     public function setStoreRoute(string $route, string $method = 'post'): DatatableCruds
     {
         $this->routes['store'] = $route;
         $this->routesMethods['store'] = $method;
         return $this;
     }
-    /**
-     * Set update route
-    */
+
     public function setUpdateRoute(string $route, string $method = 'patch'): DatatableCruds
     {
         $this->routes['update'] = $route;
         $this->routesMethods['update'] = $method;
         return $this;
     }
-    /**
-     * Set delete route
-    */
+
     public function setDeleteRoute(string $route, string $method = 'delete'): DatatableCruds
     {
         $this->routes['delete'] = $route;
         $this->routesMethods['delete'] = $method;
         return $this;
     }
-    /**
-     * Request FindBy Key Name
-    */
+
     public function setRequestFindByKeyName(string $findBy): DatatableCruds
     {
         $this->findBy = $findBy;
         return $this;
     }
-    /**
-     * Default Date Format
-    */
+
     public function setDefaultDateFormat(string $dateFormat): DatatableCruds
     {
         $this->dateFormat = str($dateFormat)->wrap("format(", ")");
         return $this;
     }
-    /**
-     * Datatable order
-    */
+
     public function setDefaultOrder(string $orderBy = 'created_at', string $order = 'desc'): DatatableCruds
     {
         $this->request['order'] = $order;
         $this->request['orderBy'] = $orderBy;
         return $this;
     }
-    /**
-     * Update addAction
-    */
-    public function addAction(string|bool $html = null, string $onclick = 'openModal', string|bool $value = true): DatatableCruds
+
+    public function rowAddButton(string|bool $html = null, bool $isJS = false, string $onclick = 'openModal', string|bool $value = true): DatatableCruds
     {
         $this->addButton['onclick'] = [$onclick => $value];
-        $this->addButton['html'] = $html;
+        $this->addButton['html'] = $isJS ? str($html)->wrap("{exec(", ")}") : $html;
         if ($html === false) {
             $this->addButton['enabled'] = false;
         }
         return $this;
     }
-    /**
-     * Update editAction
-    */
-    public function editAction(string|bool $html = null, string $onclick = 'openModal', string|bool $value = true): DatatableCruds
+
+    public function rowEditButton(string|bool $html = null, bool $isJS = false, string $onclick = 'openModal', string|bool $value = true): DatatableCruds
     {
         $this->actions["edit"]['onclick'] = [$onclick => $value];
-        $this->actions["edit"]['html'] = $html;
+        $this->actions["edit"]['html'] = $isJS ? str($html)->wrap("{exec(", ")}") : $html;
         if ($html === false) {
             $this->actions["edit"] = false;
         }
         return $this;
     }
-    /**
-     * Update deleteAction
-    */
-    public function deleteAction(string|bool $html = null, string $onclick = 'openModal', string|bool $value = true): DatatableCruds
+
+    public function rowDeleteButton(string|bool $html = null, bool $isJS = false, string $onclick = 'openModal', string|bool $value = true): DatatableCruds
     {
         $this->actions["delete"]['onclick'] = [$onclick => $value];
-        $this->actions["delete"]['html'] = $html;
+        $this->actions["delete"]['html'] = $isJS ? str($html)->wrap("{exec(", ")}") : $html;
         if ($html === false) {
             $this->actions["delete"] = false;
         }
         return $this;
     }
-    /**
-     * Update cloneAction
-    */
-    public function cloneAction(string|bool $html = null, string $onclick = 'openModal', string|bool $value = true): DatatableCruds
+
+    public function rowCloneButton(string|bool $html = null, bool $isJS = false, string $onclick = 'openModal', string|bool $value = true): DatatableCruds
     {
         $this->actions["clone"]['onclick'] = [$onclick => $value];
-        $this->actions["clone"]['html'] = $html;
+        $this->actions["clone"]['html'] = $isJS ? str($html)->wrap("{exec(", ")}") : $html;
         if ($html === false) {
             $this->actions["clone"] = false;
         }
@@ -195,35 +170,27 @@ trait Globals
         ];
         return $this;
     }
-    /**
-     * Datatable export csv
-    */
+
     public function exportCsvBtn(bool|string $csv = true, string $filename = null): DatatableCruds
     {
         $this->exports["csv"]["html"] = $csv;
         $this->exports["csv"]["filename"] = $filename;
         return $this;
     }
-    /**
-     * Datatable export excel
-    */
+
     public function exportExcelBtn(bool|string $excel = true, string $filename = null): DatatableCruds
     {
         $this->exports["excel"]["html"] = $excel;
         $this->exports["excel"]["filename"] = $filename;
         return $this;
     }
-    /**
-     * Datatable print
-    */
+
     public function printBtn(bool|string $print = true): DatatableCruds
     {
         $this->exports["print"] = $print;
         return $this;
     }
-    /**
-     * Default Texts
-    */
+
     public function setText(string $key, string $text): DatatableCruds
     {
         $texts = &$this->texts;
@@ -258,66 +225,52 @@ trait Globals
         $this->limits = $limits;
         return $this;
     }
-    /**
-     * Set form width
-    */
+
     public function formWidth(string $width): DatatableCruds
     {
         $this->formWidth = $width;
         return $this;
     }
-    /**
-     * Set form height
-    */
+
     public function formHeight(string $height): DatatableCruds
     {
         $this->formHeight = $height;
         return $this;
     }
-    /**
-     * Update form store button
-    */
-    public function storeButton(string $label = 'Create', string $color = 'primary'): DatatableCruds
+
+    public function formStoreButton(string $label = 'Create', string $color = 'primary'): DatatableCruds
     {
-        $this->storeButton = [
+        $this->formStoreButton = [
             'label' => $label,
             'color' => $color,
         ];
         return $this;
     }
-    /**
-     * Update form update button
-    */
-    public function updateButton(string $label = 'Update', string $color = 'primary'): DatatableCruds
+
+    public function formUpdateButton(string $label = 'Update', string $color = 'primary'): DatatableCruds
     {
-        $this->updateButton = [
+        $this->formUpdateButton = [
             'label' => $label,
             'color' => $color,
         ];
         return $this;
     }
-    /**
-     * Update form delete button
-    */
-    public function deleteButton(string $label = 'Delete', string $color = 'danger'): DatatableCruds
+
+    public function formDeleteButton(string $label = 'Delete', string $color = 'danger'): DatatableCruds
     {
-        $this->deleteButton = [
+        $this->formDeleteButton = [
             'label' => $label,
             'color' => $color,
         ];
         return $this;
     }
-    /**
-     * Set blade extends
-    */
+
     public function setBladeExtendsName(string $bladeExtendsName): DatatableCruds
     {
         $this->bladeExtendsName = $bladeExtendsName;
         return $this;
     }
-    /**
-     * Set blade section
-    */
+    
     public function setBladeSectionName(string $bladeSectionName): DatatableCruds
     {
         $this->bladeSectionName = $bladeSectionName;

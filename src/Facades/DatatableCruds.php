@@ -23,10 +23,10 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Exist404\DatatableCruds\DatatableCruds setRequestFindByKeyName(string $findBy): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds setDefaultDateFormat(string $dateFormat): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds setDefaultOrder(string $orderBy = 'created_at', string $order = 'desc'): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds addAction(string|bool $html = null, string $onclick = 'openModal', string|bool $value = true): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds editAction(string|bool $html = null, string $onclick = 'openModal', string|bool $value = true): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds deleteAction(string|bool $html = null, string $onclick = 'openModal', string|bool $value = true): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds cloneAction(string|bool $html = null, string $onclick = 'openModal', string|bool $value = true): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds rowAddButton(string|bool $html = null, string $onclick = 'openModal', string|bool $value = true): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds rowEditButton(string|bool $html = null, string $onclick = 'openModal', string|bool $value = true): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds rowDeleteButton(string|bool $html = null, string $onclick = 'openModal', string|bool $value = true): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds rowCloneButton(string|bool $html = null, string $onclick = 'openModal', string|bool $value = true): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds search(string $debounce, string $class = 'form-control'): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds exportCsvBtn(bool|string $csv = true): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds exportExcelBtn(bool|string $excel = true): \Exist404\DatatableCruds\DatatableCruds
@@ -37,9 +37,9 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Exist404\DatatableCruds\DatatableCruds setLimits(int ...$limits): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds formWidth(string $width): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds formHeight(string $height): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds storeButton(string $label = 'Create', string $color = 'primary'): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds updateButton(string $label = 'Update', string $color = 'primary'): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds deleteButton(string $label = 'Delete', string $color = 'danger'): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds formStoreButton(string $label = 'Create', string $color = 'primary'): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds formUpdateButton(string $label = 'Update', string $color = 'primary'): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds formDeleteButton(string $label = 'Delete', string $color = 'danger'): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds setBladeExtendsName(string $bladeExtendsName): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds setBladeSectionName(string $bladeSectionName): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds pushSectionToBlade(string $name, mixed $value): \Exist404\DatatableCruds\DatatableCruds
@@ -58,8 +58,8 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Exist404\DatatableCruds\DatatableCruds checkall(string|bool|null $label = null): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds actions(string|bool|null $label = null): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds href(string|callable $href = ''): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds execHtml(string|callable $js): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds execHref(string|callable $js): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds jsToHtml(string|callable $js): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds jsToHref(string|callable $js): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds input(string|callable $name): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds inputs(self $instance): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds type(string $type): \Exist404\DatatableCruds\DatatableCruds

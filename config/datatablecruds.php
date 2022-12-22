@@ -38,15 +38,15 @@ return [
         ],
         "print" => true, // bool || html
     ],
-    "storeButton" => [
+    "formStoreButton" => [
         'label' => "Create",
         'color' => "primary",
     ],
-    "updateButton" => [
+    "formUpdateButton" => [
         'label' => "Update",
         'color' => "primary",
     ],
-    "deleteButton" => [
+    "formDeleteButton" => [
         'label' => "Delete",
         'color' => "danger",
     ],

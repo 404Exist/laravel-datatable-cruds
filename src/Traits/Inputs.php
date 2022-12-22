@@ -168,14 +168,6 @@ trait Inputs
     }
 
     /**
-     * Make tags input
-    */
-    public function tags(): DatatableCruds
-    {
-        $this->setInputValue(["key" => 'type', "value" => "tags", "calledMethodName" => __FUNCTION__]);
-        return $this;
-    }
-    /**
      * To fill multiselect from $optionsRoute url with data on search
     */
     public function optionsRoute(string $optionsRoute): DatatableCruds
