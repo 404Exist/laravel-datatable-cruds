@@ -106,7 +106,7 @@ class DatatableCruds
     {
         $this->addCurrentInstance();
 
-        if (is_callable($name)) {
+        if (is_callable($name) && ! is_string($name)) {
             $name = $name();
             if (!$name) {
                 return $this;
@@ -222,7 +222,7 @@ class DatatableCruds
 
     protected function setValue(string $key, mixed $value, bool $shouldAppend = false): void
     {
-        if (is_callable($value)) {
+        if (is_callable($value) && ! is_string($value)) {
             $value = $value();
         }
         if (!isset($this->{$this->instance}[$key])) {

@@ -1,4 +1,10 @@
 # Release Notes
+## [v1.1.9](https://github.com/404Exist/datatable-cruds/compare/v1.1.8...v1.1.9) - 2022-12-29
+
+### Fixed
+
+- dropzone get old file issue fixed.
+- is_callable for string issue fixed.
 ## [v1.1.8](https://github.com/404Exist/datatable-cruds/compare/v1.1.7...v1.1.8) - 2022-12-22
 
 ### Added

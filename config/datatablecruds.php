@@ -23,10 +23,6 @@ return [
         "order" => "desc",
         "orderBy" => "created_at",
     ],
-    "storeButton" => [
-        'label' => "Create",
-        'color' => "primary",
-    ],
     "exports" => [
         "excel" => [
             "html" => true, // bool || html
