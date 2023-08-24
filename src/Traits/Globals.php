@@ -3,22 +3,40 @@
 namespace Exist404\DatatableCruds\Traits;
 
 use Exist404\DatatableCruds\DatatableCruds;
+use Exist404\DatatableCruds\Model\BaseModel;
 use Illuminate\Database\Eloquent\Builder;
 
 trait Globals
 {
-    public function for(Builder|string $model): DatatableCruds
+    public function for(Builder|string|null $model = null): DatatableCruds
     {
+        $model ??= BaseModel::class;
+
         if (is_string($model)) {
             $model = (new $model())->query();
         }
 
         $this->model = $model;
-        $this->tableName = $model->getModel()->getTable();
 
-        if (!$this->pageTitle) {
-            $this->setPageTitle(str($this->tableName)->headline());
+        $this->forTable($model->getModel()->getTable());
+
+        return $this;
+    }
+    /**
+     * Datatable table name
+    */
+    public function forTable(string $tableName): DatatableCruds
+    {
+        if (! isset($this->model)) {
+            $this->for();
         }
+
+        if (!$this->pageTitle || $this->pageTitle == str($this->tableName)->headline()) {
+            $this->setPageTitle(str($tableName)->headline());
+        }
+
+        $this->tableName = $tableName;
+
         return $this;
     }
     /**
@@ -270,7 +288,7 @@ trait Globals
         $this->bladeExtendsName = $bladeExtendsName;
         return $this;
     }
-    
+
     public function setBladeSectionName(string $bladeSectionName): DatatableCruds
     {
         $this->bladeSectionName = $bladeSectionName;

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Exist404\DatatableCruds\DatatableCruds dump(): mixed
  * @method static \Exist404\DatatableCruds\DatatableCruds dd(): void
  * @method static \Exist404\DatatableCruds\DatatableCruds for(\Illuminate\Contracts\Database\Eloquent\Builder|string $model): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds forTable(string $tableName): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds setPageTitle(string $title): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds setDir(string|callable $dir): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds setHeader(string $name, string $value): \Exist404\DatatableCruds\DatatableCruds

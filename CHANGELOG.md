@@ -1,4 +1,13 @@
 # Release Notes
+## [v1.2.0](https://github.com/404Exist/datatable-cruds/compare/v1.1.9...v1.2.0) - 2023-08-24
+
+### Added
+
+- Ability to view table data by it's name only with `forTable(string $tableName)` method.
+  
+### Fixed
+
+- model isnn't set exception message fixed.
 ## [v1.1.9](https://github.com/404Exist/datatable-cruds/compare/v1.1.8...v1.1.9) - 2022-12-29
 
 ### Fixed

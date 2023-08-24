@@ -30,7 +30,7 @@ class ModelDataTable
     private object $request;
     private array $select = [];
 
-    public function __construct(Builder|string $model)
+    public function __construct(Builder|string $model, ?string $tableName = null)
     {
         if (!isset($model)) {
             throw ModelIsNotSet::create();
@@ -39,15 +39,18 @@ class ModelDataTable
             $model = (new $model())->query();
         }
 
-        $this->setData($model);
+        $this->setData($model, $tableName);
 
         $this->fixQueryWheresColumnsNames();
     }
 
-    private function setData(Builder $model): void
+    private function setData(Builder $model, ?string $tableName = null): void
     {
         $this->query = $model;
         $this->model = $model->getModel();
+        if ($tableName) {
+            $this->model->setTable($tableName);
+        }
         $this->tableName = $this->model->getTable();
         $this->primaryKeyName = $this->model->getKeyName();
         $this->request = (object) array_merge($this->defaultRequest, $_GET);
@@ -81,6 +84,8 @@ class ModelDataTable
             $query = $this->applyFilters($query);
         }
 
+        $query->getQuery()->from($this->tableName);
+
         return $query
             ->select(...$this->select)
             ->distinct("{$this->tableName}.{$this->primaryKeyName}")
@@ -92,7 +97,7 @@ class ModelDataTable
         if ($this->query->getQuery()->columns) {
             foreach ($this->query->getQuery()->columns as $column) {
                 if ($column instanceof \Illuminate\Database\Query\Expression) {
-                    $this->select[] = DB::raw($column->getValue());
+                    $this->select[] = DB::raw($column->getValue($this->query->getGrammar()));
                 }
             }
         }

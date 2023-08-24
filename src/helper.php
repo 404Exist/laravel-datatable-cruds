@@ -12,9 +12,9 @@ if (!function_exists('datatableCruds')) {
 }
 
 if (!function_exists('dataTableOf')) {
-    function dataTableOf(Builder|string $model = null): LengthAwarePaginator
+    function dataTableOf(Builder|string $model = null, ?string $tableName = null): LengthAwarePaginator
     {
-        return (new \Exist404\DatatableCruds\QueryBuilder\ModelDataTable($model))->get();
+        return (new \Exist404\DatatableCruds\QueryBuilder\ModelDataTable($model, $tableName))->get();
     }
 }
 

@@ -189,7 +189,7 @@ class DatatableCruds
             throw ModelIsNotSet::create();
         }
         if (isset($_SERVER['HTTP_X_DATATABLE'])) {
-            return dataTableOf($this->model);
+            return dataTableOf($this->model, $this->tableName);
         }
 
         return view('datatable::datatable-cruds')->with([
