@@ -2,13 +2,16 @@
 
 namespace Exist404\DatatableCruds;
 
+use Closure;
 use Exist404\DatatableCruds\Exceptions\ModelIsNotSet;
 use Exist404\DatatableCruds\Traits\Globals;
 use Exist404\DatatableCruds\Traits\Columns;
 use Exist404\DatatableCruds\Traits\Inputs;
 use Exist404\DatatableCruds\Traits\Common;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\HtmlString;
 
 class DatatableCruds
 {
@@ -91,6 +94,7 @@ class DatatableCruds
      * Create a new DatatableCruds instance.
      *
     */
+    protected ?LengthAwarePaginator $result = null;
     public function __construct()
     {
         foreach (config('datatablecruds') as $key => $value) {
@@ -102,11 +106,11 @@ class DatatableCruds
     /**
      * Create a new (input || column)
     */
-    protected function create(string $instance, string|callable $name): self
+    protected function create(string $instance, string|Closure $name): self
     {
         $this->addCurrentInstance();
 
-        if (is_callable($name) && ! is_string($name)) {
+        if (is_callable($name)) {
             $name = $name();
             if (!$name) {
                 return $this;
@@ -132,16 +136,18 @@ class DatatableCruds
         return $this;
     }
 
-    public function dump(): mixed
+    public function dump(): self
     {
         $this->addCurrentInstance();
-        return dump($this);
+        dump($this);
+        return $this;
     }
 
-    public function dd(): void
+    public function dd(): self
     {
         $this->addCurrentInstance();
         dd($this);
+        return $this;
     }
 
     public function renderData(): array
@@ -149,6 +155,7 @@ class DatatableCruds
         $this->addCurrentInstance();
 
         $datatable = [
+            'component_id' => $this->pageTitle,
             'title' => $this->pageTitle,
             'dir' => $this->dir,
             'dateFormat' => $this->dateFormat,
@@ -183,13 +190,54 @@ class DatatableCruds
         return $datatable;
     }
 
-    public function render(array $extendsData = []): View|LengthAwarePaginator
+    public function table(): Htmlable
+    {
+        return new HtmlString("<datatable-cruds data='" . json_encode($this->renderData()) . "'></datatable-cruds>");
+    }
+
+    public function getResults(): LengthAwarePaginator
+    {
+        $columnsHasCallback = false;
+        foreach ($this->columns as $column) {
+            if (isset($column["callback"])) {
+                $columnsHasCallback = true;
+                break;
+            }
+        }
+        if ($columnsHasCallback) {
+            array_map(function ($item) {
+                array_map(function ($column) use ($item) {
+                    if (isset($column['callback']) && is_callable($column['callback'])) {
+                        $item->{$column['name']} = $column['callback']($item);
+                        return $column;
+                    }
+                }, $this->columns);
+            }, $this->result->items());
+        }
+
+        return $this->result;
+    }
+
+    public function isXhr(): bool
+    {
+        return isset(
+            $_SERVER['HTTP_X_DATATABLE'],
+            $_SERVER['HTTP_X_DATATABLE_COMPONENT']
+        ) && $_SERVER['HTTP_X_DATATABLE_COMPONENT'] === $this->pageTitle;
+    }
+
+    public function render(array|string $extendsData = []): View|LengthAwarePaginator
     {
         if (!isset($this->model)) {
             throw ModelIsNotSet::create();
         }
-        if (isset($_SERVER['HTTP_X_DATATABLE'])) {
-            return dataTableOf($this->model, $this->tableName);
+
+        if ($this->isXhr()) {
+            return $this->getResults();
+        }
+
+        if (is_string($extendsData) && view($extendsData)) {
+            return view($extendsData)->with(["datatable" => $this]);
         }
 
         return view('datatable::datatable-cruds')->with([
@@ -222,7 +270,7 @@ class DatatableCruds
 
     protected function setValue(string $key, mixed $value, bool $shouldAppend = false): void
     {
-        if (is_callable($value) && ! is_string($value)) {
+        if (is_callable($value) && $key != "callback") {
             $value = $value();
         }
         if (!isset($this->{$this->instance}[$key])) {

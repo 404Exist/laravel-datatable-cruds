@@ -3,38 +3,29 @@
 namespace {{namespace}};
 
 use {{modelNameSpace}};
+use Exist404\DatatableCruds\AbstractDatatable;
 use Exist404\DatatableCruds\DatatableCruds;
 
-class {{class}}DatatableCruds
+class {{class}}DatatableCruds extends AbstractDatatable
 {
-    /**
-     * you can define all of your datatable globals methods here
-    */
-    public static function init(): DatatableCruds
+    public function init(): DatatableCruds
     {
-        return datatableCruds()
-            ->for({{class}}::class)
-            ->columns(static::columns())
-            ->inputs(static::inputs())
+        return $this->datatable->for({{class}}::class)
+            ->columns($this->columns())
+            ->inputs($this->inputs())
             ;
     }
 
-    /**
-     * you can define all of your datatable columns here
-    */
-    protected static function columns(): DatatableCruds
+    protected function columns(): DatatableCruds
     {
-        return datatableCruds()
+        return $this->datatable
             ->column("id")->sortable()->searchable()->exportable()
             ;
     }
 
-    /**
-     * you can define all of your datatable forms inputs here
-    */
-    protected static function inputs(): DatatableCruds
+    protected function inputs(): DatatableCruds
     {
-        return datatableCruds()
+        return $this->datatable
             ->input("name")->type("text")
             ;
     }

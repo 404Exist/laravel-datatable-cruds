@@ -6,6 +6,6 @@ class ModelIsNotSet extends \InvalidArgumentException
 {
     public static function create()
     {
-        return new static("You must set model by using `for()` method or set table by using `forTable()` method");
+        return new static("You must set model or table by using `for()` method");
     }
 }

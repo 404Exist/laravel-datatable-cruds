@@ -2,6 +2,7 @@
 
 namespace Exist404\DatatableCruds\Traits;
 
+use Closure;
 use Exist404\DatatableCruds\DatatableCruds;
 
 trait Common
@@ -20,11 +21,17 @@ trait Common
     /**
      * Use html tags with current instance
     */
-    public function html(string|callable $html = ''): DatatableCruds
+    public function html(string|Closure $html = ''): DatatableCruds
     {
         $this->setValue('isDate', false);
         $this->setValue('isImage', false);
         $this->setValue('html', $html, true);
+        return $this;
+    }
+
+    public function toRaw(): DatatableCruds
+    {
+        $this->setValue('raw', true);
         return $this;
     }
     /**

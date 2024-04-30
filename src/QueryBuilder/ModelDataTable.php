@@ -145,8 +145,13 @@ class ModelDataTable
     {
         foreach ($this->request->filterBy as $field => $value) {
             if (!empty($value)) {
-                $operator = $value == "!null" ? "!=" : "=";
-                $value = $value == "!null" || $value == "null" ? null : $value;
+                $operator = "=";
+
+                if (preg_match('/^([!<>=]+)(.+)/', $value, $matches)) {
+                    $operator = $matches[1] == "!" ? "!=" : $matches[1];
+                    $value = $matches[2];
+                }
+                $value = $value == "null" ? null : $value;
 
                 if ($this->isRelatedToModel($field)) {
                     @list($relation, $column) = $this->listRelationAndColumn($field);

@@ -24,14 +24,6 @@ return [
         "orderBy" => "created_at",
     ],
     "exports" => [
-        "excel" => [
-            "html" => true, // bool || html
-            "filename" => null
-        ],
-        "csv" => [
-            "html" => true, // bool || html
-            "filename" => null
-        ],
         "print" => true, // bool || html
     ],
     "formStoreButton" => [

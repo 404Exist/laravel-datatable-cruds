@@ -1,18 +1,18 @@
 <?php
 
-namespace Exist404\DatatableCruds\Facades;
-
-use Illuminate\Support\Facades\Facade;
+namespace Exist404\DatatableCruds;
 
 /**
- * @method static \Exist404\DatatableCruds\DatatableCruds render(array $extendsData = []): \Illuminate\Contracts\View\View|\Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Database\Eloquent\Collection
+ * @method static \Exist404\DatatableCruds\DatatableCruds render(array|string $extendsData = []): \Illuminate\Contracts\View\View|\Illuminate\Contracts\Pagination\LengthAwarePaginator
  * @method static \Exist404\DatatableCruds\DatatableCruds renderData(): array
- * @method static \Exist404\DatatableCruds\DatatableCruds dump(): mixed
- * @method static \Exist404\DatatableCruds\DatatableCruds dd(): void
+ * @method static \Exist404\DatatableCruds\DatatableCruds table(): \Illuminate\Contracts\Support\Htmlable
+ * @method static \Exist404\DatatableCruds\DatatableCruds getResults(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+ * @method static \Exist404\DatatableCruds\DatatableCruds isXhr(): bool
+ * @method static \Exist404\DatatableCruds\DatatableCruds dump(): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds dd(): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds for(\Illuminate\Contracts\Database\Eloquent\Builder|string $model): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds forTable(string $tableName): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds setPageTitle(string $title): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds setDir(string|callable $dir): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds setDir(string|\Closure $dir): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds setHeader(string $name, string $value): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds with(string ...$with): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds searchBy(string ...$searchBy): \Exist404\DatatableCruds\DatatableCruds
@@ -46,29 +46,29 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Exist404\DatatableCruds\DatatableCruds pushSectionToBlade(string $name, mixed $value): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds pushStackToBlade(string $name, mixed $value): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds label(string $label): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds html(string|callable $html = ''): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds html(string|\Closure $html = ''): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds attributes(array $attributes): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds setAttribute(string $name, string $value): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds column(string|callable $name): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds column(string|\Closure $name): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds columns(self $instance): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds sortable(bool|callable $sortable = true): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds searchable(bool|callable $searchable = true): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds exportable(bool|callable $exportable = true): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds sortable(bool|\Closure $sortable = true): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds searchable(bool|\Closure $searchable = true): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds exportable(bool|\Closure $exportable = true): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds image(string|bool|null $path = ''): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds date(string|bool|null $format = null): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds date(string|bool|null $format = null, string $invalid = 'Invalid Date'): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds checkall(string|bool|null $label = null): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds actions(string|bool|null $label = null): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds href(string|callable $href = ''): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds jsToHtml(string|callable $js): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds jsToHref(string|callable $js): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds input(string|callable $name): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds href(string|\Closure $href = '', string $target = "_self"): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds jsToHtml(string|\Closure $js): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds jsToHref(string|\Closure $js): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds input(string|\Closure $name): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds inputs(self $instance): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds type(string $type): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds editForm(): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds createForm(): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds page(int $page): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds parentClass(string|callable $parentClass): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds labelClass(string|callable $labelClass): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds parentClass(string|\Closure $parentClass): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds labelClass(string|\Closure $labelClass): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds multiSelect(string $label = "name", string $val = "id", bool $multiple = true): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds select(string $label = "name", string $val = "id"): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds options(array $options = []): \Exist404\DatatableCruds\DatatableCruds
@@ -80,11 +80,25 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Exist404\DatatableCruds\DatatableCruds optionsRoute(string $optionsRoute): \Exist404\DatatableCruds\DatatableCruds
  *
  * @see \Exist404\DatatableCruds\DatatableCruds
- */
-class DatatableCruds extends Facade
+*/
+abstract class AbstractDatatable
 {
-    protected static function getFacadeAccessor()
+    protected DatatableCruds $datatable;
+
+    public function __construct()
     {
-        return 'datatablecruds';
+        if (! isset($this->datatable)) {
+            $this->datatable = new DatatableCruds();
+            $this->datatable = $this->init();
+        }
+    }
+
+    abstract public function init(): DatatableCruds;
+
+    public function __call($name, $arguments)
+    {
+        if (! method_exists(__CLASS__, $name)) {
+            return $this->datatable->$name(...$arguments);
+        }
     }
 }

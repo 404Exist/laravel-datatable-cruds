@@ -2,16 +2,16 @@
 
 namespace Exist404\DatatableCruds\Traits;
 
+use Closure;
 use Exist404\DatatableCruds\DatatableCruds;
 use Exist404\DatatableCruds\Exceptions\MethodNotAllowedWithCurrentInstance;
-use Illuminate\Support\Arr;
 
 trait Inputs
 {
     /**
      * Create a new input
     */
-    public function input(string|callable $name): DatatableCruds
+    public function input(string|Closure $name): DatatableCruds
     {
         return $this->create('input', $name);
     }
@@ -21,11 +21,8 @@ trait Inputs
     public function inputs(self $instance): DatatableCruds
     {
         $this->addCurrentInstance();
-        $instance->addCurrentInstance();
 
-        if (array_diff(Arr::dot($this->inputs), Arr::dot($instance->inputs))) {
-            $instance->inputs = array_merge($this->inputs, $instance->inputs);
-        }
+        $instance->addCurrentInstance();
 
         $this->inputs = $instance->inputs;
 
@@ -69,7 +66,7 @@ trait Inputs
     /**
      * Set class for current input parent
     */
-    public function parentClass(string|callable $parentClass): DatatableCruds
+    public function parentClass(string|Closure $parentClass): DatatableCruds
     {
         $this->setInputValue("parentClass", $parentClass);
         return $this;
@@ -77,7 +74,7 @@ trait Inputs
     /**
      * Set class for current input label
     */
-    public function labelClass(string|callable $labelClass): DatatableCruds
+    public function labelClass(string|Closure $labelClass): DatatableCruds
     {
         $this->setInputValue("labelClass", $labelClass);
         return $this;

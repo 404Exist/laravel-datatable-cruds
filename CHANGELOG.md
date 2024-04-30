@@ -1,4 +1,21 @@
 # Release Notes
+## [v2.0.0](https://github.com/404Exist/datatable-cruds/compare/v1.2.0...v2.0.0) - 2024-04-30
+
+### Added
+
+- `toRaw()` can be used on a column to display HTML content on the page.
+- `isXhr()` can be used on a DatatableCruds instance to determine whether the current table request is an XHR (XMLHttpRequest) or not.
+- `getResults()` can be used on a DatatableCruds instance to obtain a LengthAwarePaginator result.
+- `table()` can be used on a DatatableCruds instance in Blade to render the table UI.
+  
+### Updated
+
+- The `column(string|callable $name)` method has been updated to `column(string|callable $name, ?Closure $callback = null)`. Now, the column method accepts a callback function with the current $row data injected into it.
+- The `href(string|callable $href = '')` method has been updated to `href(string|callable $href = '', string $target = "_self")`.
+- The `date(string|bool|null $format = null)` method has been updated to `date(string|bool|null $format = null, string $invalid = 'Invalid Date')`
+### Removed
+
+- The method `forTable(string $tableName)` has been deprecated. You can now use `for($tableName)` instead.
 ## [v1.2.0](https://github.com/404Exist/datatable-cruds/compare/v1.1.9...v1.2.0) - 2023-08-24
 
 ### Added

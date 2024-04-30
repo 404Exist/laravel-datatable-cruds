@@ -86,7 +86,7 @@ class DatatableInjection
             ".*?\\" . config("datatablecruds.script_file_url") . "?.*?"
         );
 
-        return ! (bool) count($matches);
+        return !(bool) count($matches);
     }
 
     protected function isNotDatatableDivLoaded(): bool
@@ -97,14 +97,16 @@ class DatatableInjection
             "datatablecruds"
         );
 
-        return ! (bool) count($matches);
+        return !(bool) count($matches);
     }
 
     protected function matchTagElWithAttributeValue($tag, $attribute, $value): array
     {
+        $value = str_replace('/', '\/', str_replace('\\', '', $value));
+
         $regexs = [
             "/<\s*$tag.*?$attribute=\"$value\"[^>]*>/",
-            "/<\s*$tag.*?$attribute='$value'[^>]*>/",
+            "/<*s*$tag.*?$attribute='$value'[^>]*>/",
         ];
 
         $matches = [];

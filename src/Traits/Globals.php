@@ -2,40 +2,29 @@
 
 namespace Exist404\DatatableCruds\Traits;
 
+use Closure;
 use Exist404\DatatableCruds\DatatableCruds;
 use Exist404\DatatableCruds\Model\BaseModel;
 use Illuminate\Database\Eloquent\Builder;
 
 trait Globals
 {
-    public function for(Builder|string|null $model = null): DatatableCruds
+    public function for(Builder|string $model): DatatableCruds
     {
-        $model ??= BaseModel::class;
-
         if (is_string($model)) {
-            $model = (new $model())->query();
+            $this->tableName = ! class_exists($model) ? $model : null;
+            $model = class_exists($model) ? (new $model())->query() : BaseModel::query();
         }
+
+        $this->tableName ??= $model->getModel()->getTable();
 
         $this->model = $model;
 
-        $this->forTable($model->getModel()->getTable());
+        $this->setPageTitle(str($this->tableName)->headline());
 
-        return $this;
-    }
-    /**
-     * Datatable table name
-    */
-    public function forTable(string $tableName): DatatableCruds
-    {
-        if (! isset($this->model)) {
-            $this->for();
+        if ($this->isXhr()) {
+            $this->result = dataTableOf($this->model, $this->tableName);
         }
-
-        if (!$this->pageTitle || $this->pageTitle == str($this->tableName)->headline()) {
-            $this->setPageTitle(str($tableName)->headline());
-        }
-
-        $this->tableName = $tableName;
 
         return $this;
     }
@@ -50,7 +39,7 @@ trait Globals
     /**
      * Datatable direction
     */
-    public function setDir(string|callable $dir): DatatableCruds
+    public function setDir(string|Closure $dir): DatatableCruds
     {
         $this->dir = $dir;
         return $this;
@@ -189,20 +178,6 @@ trait Globals
         return $this;
     }
 
-    public function exportCsvBtn(bool|string $csv = true, string $filename = null): DatatableCruds
-    {
-        $this->exports["csv"]["html"] = $csv;
-        $this->exports["csv"]["filename"] = $filename;
-        return $this;
-    }
-
-    public function exportExcelBtn(bool|string $excel = true, string $filename = null): DatatableCruds
-    {
-        $this->exports["excel"]["html"] = $excel;
-        $this->exports["excel"]["filename"] = $filename;
-        return $this;
-    }
-
     public function printBtn(bool|string $print = true): DatatableCruds
     {
         $this->exports["print"] = $print;
@@ -235,9 +210,7 @@ trait Globals
         $this->pagination["hideIfContainOnePage"] = $hide;
         return $this;
     }
-    /**
-     * Set view limits
-    */
+
     public function setLimits(int ...$limits): DatatableCruds
     {
         $this->limits = $limits;
