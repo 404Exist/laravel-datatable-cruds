@@ -110,7 +110,7 @@ class DatatableCruds
     {
         $this->addCurrentInstance();
 
-        if (is_callable($name)) {
+        if ($name instanceof Closure) {
             $name = $name();
             if (!$name) {
                 return $this;
@@ -207,7 +207,7 @@ class DatatableCruds
         if ($columnsHasCallback) {
             array_map(function ($item) {
                 array_map(function ($column) use ($item) {
-                    if (isset($column['callback']) && is_callable($column['callback'])) {
+                    if (isset($column['callback']) && $column['callback'] instanceof Closure) {
                         $item->{$column['name']} = $column['callback']($item);
                         return $column;
                     }
@@ -270,7 +270,7 @@ class DatatableCruds
 
     protected function setValue(string $key, mixed $value, bool $shouldAppend = false): void
     {
-        if (is_callable($value) && $key != "callback") {
+        if ($value instanceof Closure && $key != "callback") {
             $value = $value();
         }
         if (!isset($this->{$this->instance}[$key])) {

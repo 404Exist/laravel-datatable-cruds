@@ -6,6 +6,7 @@ use Exist404\DatatableCruds\Exceptions\ModelIsNotSet;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;
 
 class ModelDataTable
@@ -29,6 +30,8 @@ class ModelDataTable
     private string $primaryKeyName;
     private object $request;
     private array $select = [];
+    private string $tableNameWithDBName;
+    private string $connectionDriver;
 
     public function __construct(Builder|string $model, ?string $tableName = null)
     {
@@ -51,18 +54,30 @@ class ModelDataTable
         if ($tableName) {
             $this->model->setTable($tableName);
         }
+        $this->connectionDriver = $this->query->getQuery()->getConnection()->getDriverName();
         $this->tableName = $this->model->getTable();
+        $this->tableNameWithDBName = $this->tableName($this->query->getQuery(), $this->tableName);
         $this->primaryKeyName = $this->model->getKeyName();
         $this->request = (object) array_merge($this->defaultRequest, $_GET);
         $this->select[] = "{$this->tableName}.*";
+    }
+
+    private function tableName(QueryBuilder $query, string $tableName): string
+    {
+        $driverName = $query->getConnection()->getDriverName();
+        $prefix = $driverName == 'sqlsrv' && ! str_contains($tableName, 'dbo') ? ".dbo." : ".";
+        if (str_contains($tableName, $query->getConnection()->getDatabaseName())) {
+            return $tableName;
+        }
+        return $query->getConnection()->getDatabaseName() . $prefix . $tableName;
     }
 
     private function fixQueryWheresColumnsNames(): void
     {
         $this->query->getQuery()->wheres = array_map(
             function ($where) {
-                if (! isset(explode(".", $where['column'])[1])) {
-                    $where['column'] = $this->tableName . "." . $where['column'];
+                if (isset($where['column']) && ! isset(explode(".", $where['column'])[1])) {
+                    $where['column'] = $this->tableNameWithDBName . "." . $where['column'];
                 }
                 return $where;
             },
@@ -88,7 +103,7 @@ class ModelDataTable
 
         return $query
             ->select(...$this->select)
-            ->distinct("{$this->tableName}.{$this->primaryKeyName}")
+            ->distinct("{$this->tableNameWithDBName}.{$this->primaryKeyName}")
             ->paginate($this->request->limit, ['*'], 'page', $this->request->page);
     }
 
@@ -127,13 +142,16 @@ class ModelDataTable
                 @list($relation, $column) = $this->listRelationAndColumn($field);
                 $query = $query->{$method . "Has"}(
                     $relation,
-                    fn($query)=> $query->whereRaw(
-                        "LOWER({$this->fixColumnName($column)}) LIKE (?)",
-                        ["%{$this->request->search}%"]
-                    )
+                    function ($query) use ($column, $relation) {
+                        $query->from($this->relatedTableName($relation));
+                        return $query->whereRaw(
+                            "LOWER({$this->fixColumnName($this->relatedTableName($relation).'.'.$column)}) LIKE (?)",
+                            ["%{$this->request->search}%"]
+                        );
+                    }
                 );
             } else {
-                $column = $this->fixColumnName("{$this->tableName}.$field");
+                $column = $this->fixColumnName("{$this->tableNameWithDBName}.$field");
                 $query = $query->{$method . "Raw"}("LOWER($column) LIKE (?)", ["%{$this->request->search}%"]);
             }
         }
@@ -160,7 +178,7 @@ class ModelDataTable
                         fn($query)=> $query->where($column, $operator, $value)
                     );
                 } else {
-                    $query = $query->where("{$this->tableName}.$field", $operator, $value);
+                    $query = $query->where("{$this->tableNameWithDBName}.$field", $operator, $value);
                 }
             }
         }
@@ -173,11 +191,12 @@ class ModelDataTable
         @list($relationName, $orderBy) = $this->listRelationAndColumn($this->request->orderBy);
 
         $relatedTableName = $this->relatedTableName($relationName);
+        $relatedTableNameWithoutDot = str_replace('.', '_', $relatedTableName);
 
-        $this->select[] = "$relatedTableName.$orderBy as datatableas_$relatedTableName" . "_" . $orderBy;
+        $this->select[] = "$relatedTableName.$orderBy as datatableas_$relatedTableNameWithoutDot" . "_" . $orderBy;
 
         return $this->leftJoinRelation($relationName)
-            ->orderBy("datatableas_$relatedTableName" . "_" . "$orderBy", $this->request->order ?? 'desc');
+            ->orderBy("datatableas_$relatedTableNameWithoutDot" . "_" . $orderBy, $this->request->order ?? 'desc');
     }
 
     private function fixColumnName(string $column): string
@@ -187,13 +206,23 @@ class ModelDataTable
         if (count($columns) > 1) {
             $column = $this->addBackTicksToColumnName(array_shift($columns));
 
-            $sql = "json_unquote(json_extract($column, '$";
+            if ($this->connectionDriver == 'sqlsrv') {
+                $sql = "json_value($column, '$";
+            } else if ($this->connectionDriver == 'pgsql') {
+                $sql = "jsonb_extract_path($column, '";
+            } else {
+                $sql = "json_unquote(json_extract($column, '$";
+            }
 
             foreach ($columns as $column) {
                 $sql .= ".\"$column\"";
             }
 
-            $sql .= "'))";
+            if ($this->connectionDriver == 'mysql') {
+                $sql .= "'))";
+            } else {
+                $sql .= "')";
+            }
 
             return $sql;
         }
@@ -206,7 +235,15 @@ class ModelDataTable
         $fixedColumn = "";
 
         foreach (explode('.', $column) as $column) {
-            $fixedColumn .= "`$column`.";
+            if ($this->connectionDriver == 'mysql') {
+                $fixedColumn .= "`$column`.";
+            } else if ($this->connectionDriver == 'pgsql') {
+                $fixedColumn .= "\"$column\".";
+            } else if ($this->connectionDriver == 'sqlsrv') {
+                $fixedColumn .= "[$column].";
+            } else {
+                $fixedColumn .= "$column.";
+            }
         }
 
         return rtrim($fixedColumn, '.');

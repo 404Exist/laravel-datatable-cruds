@@ -37,6 +37,18 @@ trait Inputs
         return $this;
     }
     /**
+     * Set placeholder for current input
+    */
+    public function placeholder(string $placeholder): DatatableCruds
+    {
+        $this->setInputValue([
+            "key" => 'attributes',
+            "value" => ['placeholder' => $placeholder],
+            "shouldAppend" => true
+        ]);
+        return $this;
+    }
+    /**
      * Push input to the edit form only
     */
     public function editForm(): DatatableCruds
@@ -112,6 +124,11 @@ trait Inputs
     */
     public function options(array $options = []): DatatableCruds
     {
+        foreach ($options as $key => $title) {
+            if (is_string($title)) {
+                $options[$key] = ['name' => $title, 'id' => $key];
+            }
+        }
         $this->setInputValue("options", $options);
         return $this;
     }
@@ -179,6 +196,6 @@ trait Inputs
         if ($this->instance == "column") {
             throw MethodNotAllowedWithCurrentInstance::create("column", $data["calledMethodName"] ?? $data["key"]);
         }
-        $this->setValue($data["key"], $data["value"]);
+        $this->setValue($data["key"], $data["value"], $data["shouldAppend"] ?? false);
     }
 }

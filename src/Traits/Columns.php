@@ -20,6 +20,15 @@ trait Columns
         }
         return $this->create('column', $name);
     }
+
+    public function indexColumn(string $name): DatatableCruds
+    {
+        $count = 0;
+        return $this->column($name, function () use (&$count) {
+            $page = request('page') ?? 1;
+            return ++$count + ($page * request('limit')) - request('limit');
+        });
+    }
     /**
      * Push columns from other instance
     */

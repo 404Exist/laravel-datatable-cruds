@@ -5,6 +5,7 @@ namespace Exist404\DatatableCruds\QueryBuilder;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 trait HasRelation
@@ -40,28 +41,29 @@ trait HasRelation
     private function leftJoin(string $childRelationName, string $parentTableName): Builder
     {
         $childRelation = $this->relatedRelation($childRelationName);
+        $relatedTableName = $this->relatedTableName($childRelationName);
 
-        if (in_array($childRelation->getModel()->getTable(), $this->joins)) {
+        if (in_array($relatedTableName, $this->joins)) {
             return $this->query;
         }
 
-        $this->joins[] = $childRelation->getModel()->getTable();
+        $this->joins[] = $relatedTableName;
 
         return $this->query
-            ->leftJoin($childRelation->getModel()->getTable(), function ($join) use ($parentTableName, $childRelation) {
+            ->leftJoin($relatedTableName, function ($join) use ($parentTableName, $childRelation, $relatedTableName) {
                 $relatedForeign = $childRelation->getForeignKeyName();
-                $relatedTableName = $childRelation->getModel()->getTable();
-                $relatedOwnerKey = $childRelation->getModel()->getKeyName();
-
+                $relatedOwnerKey = $childRelation->getOwnerKeyName();
                 if (method_exists($childRelation, "getMorphType")) {
                     $join->where(
                         "$relatedTableName.{$childRelation->getMorphType()}",
                         "{$childRelation->getMorphClass()}"
                     );
                 }
-
                 if ($childRelation instanceof BelongsTo) {
                     $join->on("$parentTableName.$relatedForeign", '=', "$relatedTableName.$relatedOwnerKey");
+                } else if ($childRelation instanceof HasOne) {
+                    $relatedLocal = $childRelation->getLocalKeyName();
+                    $join->on("$relatedTableName.$relatedForeign", '=', "$parentTableName.$relatedLocal");
                 } else {
                     $join->on("$relatedTableName.$relatedForeign", '=', "$parentTableName.$relatedOwnerKey");
                 }
@@ -93,7 +95,8 @@ trait HasRelation
 
     private function relatedTableName(string $relationName): string
     {
-        return $this->relatedModel($relationName)->getTable();
+        $model = $this->relatedModel($relationName);
+        return $this->tableName($model->getQuery(), $model->getTable());
     }
 
     private function listRelationAndColumn(string $field): array

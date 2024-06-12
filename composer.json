@@ -2,8 +2,8 @@
     "name":"exist404/datatable-cruds",
     "description": "Laravel datatable cruds package",
     "type": "package",
-    "version": "2.0.0",
-    "keywords": ["laravel", "vue", "datatables", "cruds", "datatable-cruds", "forms", "axios", "js"],
+    "version": "2.1.0",
+    "keywords": ["package", "laravel", "vue", "datatables", "cruds", "datatable-cruds", "forms", "axios", "js"],
     "authors": [
         {
             "name": "Osama Saad",

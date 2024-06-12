@@ -10,7 +10,7 @@ namespace Exist404\DatatableCruds;
  * @method static \Exist404\DatatableCruds\DatatableCruds isXhr(): bool
  * @method static \Exist404\DatatableCruds\DatatableCruds dump(): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds dd(): \Exist404\DatatableCruds\DatatableCruds
- * @method static \Exist404\DatatableCruds\DatatableCruds for(\Illuminate\Contracts\Database\Eloquent\Builder|string $model): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds for(\Illuminate\Contracts\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Relations\Relation|string $model): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds setPageTitle(string $title): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds setDir(string|\Closure $dir): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds setHeader(string $name, string $value): \Exist404\DatatableCruds\DatatableCruds
@@ -50,6 +50,7 @@ namespace Exist404\DatatableCruds;
  * @method static \Exist404\DatatableCruds\DatatableCruds attributes(array $attributes): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds setAttribute(string $name, string $value): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds column(string|\Closure $name): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds indexColumn(string $name): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds columns(self $instance): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds sortable(bool|\Closure $sortable = true): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds searchable(bool|\Closure $searchable = true): \Exist404\DatatableCruds\DatatableCruds
@@ -64,6 +65,7 @@ namespace Exist404\DatatableCruds;
  * @method static \Exist404\DatatableCruds\DatatableCruds input(string|\Closure $name): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds inputs(self $instance): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds type(string $type): \Exist404\DatatableCruds\DatatableCruds
+ * @method static \Exist404\DatatableCruds\DatatableCruds placeholder(string $placeholder): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds editForm(): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds createForm(): \Exist404\DatatableCruds\DatatableCruds
  * @method static \Exist404\DatatableCruds\DatatableCruds page(int $page): \Exist404\DatatableCruds\DatatableCruds

@@ -6,14 +6,19 @@ use Closure;
 use Exist404\DatatableCruds\DatatableCruds;
 use Exist404\DatatableCruds\Model\BaseModel;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 trait Globals
 {
-    public function for(Builder|string $model): DatatableCruds
+    public function for(Builder|Relation|string $model): DatatableCruds
     {
         if (is_string($model)) {
             $this->tableName = ! class_exists($model) ? $model : null;
             $model = class_exists($model) ? (new $model())->query() : BaseModel::query();
+        }
+
+        if ($model instanceof Relation) {
+            $model = $model->getQuery();
         }
 
         $this->tableName ??= $model->getModel()->getTable();
@@ -130,40 +135,40 @@ trait Globals
     public function rowAddButton(string|bool $html = null, bool $isJS = false, string $onclick = 'openModal', string|bool $value = true): DatatableCruds
     {
         $this->addButton['onclick'] = [$onclick => $value];
-        $this->addButton['html'] = $isJS ? str($html)->wrap("{exec(", ")}") : $html;
-        if ($html === false) {
-            $this->addButton['enabled'] = false;
+        if (is_string($html)) {
+            $this->addButton['html'] = $isJS ? str($html)->wrap("{exec(", ")}") : $html;
         }
+        $this->addButton['enabled'] = $html ? true : false;
         return $this;
     }
 
     public function rowEditButton(string|bool $html = null, bool $isJS = false, string $onclick = 'openModal', string|bool $value = true): DatatableCruds
     {
         $this->actions["edit"]['onclick'] = [$onclick => $value];
-        $this->actions["edit"]['html'] = $isJS ? str($html)->wrap("{exec(", ")}") : $html;
-        if ($html === false) {
-            $this->actions["edit"] = false;
+        if (is_string($html)) {
+            $this->actions["edit"]['html'] = $isJS ? str($html)->wrap("{exec(", ")}") : $html;
         }
+        $this->actions["edit"]['enabled'] = $html ? true : false;
         return $this;
     }
 
     public function rowDeleteButton(string|bool $html = null, bool $isJS = false, string $onclick = 'openModal', string|bool $value = true): DatatableCruds
     {
         $this->actions["delete"]['onclick'] = [$onclick => $value];
-        $this->actions["delete"]['html'] = $isJS ? str($html)->wrap("{exec(", ")}") : $html;
-        if ($html === false) {
-            $this->actions["delete"] = false;
+        if (is_string($html)) {
+            $this->actions["delete"]['html'] = $isJS ? str($html)->wrap("{exec(", ")}") : $html;
         }
+        $this->actions["delete"]['enabled'] = $html ? true : false;
         return $this;
     }
 
     public function rowCloneButton(string|bool $html = null, bool $isJS = false, string $onclick = 'openModal', string|bool $value = true): DatatableCruds
     {
         $this->actions["clone"]['onclick'] = [$onclick => $value];
-        $this->actions["clone"]['html'] = $isJS ? str($html)->wrap("{exec(", ")}") : $html;
-        if ($html === false) {
-            $this->actions["clone"] = false;
+        if (is_string($html)) {
+            $this->actions["clone"]['html'] = $isJS ? str($html)->wrap("{exec(", ")}") : $html;
         }
+        $this->actions["clone"]['enabled'] = $html ? true : false;
         return $this;
     }
     /**

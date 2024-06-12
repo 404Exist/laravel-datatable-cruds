@@ -1,4 +1,11 @@
 # Release Notes
+## [v2.1.0](https://github.com/404Exist/datatable-cruds/compare/v2.0.0...v2.1.0) - 2024-06-12
+
+### Added
+
+- `indexColumn()` show the index of current row.
+- `placeholder()` can be used on input to set custom place holder to it.
+
 ## [v2.0.0](https://github.com/404Exist/datatable-cruds/compare/v1.2.0...v2.0.0) - 2024-04-30
 
 ### Added
